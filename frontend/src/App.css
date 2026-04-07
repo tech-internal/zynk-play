@@ -1,33 +1,113 @@
+/* ============================================
+   GAMEPALAZIO APP STYLES
+   ============================================ */
+
+:root {
+  --blue-deep: #1a3a8f;
+  --blue-sky: #5091cd;
+  --bg-dark: #050d1f;
+  --gold: #ffd700;
+  --gold-hot: #ffa500;
+  --orange: #ff6b35;
+  --pink: #e8356e;
+  --purple: #7b2d8b;
+  --white: #ffffff;
+  --muted: #94a3b8;
+  --grad2: linear-gradient(135deg, #ffd700, #ff6b35);
+  --grad-logo: linear-gradient(135deg, #c8e63c, #ff6b35, #e8356e, #7b2d8b);
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
 .App {
-  text-align: center;
+  background: var(--bg-dark);
+  color: var(--white);
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
 }
 
+/* Logo Section */
+.logo-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.logo-svg {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+}
+
+.logo-section h1 {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.text-gold {
+  background: var(--grad-logo);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.tagline {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0 0 30px 0;
+  font-family: 'Rajdhani', sans-serif;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* App Header */
 .App-header {
-  padding: 40px 20px;
-  color: white;
-  font-size: calc(10px + 2vmin);
+  padding: 60px 20px;
+  text-align: center;
+  background: linear-gradient(135deg, rgba(26, 58, 143, 0.15), rgba(232, 53, 110, 0.08));
+  position: relative;
+  overflow: hidden;
 }
 
-.App-header h1 {
-  font-size: 3rem;
-  margin: 0;
-  margin-bottom: 10px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+.App-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(80, 145, 205, 0.1), transparent);
+  border-radius: 50%;
+  pointer-events: none;
 }
 
-.App-header p {
-  font-size: 1.3rem;
-  margin: 0;
-  margin-bottom: 30px;
-  opacity: 0.9;
+.App-header::after {
+  content: '';
+  position: absolute;
+  bottom: -30%;
+  left: -5%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(255, 165, 0, 0.08), transparent);
+  border-radius: 50%;
+  pointer-events: none;
 }
 
+.App-header > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* Navigation Menu */
 .nav-menu {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 12px;
   margin-bottom: 40px;
   flex-wrap: wrap;
 }
@@ -35,57 +115,68 @@
 .nav-menu a,
 .nav-menu Link {
   display: inline-block;
-  padding: 12px 24px;
-  background: rgba(255, 255, 255, 0.2);
+  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 215, 0, 0.2);
   border-radius: 8px;
-  color: white;
+  color: rgba(255, 255, 255, 0.85);
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 500;
+  font-size: 0.9rem;
   transition: all 0.3s ease;
-  border: 2px solid transparent;
+  font-family: 'Rajdhani', sans-serif;
 }
 
 .nav-menu a:hover,
 .nav-menu Link:hover {
-  background: rgba(255, 255, 255, 0.3);
-  border-color: white;
+  background: rgba(255, 215, 0, 0.15);
+  border-color: rgba(255, 215, 0, 0.5);
+  color: var(--gold);
   transform: translateY(-2px);
 }
 
+/* Status, API Info, Features Boxes */
 .status,
 .api-info,
 .features {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 20px;
-  margin: 20px auto;
-  border-radius: 10px;
-  max-width: 600px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 28px;
+  margin: 24px auto;
+  border-radius: 16px;
+  max-width: 700px;
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .status h2,
 .api-info h2,
 .features h2 {
   margin-top: 0;
-  font-size: 1.5rem;
+  margin-bottom: 16px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  font-family: 'Rajdhani', sans-serif;
+  color: var(--white);
 }
 
 .status p,
 .api-info p {
-  margin: 10px 0;
-  font-size: 1.1rem;
+  margin: 12px 0;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .status a,
 .api-info a {
-  color: #ffd700;
+  color: var(--gold);
   text-decoration: none;
-  font-weight: bold;
+  font-weight: 600;
+  transition: color 0.3s ease;
 }
 
 .status a:hover,
 .api-info a:hover {
+  color: var(--gold-hot);
   text-decoration: underline;
 }
 
@@ -94,42 +185,57 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  text-align: center;
+  text-align: left;
 }
 
 .api-info li,
 .features li {
-  padding: 10px;
-  margin: 5px 0;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 5px;
-  font-size: 1rem;
+  padding: 12px 16px;
+  margin: 8px 0;
+  background: rgba(255, 215, 0, 0.04);
+  border: 1px solid rgba(255, 215, 0, 0.1);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.85);
+  transition: all 0.3s ease;
+}
+
+.api-info li:hover,
+.features li:hover {
+  background: rgba(255, 215, 0, 0.1);
+  border-color: rgba(255, 215, 0, 0.3);
+  transform: translateX(4px);
 }
 
 .api-info li a,
 .features li a {
   text-decoration: none;
-  color: white;
+  color: var(--white);
   font-weight: 600;
   transition: color 0.3s ease;
 }
 
 .api-info li a:hover,
 .features li a:hover {
-  color: #ffd700;
+  color: var(--gold);
 }
 
 .features li {
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
+/* Animations */
 @media (prefers-reduced-motion: no-preference) {
-  .App-header h1 {
-    animation: fadeInDown 1s ease-in;
+  .App-header {
+    animation: slideInDown 0.6s ease-out;
+  }
+
+  .logo-section {
+    animation: scaleIn 0.8s ease-out;
   }
 }
 
-@keyframes fadeInDown {
+@keyframes slideInDown {
   from {
     opacity: 0;
     transform: translateY(-30px);
@@ -137,5 +243,79 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .App-header {
+    padding: 40px 20px;
+  }
+
+  .logo-section h1 {
+    font-size: 1.8rem;
+  }
+
+  .tagline {
+    font-size: 0.9rem;
+  }
+
+  .nav-menu {
+    gap: 8px;
+  }
+
+  .nav-menu a,
+  .nav-menu Link {
+    padding: 8px 14px;
+    font-size: 0.8rem;
+  }
+
+  .status,
+  .api-info,
+  .features {
+    padding: 20px;
+  }
+
+  .status h2,
+  .api-info h2,
+  .features h2 {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-section {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .logo-svg {
+    width: 40px;
+    height: 40px;
+  }
+
+  .logo-section h1 {
+    font-size: 1.4rem;
+  }
+
+  .nav-menu {
+    flex-direction: column;
+  }
+
+  .nav-menu a,
+  .nav-menu Link {
+    width: 100%;
+    text-align: center;
   }
 }

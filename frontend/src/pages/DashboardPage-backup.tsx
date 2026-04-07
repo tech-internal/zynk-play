@@ -1,65 +1,9 @@
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import './DashboardPage.css';
 
 const DashboardPage: React.FC = () => {
   const [activeGameTab, setActiveGameTab] = React.useState('keyboard');
   const [selectedStream, setSelectedStream] = React.useState(0);
-  const gameIframeRef = useRef<HTMLIFrameElement>(null);
-  const streamVideoRef = useRef<HTMLVideoElement>(null);
-  const gameContainerRef = useRef<HTMLDivElement>(null);
-  const streamContainerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    document.title = 'Game Palazio | AFG Cricket — Play Free';
-  }, []);
-
-  // Game URLs
-  const GAME_URL = 'https://html-classic.itch.zone/html/16844939/Build%204/index.html?v=1773811903';
-  const STREAM_URL = 'https://d1clrt8nxj7onv.cloudfront.net/live/myStream/playlist.m3u8';
-
-  // Reload game
-  const handleReloadGame = () => {
-    if (gameIframeRef.current) {
-      gameIframeRef.current.src = GAME_URL;
-    }
-  };
-
-  // Toggle game fullscreen
-  const handleGameFullscreen = async () => {
-    if (gameContainerRef.current) {
-      try {
-        if (!document.fullscreenElement) {
-          await gameContainerRef.current.requestFullscreen();
-        } else {
-          await document.exitFullscreen();
-        }
-      } catch (error) {
-        console.log('Fullscreen not available');
-      }
-    }
-  };
-
-  // Reload stream
-  const handleReloadStream = () => {
-    if (streamVideoRef.current) {
-      streamVideoRef.current.load();
-    }
-  };
-
-  // Toggle stream fullscreen
-  const handleStreamFullscreen = async () => {
-    if (streamContainerRef.current) {
-      try {
-        if (!document.fullscreenElement) {
-          await streamContainerRef.current.requestFullscreen();
-        } else {
-          await document.exitFullscreen();
-        }
-      } catch (error) {
-        console.log('Fullscreen not available');
-      }
-    }
-  };
 
   // Gameplay Data
   const keyboardControls = [
@@ -90,28 +34,25 @@ const DashboardPage: React.FC = () => {
       id: 1,
       title: 'Live Cricket Tournament',
       channel: 'Cricket Masters',
-      viewers: '45.2K',
+      viewers: '12.5K',
       image: '🏏',
-      quality: '1080p',
-      url: STREAM_URL,
+      quality: '4K',
     },
     {
       id: 2,
       title: 'Gaming Legends Battle',
       channel: 'Gaming Hub',
-      viewers: '32.5K',
+      viewers: '8.3K',
       image: '🎮',
       quality: 'HD',
-      url: STREAM_URL,
     },
     {
       id: 3,
       title: 'Music Festival Live',
       channel: 'Entertainment Plus',
-      viewers: '18.9K',
+      viewers: '15.7K',
       image: '🎵',
-      quality: '1080p',
-      url: STREAM_URL,
+      quality: '4K',
     },
   ];
 
@@ -121,8 +62,6 @@ const DashboardPage: React.FC = () => {
     { name: 'Music', count: 12, icon: '🎵' },
     { name: 'Technology', count: 8, icon: '💻' },
   ];
-
-  const currentStream = streams[selectedStream];
 
   return (
     <div className="dashboard-page">
@@ -140,73 +79,58 @@ const DashboardPage: React.FC = () => {
       {/* Main Dashboard Content */}
       <section className="dashboard-content">
         <div className="container">
-          {/* Left Column - Gameplay with Game Embed */}
+          {/* Left Column - Gameplay */}
           <div className="dashboard-column">
             <div className="column-header">
-              <h2 className="column-title">🏏 AFG Cricket Game</h2>
-              <div className="header-controls">
-                <button className="icon-btn" onClick={handleReloadGame} title="Reload Game">↺</button>
-                <button className="icon-btn" onClick={handleGameFullscreen} title="Fullscreen">⛶</button>
-              </div>
+              <h2 className="column-title">🏏 Gameplay</h2>
+              <p className="column-sub">Master cricket game controls</p>
             </div>
 
-            {/* Game Embed Container */}
-            <div className="game-embed-container" ref={gameContainerRef}>
-              <iframe
-                ref={gameIframeRef}
-                src={GAME_URL}
-                title="AFG Cricket Game"
-                className="game-embed"
-                allowFullScreen
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              />
+            {/* Game Controls Tabs */}
+            <div className="mini-tabs">
+              <button
+                className={`mini-tab ${activeGameTab === 'keyboard' ? 'active' : ''}`}
+                onClick={() => setActiveGameTab('keyboard')}
+              >
+                ⌨️ Keyboard
+              </button>
+              <button
+                className={`mini-tab ${activeGameTab === 'touch' ? 'active' : ''}`}
+                onClick={() => setActiveGameTab('touch')}
+              >
+                📱 Touch
+              </button>
             </div>
 
-            {/* Game Controls Info */}
-            <div className="controls-section">
-              <div className="controls-tabs">
-                <button
-                  className={`tab-btn ${activeGameTab === 'keyboard' ? 'active' : ''}`}
-                  onClick={() => setActiveGameTab('keyboard')}
-                >
-                  ⌨️ Keyboard
-                </button>
-                <button
-                  className={`tab-btn ${activeGameTab === 'touch' ? 'active' : ''}`}
-                  onClick={() => setActiveGameTab('touch')}
-                >
-                  👆 Touch
-                </button>
-              </div>
-
+            {/* Keyboard Controls */}
+            {activeGameTab === 'keyboard' && (
               <div className="controls-list">
-                {activeGameTab === 'keyboard' ? (
-                  <div className="controls-grid">
-                    {keyboardControls.map((ctrl, idx) => (
-                      <div key={idx} className="control-item">
-                        <div className="ctrl-key">{ctrl.key}</div>
-                        <div className="ctrl-content">
-                          <div className="ctrl-action">{ctrl.action}</div>
-                          <div className="ctrl-desc">{ctrl.desc}</div>
-                        </div>
-                      </div>
-                    ))}
+                {keyboardControls.map((ctrl, idx) => (
+                  <div key={idx} className="control-item">
+                    <div className="ctrl-key">{ctrl.key}</div>
+                    <div className="ctrl-content">
+                      <div className="ctrl-action">{ctrl.action}</div>
+                      <div className="ctrl-desc">{ctrl.desc}</div>
+                    </div>
                   </div>
-                ) : (
-                  <div className="controls-grid">
-                    {touchControls.map((ctrl, idx) => (
-                      <div key={idx} className="control-item">
-                        <span className="touch-emoji">{ctrl.arrow}</span>
-                        <div className="ctrl-content">
-                          <div className="ctrl-action">{ctrl.gesture}</div>
-                          <div className="ctrl-desc">→ {ctrl.action}</div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                ))}
               </div>
-            </div>
+            )}
+
+            {/* Touch Controls */}
+            {activeGameTab === 'touch' && (
+              <div className="controls-list">
+                {touchControls.map((ctrl, idx) => (
+                  <div key={idx} className="touch-item">
+                    <span className="touch-emoji">{ctrl.arrow}</span>
+                    <div className="touch-content">
+                      <div className="touch-gesture">{ctrl.gesture}</div>
+                      <div className="touch-action">→ {ctrl.action}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
 
             {/* Leaderboard */}
             <div className="mini-leaderboard">
@@ -225,42 +149,37 @@ const DashboardPage: React.FC = () => {
                 ))}
               </div>
             </div>
+
+            <button className="btn-small btn-gold">Play Now</button>
           </div>
 
-          {/* Right Column - Streaming with Video Embed */}
+          {/* Right Column - Streaming */}
           <div className="dashboard-column">
             <div className="column-header">
-              <h2 className="column-title">📺 Live Stream</h2>
-              <div className="header-controls">
-                <button className="icon-btn" onClick={handleReloadStream} title="Reload Stream">↺</button>
-                <button className="icon-btn" onClick={handleStreamFullscreen} title="Fullscreen">⛶</button>
+              <h2 className="column-title">🎬 Streaming</h2>
+              <p className="column-sub">Watch live entertainment</p>
+            </div>
+
+            {/* Featured Stream Selector */}
+            <div className="featured-compact">
+              <div className="stream-player">
+                <span className="stream-emoji">{streams[selectedStream].image}</span>
+                <div className="live-badge">● LIVE</div>
               </div>
-            </div>
 
-            {/* Stream Video Container */}
-            <div className="stream-embed-container" ref={streamContainerRef}>
-              <video
-                ref={streamVideoRef}
-                className="stream-embed"
-                controls
-                poster="https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=600&q=80"
-              >
-                <source src={currentStream.url} type="application/x-mpegURL" />
-                Your browser does not support HTML5 video.
-              </video>
-            </div>
-
-            {/* Stream Info */}
-            <div className="stream-info-section">
-              <h3 className="stream-title-info">{currentStream.image} {currentStream.title}</h3>
-              <p className="stream-channel-info">{currentStream.channel}</p>
-              <div className="stream-meta-info">
-                <span>👁️ {currentStream.viewers}</span>
-                <span className="quality-badge">{currentStream.quality}</span>
+              <div className="stream-info-compact">
+                <h3 className="stream-title-compact">{streams[selectedStream].title}</h3>
+                <p className="stream-channel-compact">{streams[selectedStream].channel}</p>
+                <div className="stream-meta-compact">
+                  <span>👁️ {streams[selectedStream].viewers}</span>
+                  <span className="quality-badge">{streams[selectedStream].quality}</span>
+                </div>
               </div>
+
+              <button className="btn-small btn-gold">Watch</button>
             </div>
 
-            {/* Stream Selection */}
+            {/* Stream Carousel */}
             <h3 className="section-mini-title">📡 Live Streams</h3>
             <div className="stream-grid-compact">
               {streams.map((stream, idx) => (
@@ -291,6 +210,8 @@ const DashboardPage: React.FC = () => {
                 </div>
               ))}
             </div>
+
+            <button className="btn-small btn-gold">Explore All</button>
           </div>
         </div>
       </section>
@@ -330,8 +251,8 @@ const DashboardPage: React.FC = () => {
           <h2 className="section-title">Start Your Journey</h2>
           <p className="section-sub">Join millions of gamers and streamers today</p>
           <div className="cta-buttons-dashboard">
-            <button className="btn-gold">🎮 Start Gaming</button>
-            <button className="btn-outline">📺 Watch Streams</button>
+            <button className="btn-gold">Get Started</button>
+            <button className="btn-outline">Learn More</button>
           </div>
         </div>
       </section>

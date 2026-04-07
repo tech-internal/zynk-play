@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Game Palazio - AFG Cricket Play Free. Experience the ultimate gaming and streaming entertainment platform.">
+    <meta name="theme-color" content="#050d1f">
+    <title>Game Palazio | AFG Cricket — Play Free</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #050d1f;
+            --gold: #ffd700;
+            --orange: #ff6b35;
+            --pink: #e8356e;
+            --purple: #7b2d8b;
+            --lime: #c8e63c;
+            --white: #ffffff;
+            --text-light: rgba(255, 255, 255, 0.85);
+            --border-color: rgba(255, 215, 0, 0.1);
+            --grad-primary: linear-gradient(135deg, #ffd700, #ff6b35);
+            --grad-logo: linear-gradient(135deg, #c8e63c, #ff6b35, #e8356e, #7b2d8b);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ==========================================
+           HEADER & NAVIGATION
+           ========================================== */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(5, 13, 31, 0.95);
+            border-bottom: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+            padding: 12px 20px;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            font-weight: 700;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.1rem;
+            color: var(--white);
+            transition: opacity 0.3s ease;
+        }
+
+        .logo:hover {
+            opacity: 0.85;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+        }
+
+        .logo-text span {
+            background: var(--grad-logo);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        nav {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        nav a {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            font-family: 'Rajdhani', sans-serif;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        nav a:hover {
+            background: rgba(255, 215, 0, 0.15);
+            border-color: rgba(255, 215, 0, 0.4);
+            color: var(--gold);
+        }
+
+        /* ==========================================
+           HERO SECTION
+           ========================================== */
+        .hero {
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(26, 58, 143, 0.2), rgba(232, 53, 110, 0.1));
+            padding: 60px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(80, 145, 205, 0.1), transparent);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            text-align: center;
+            z-index: 2;
+            position: relative;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 10px 20px;
+            background: rgba(200, 230, 60, 0.15);
+            border: 1px solid rgba(200, 230, 60, 0.3);
+            border-radius: 50px;
+            color: var(--lime);
+            font-size: 0.85rem;
+            font-weight: 600;
+            font-family: 'Rajdhani', sans-serif;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            font-family: 'Rajdhani', sans-serif;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            letter-spacing: -1px;
+        }
+
+        .hero h1 span {
+            background: var(--grad-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: 'Rajdhani', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--grad-primary);
+            color: var(--bg-dark);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(255, 215, 0, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--gold);
+            color: var(--gold);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 215, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* ==========================================
+           FEATURES SECTION
+           ========================================== */
+        .features {
+            padding: 80px 20px;
+            background: var(--bg-dark);
+            position: relative;
+        }
+
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .section-header h2 span {
+            background: var(--grad-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-header p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 40px 30px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.1), transparent);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .feature-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 215, 0, 0.3);
+            transform: translateY(-8px);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--white);
+        }
+
+        .feature-card p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-light);
+        }
+
+        /* ==========================================
+           GAMES SECTION
+           ========================================== */
+        .games {
+            padding: 80px 20px;
+            background: linear-gradient(180deg, rgba(26, 58, 143, 0.1), rgba(232, 53, 110, 0.05));
+            position: relative;
+        }
+
+        .games-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .game-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .game-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 215, 0, 0.3);
+            transform: translateY(-8px);
+        }
+
+        .game-thumbnail {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, rgba(200, 230, 60, 0.2), rgba(255, 107, 53, 0.2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .game-info {
+            padding: 20px;
+        }
+
+        .game-info h3 {
+            font-size: 1.1rem;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--white);
+        }
+
+        .game-info p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 12px;
+        }
+
+        .game-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(255, 215, 0, 0.15);
+            border-radius: 4px;
+            color: var(--gold);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* ==========================================
+           STREAMING SECTION
+           ========================================== */
+        .streams {
+            padding: 80px 20px;
+            background: var(--bg-dark);
+        }
+
+        .streams-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .streams-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .stream-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .stream-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 215, 0, 0.3);
+            transform: translateY(-8px);
+        }
+
+        .stream-thumbnail {
+            width: 100%;
+            height: 160px;
+            background: linear-gradient(135deg, rgba(26, 58, 143, 0.3), rgba(80, 145, 205, 0.2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            position: relative;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .live-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 6px 12px;
+            background: #ff4444;
+            color: var(--white);
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .stream-info {
+            padding: 20px;
+        }
+
+        .stream-info h3 {
+            font-size: 1rem;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--white);
+        }
+
+        .stream-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* ==========================================
+           CTA SECTION
+           ========================================== */
+        .cta {
+            padding: 80px 20px;
+            background: linear-gradient(135deg, rgba(200, 230, 60, 0.1), rgba(255, 107, 53, 0.1));
+            text-align: center;
+            position: relative;
+        }
+
+        .cta-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta h2 {
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .cta p {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            color: var(--text-light);
+        }
+
+        /* ==========================================
+           FOOTER
+           ========================================== */
+        footer {
+            padding: 50px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h3 {
+            font-size: 1rem;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--white);
+        }
+
+        .footer-section a {
+            display: block;
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--gold);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* ==========================================
+           RESPONSIVE
+           ========================================== */
+        @media (max-width: 768px) {
+            .header-content {
+                gap: 15px;
+            }
+
+            nav {
+                gap: 8px;
+                flex-wrap: wrap;
+            }
+
+            nav a {
+                padding: 6px 12px;
+                font-size: 0.75rem;
+            }
+
+            .hero {
+                min-height: 80vh;
+                padding: 40px 20px;
+            }
+
+            .features-grid,
+            .games-grid,
+            .streams-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .feature-card,
+            .game-item,
+            .stream-card {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <div class="header-content">
+            <a href="#" class="logo">
+                <svg class="logo-icon" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stopColor="#c8e63c"/>
+                            <stop offset="33%" stopColor="#ff6b35"/>
+                            <stop offset="66%" stopColor="#e8356e"/>
+                            <stop offset="100%" stopColor="#7b2d8b"/>
+                        </linearGradient>
+                    </defs>
+                    <circle cx="19" cy="19" r="18" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                    <path d="M8 26 Q10 10 19 8 Q28 6 30 12 Q32 18 26 26" stroke="url(#logoGrad)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+                    <circle cx="19" cy="22" r="4" fill="url(#logoGrad)" opacity="0.9"/>
+                </svg>
+                <span class="logo-text">Game<span>Palazio</span></span>
+            </a>
+            <nav>
+                <a href="#games">🎮 Games</a>
+                <a href="#streams">📺 Streams</a>
+                <a href="#features">✨ Features</a>
+                <a href="http://localhost:3000">🚀 Platform</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">🎮 🎬 ENTERTAINMENT HUB</div>
+            <h1>Play Games & Watch <span>Live Streams</span></h1>
+            <p class="hero-subtitle">Experience the ultimate entertainment platform with exclusive cricket games, live streaming, and an immersive gaming community. Play, watch, and celebrate like champions.</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary" onclick="window.location.href='http://localhost:3000'">🚀 Launch Platform</button>
+                <button class="btn btn-secondary">📖 Learn More</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES SECTION -->
+    <section class="features" id="features">
+        <div class="features-container">
+            <div class="section-header">
+                <h2>Why Choose <span>Game Palazio?</span></h2>
+                <p>Everything you need for entertainment in one place</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎮</div>
+                    <h3>Amazing Games</h3>
+                    <p>Play a variety of exciting games including the popular AFG Cricket. Compete with friends and climb the leaderboard with real-time scores.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📺</div>
+                    <h3>Live Streaming</h3>
+                    <p>Watch live streams of cricket tournaments, gaming events, music shows, and more. Get exclusive content from your favorite creators and channels.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏆</div>
+                    <h3>Leaderboards</h3>
+                    <p>Track your progress and compete with players worldwide. Earn achievements, unlock badges, and become a champion in the Game Palazio community.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Side-by-Side Experience</h3>
+                    <p>Play games and watch streams simultaneously on our advanced dashboard. Enjoy both experiences without missing anything.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Multi-Device Support</h3>
+                    <p>Access Game Palazio from any device - desktop, tablet, or mobile. Seamless experience across all platforms with responsive design.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌟</div>
+                    <h3>Community Driven</h3>
+                    <p>Join a vibrant community of gamers and streamers. Share moments, make friends, and celebrate victories together in our platform.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GAMES SECTION -->
+    <section class="games" id="games">
+        <div class="games-container">
+            <div class="section-header">
+                <h2>Popular <span>Games</span></h2>
+                <p>Challenge yourself with our exciting game collection</p>
+            </div>
+            <div class="games-grid">
+                <div class="game-item">
+                    <div class="game-thumbnail">🏏</div>
+                    <div class="game-info">
+                        <h3>AFG Cricket</h3>
+                        <p>Experience thrilling cricket matches with realistic gameplay and stunning graphics.</p>
+                        <span class="game-tag">Sports</span>
+                    </div>
+                </div>
+                <div class="game-item">
+                    <div class="game-thumbnail">⚽</div>
+                    <div class="game-info">
+                        <h3>Football Pro</h3>
+                        <p>Score goals and become a football legend. Compete in multiplayer matches.</p>
+                        <span class="game-tag">Sports</span>
+                    </div>
+                </div>
+                <div class="game-item">
+                    <div class="game-thumbnail">🎮</div>
+                    <div class="game-info">
+                        <h3>Quest Arena</h3>
+                        <p>Embark on epic quests and battles in our immersive adventure game.</p>
+                        <span class="game-tag">Adventure</span>
+                    </div>
+                </div>
+                <div class="game-item">
+                    <div class="game-thumbnail">🎯</div>
+                    <div class="game-info">
+                        <h3>Precision Shot</h3>
+                        <p>Test your aim and reaction time in this fast-paced shooting game.</p>
+                        <span class="game-tag">Action</span>
+                    </div>
+                </div>
+                <div class="game-item">
+                    <div class="game-thumbnail">🧩</div>
+                    <div class="game-info">
+                        <h3>Mind Puzzles</h3>
+                        <p>Solve challenging puzzles and train your brain with brain-teasing challenges.</p>
+                        <span class="game-tag">Puzzle</span>
+                    </div>
+                </div>
+                <div class="game-item">
+                    <div class="game-thumbnail">🏎️</div>
+                    <div class="game-info">
+                        <h3>Speed Racer</h3>
+                        <p>Race against opponents in high-speed tracks and become a racing champion.</p>
+                        <span class="game-tag">Racing</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STREAMING SECTION -->
+    <section class="streams" id="streams">
+        <div class="streams-container">
+            <div class="section-header">
+                <h2>Live <span>Streams</span></h2>
+                <p>Watch your favorite content in real-time</p>
+            </div>
+            <div class="streams-grid">
+                <div class="stream-card">
+                    <div class="stream-thumbnail">
+                        🏏
+                        <div class="live-badge">LIVE</div>
+                    </div>
+                    <div class="stream-info">
+                        <h3>Cricket Tournament</h3>
+                        <div class="stream-meta">
+                            <span>🏢 Cricket Masters</span>
+                            <span>👥 45.2K</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="stream-card">
+                    <div class="stream-thumbnail">
+                        🎮
+                        <div class="live-badge">LIVE</div>
+                    </div>
+                    <div class="stream-info">
+                        <h3>Gaming Battle</h3>
+                        <div class="stream-meta">
+                            <span>🏢 Gaming Hub</span>
+                            <span>👥 32.5K</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="stream-card">
+                    <div class="stream-thumbnail">
+                        🎵
+                        <div class="live-badge">LIVE</div>
+                    </div>
+                    <div class="stream-info">
+                        <h3>Music Festival</h3>
+                        <div class="stream-meta">
+                            <span>🏢 Entertainment</span>
+                            <span>👥 18.9K</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="stream-card">
+                    <div class="stream-thumbnail">
+                        💻
+                        <div class="live-badge">LIVE</div>
+                    </div>
+                    <div class="stream-info">
+                        <h3>Tech Talk Show</h3>
+                        <div class="stream-meta">
+                            <span>🏢 Tech Insider</span>
+                            <span>👥 12.3K</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA SECTION -->
+    <section class="cta">
+        <div class="cta-container">
+            <h2>Ready to Play & Stream?</h2>
+            <p>Join thousands of gamers and streamers enjoying the ultimate entertainment experience</p>
+            <button class="btn btn-primary" onclick="window.location.href='http://localhost:3000'" style="font-size: 1.1rem; padding: 16px 40px;">
+                🚀 Launch Game Palazio Now
+            </button>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Game Palazio</h3>
+                <a href="#">About Us</a>
+                <a href="#">Blog</a>
+                <a href="#">Careers</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="footer-section">
+                <h3>Games</h3>
+                <a href="#">All Games</a>
+                <a href="#">Popular Games</a>
+                <a href="#">New Releases</a>
+                <a href="#">Leaderboard</a>
+            </div>
+            <div class="footer-section">
+                <h3>Streaming</h3>
+                <a href="#">Live Streams</a>
+                <a href="#">Categories</a>
+                <a href="#">Channels</a>
+                <a href="#">Recommendations</a>
+            </div>
+            <div class="footer-section">
+                <h3>Support</h3>
+                <a href="#">Help Center</a>
+                <a href="#">FAQ</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Privacy Policy</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Game Palazio. All rights reserved. | Crafted with ❤️ for gamers and streamers worldwide.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

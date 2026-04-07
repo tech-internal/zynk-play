@@ -2,6 +2,10 @@ import React from 'react';
 import './GamePlayPage.css';
 
 const GamePlayPage: React.FC = () => {
+  React.useEffect(() => {
+    document.title = 'Game Palazio | AFG Cricket — Play Free';
+  }, []);
+
   const [activeTab, setActiveTab] = React.useState('keyboard');
 
   const keyboardControls = [

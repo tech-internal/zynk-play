@@ -2,6 +2,10 @@ import React from 'react';
 import './StreamingPage.css';
 
 const StreamingPage: React.FC = () => {
+  React.useEffect(() => {
+    document.title = 'Game Palazio | AFG Cricket — Play Free';
+  }, []);
+
   const [selectedStream, setSelectedStream] = React.useState(0);
 
   const streams = [

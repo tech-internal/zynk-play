@@ -1,0 +1,99 @@
+.App {
+  text-align: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.App-header {
+  padding: 40px 20px;
+  color: white;
+  font-size: calc(10px + 2vmin);
+}
+
+.App-header h1 {
+  font-size: 3rem;
+  margin: 0;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.App-header p {
+  font-size: 1.3rem;
+  margin: 0;
+  margin-bottom: 30px;
+  opacity: 0.9;
+}
+
+.status,
+.api-info,
+.features {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  margin: 20px auto;
+  border-radius: 10px;
+  max-width: 600px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.status h2,
+.api-info h2,
+.features h2 {
+  margin-top: 0;
+  font-size: 1.5rem;
+}
+
+.status p,
+.api-info p {
+  margin: 10px 0;
+  font-size: 1.1rem;
+}
+
+.status a,
+.api-info a {
+  color: #ffd700;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.status a:hover,
+.api-info a:hover {
+  text-decoration: underline;
+}
+
+.api-info ul,
+.features ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.api-info li,
+.features li {
+  padding: 10px;
+  margin: 5px 0;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.features li {
+  margin-bottom: 10px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-header h1 {
+    animation: fadeInDown 1s ease-in;
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

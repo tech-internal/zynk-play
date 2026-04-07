@@ -1,0 +1,136 @@
+================================================================================
+    ENTERTAINMENT PLATFORM - QUICK START GUIDE
+================================================================================
+
+✅ PLATFORM STATUS:
+   • Backend code: Generated & ready
+   • Database: SQLite created with all tables
+   • Admin user: Created (admin/admin123)
+   • Subscription plans: Sample data added
+   • All dependencies: Installed
+
+================================================================================
+🚀 TO START THE SERVER - RUN THIS IN COMMAND PROMPT:
+================================================================================
+
+1. Open Command Prompt (cmd.exe)
+
+2. Navigate to project folder:
+   cd d:\Projects\zynk-play
+
+3. Run the Django server:
+   C:\Users\Microsoft\AppData\Local\Programs\Python\Python315\python.exe manage.py runserver 0.0.0.0:8000
+
+   OR more simply (if Python is in PATH):
+   python manage.py runserver
+
+4. You should see output like:
+   Starting development server at http://127.0.0.1:8000/
+   Quit the server with CONTROL-C.
+
+================================================================================
+🌐 THEN OPEN IN YOUR BROWSER:
+================================================================================
+
+   http://localhost:8000/admin
+
+================================================================================
+👤 LOGIN CREDENTIALS:
+================================================================================
+
+   Username: admin
+   Password: admin123
+
+================================================================================
+🛠️ IF YOU SEE A BLANK PAGE:
+================================================================================
+
+1. Hard Refresh Your Browser:
+   • Windows: Ctrl + Shift + R
+   • Mac: Cmd + Shift + R
+
+2. Check for errors in browser console (F12)
+
+3. Test the API directly (should return JSON):
+   http://localhost:8000/api/v1/subscriptions/plans/
+
+4. If API works but admin is blank:
+   - Run in command prompt:
+     python manage.py collectstatic --clear --noinput
+   - Then refresh the browser
+
+5. Check browser's DevTools (F12):
+   - Console tab for JavaScript errors
+   - Network tab to see if CSS/JS files load
+
+================================================================================
+📚 USEFUL URLS:
+================================================================================
+
+Admin Panel:       http://localhost:8000/admin
+API Base:          http://localhost:8000/api/v1
+Plans API:         http://localhost:8000/api/v1/subscriptions/plans/
+Auth API:          http://localhost:8000/api/v1/auth/send-otp
+
+================================================================================
+📖 DOCUMENTATION:
+================================================================================
+
+• README.md - Full technical documentation
+• DEPLOYMENT_STATUS.md - Deployment details
+• SETUP_GUIDE.md - Installation instructions
+• FILE_MANIFEST.md - All files explained
+
+================================================================================
+✨ FEATURES AVAILABLE:
+================================================================================
+
+✓ OTP Authentication (SMS adapter ready)
+✓ JWT Token Management  
+✓ Subscription Management
+✓ Stream Access Control with 5-min free trial
+✓ Gaming Platform
+✓ Payment Processing (adapter ready)
+✓ Audit Logging
+✓ Admin Dashboard
+✓ REST API Endpoints (23 total)
+
+================================================================================
+💡 COMMON ISSUES & SOLUTIONS:
+================================================================================
+
+Issue: "Module not found: django"
+Fix: Make sure to use the full Python path as shown above
+
+Issue: Port 8000 already in use
+Fix: Run with different port:
+     python manage.py runserver 0.0.0.0:8001
+
+Issue: Database error
+Fix: Reset database:
+     del db.sqlite3
+     python manage.py migrate
+     python manage.py createsuperuser (create new admin)
+
+Issue: Static files not loading
+Fix: Collect static files:
+     python manage.py collectstatic --clear --noinput
+
+================================================================================
+🔗 API EXAMPLES (test with curl):
+================================================================================
+
+List subscription plans:
+   curl http://localhost:8000/api/v1/subscriptions/plans/
+
+Send OTP (step 1 of login):
+   curl -X POST http://localhost:8000/api/v1/auth/send-otp ^
+     -H "Content-Type: application/json" ^
+     -d "{\"phone_number\": \"+93701234567\"}"
+
+Get streaming content:
+   curl http://localhost:8000/api/v1/streams/
+
+================================================================================
+
+✅ You're all set! Start the server and visit http://localhost:8000/admin

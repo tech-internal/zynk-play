@@ -1,0 +1,179 @@
+# docker-compose.yml
+# Complete Docker setup for the Entertainment Platform
+
+version: '3.8'
+
+services:
+  # =====================================================================
+  # PostgreSQL Database
+  # =====================================================================
+  db:
+    image: postgres:15-alpine
+    container_name: ep-postgres
+    environment:
+      POSTGRES_DB: entertainment_platform
+      POSTGRES_USER: ep_user
+      POSTGRES_PASSWORD: ep_password_secure
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./01_database_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ep_user -d entertainment_platform"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ep-network
+
+  # =====================================================================
+  # Redis Cache
+  # =====================================================================
+  redis:
+    image: redis:7-alpine
+    container_name: ep-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ep-network
+
+  # =====================================================================
+  # Django Backend
+  # =====================================================================
+  backend:
+    build:
+      context: ./
+      dockerfile: Dockerfile.backend
+    container_name: ep-backend
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py collectstatic --noinput &&
+             gunicorn config.wsgi:application --bind 0.0.0.0:8000"
+    environment:
+      DEBUG: "False"
+      SECRET_KEY: "your-secret-key-here"
+      DB_NAME: entertainment_platform
+      DB_USER: ep_user
+      DB_PASSWORD: ep_password_secure
+      DB_HOST: db
+      DB_PORT: 5432
+      REDIS_URL: redis://redis:6379/1
+      CELERY_BROKER_URL: redis://redis:6379/0
+      SMS_SERVICE_URL: ""
+      SMS_API_KEY: ""
+      PAYMENT_PROVIDER_URL: ""
+      PAYMENT_API_KEY: ""
+      SITE_URL: "http://localhost:8000"
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./:/app
+    networks:
+      - ep-network
+
+  # =====================================================================
+  # Celery Worker
+  # =====================================================================
+  celery:
+    build:
+      context: ./
+      dockerfile: Dockerfile.backend
+    container_name: ep-celery
+    command: celery -A config worker -l info
+    environment:
+      DEBUG: "False"
+      SECRET_KEY: "your-secret-key-here"
+      DB_NAME: entertainment_platform
+      DB_USER: ep_user
+      DB_PASSWORD: ep_password_secure
+      DB_HOST: db
+      DB_PORT: 5432
+      REDIS_URL: redis://redis:6379/1
+      CELERY_BROKER_URL: redis://redis:6379/0
+    depends_on:
+      - backend
+      - redis
+    volumes:
+      - ./:/app
+    networks:
+      - ep-network
+
+  # =====================================================================
+  # Celery Beat (Scheduler)
+  # =====================================================================
+  celery-beat:
+    build:
+      context: ./
+      dockerfile: Dockerfile.backend
+    container_name: ep-celery-beat
+    command: celery -A config beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    environment:
+      DEBUG: "False"
+      SECRET_KEY: "your-secret-key-here"
+      DB_NAME: entertainment_platform
+      DB_USER: ep_user
+      DB_PASSWORD: ep_password_secure
+      DB_HOST: db
+      DB_PORT: 5432
+      REDIS_URL: redis://redis:6379/1
+      CELERY_BROKER_URL: redis://redis:6379/0
+    depends_on:
+      - backend
+      - redis
+    volumes:
+      - ./:/app
+    networks:
+      - ep-network
+
+  # =====================================================================
+  # React Frontend
+  # =====================================================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ep-frontend
+    environment:
+      REACT_APP_API_URL: "http://localhost:8000"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - ep-network
+
+  # =====================================================================
+  # Nginx Reverse Proxy
+  # =====================================================================
+  nginx:
+    image: nginx:alpine
+    container_name: ep-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - ep-network
+
+networks:
+  ep-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

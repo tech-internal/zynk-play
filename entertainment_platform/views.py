@@ -56,6 +56,10 @@ def home(request):
                 "verify_otp": "POST /api/v1/auth/verify-otp - Verify OTP and get JWT",
                 "refresh": "POST /api/v1/auth/refresh - Refresh access token"
             },
+            "mock_auth": {
+                "send_otp": "POST /api/v1/mock/auth/send-otp - Mock: always responds as if OTP was sent",
+                "verify_otp": "POST /api/v1/mock/auth/verify-otp - Mock: success when otp_code is 123456"
+            },
             "subscriptions": {
                 "plans": "GET /api/v1/subscriptions/plans - List subscription plans",
                 "purchase": "POST /api/v1/subscriptions/purchase - Purchase plan",
@@ -204,6 +208,54 @@ def verify_otp(request):
         'refresh': str(refresh),
         'user': UserSerializer(user).data
     }, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def mock_send_otp(request):
+    """
+    Mock OTP send — no SMS; always reports success.
+    POST /api/v1/mock/auth/send-otp
+    Body: { "phone_number": "+93..." }
+    """
+    serializer = SendOTPSerializer(data=request.data)
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    return Response(
+        {'message': 'OTP has been sent'},
+        status=status.HTTP_200_OK,
+    )
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def mock_verify_otp(request):
+    """
+    Mock OTP verify — succeeds only when otp_code is 123456.
+    POST /api/v1/mock/auth/verify-otp
+    Body: { "phone_number": "...", "otp_code": "123456" }
+    """
+    serializer = VerifyOTPSerializer(data=request.data)
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    otp_code = serializer.validated_data['otp_code']
+    phone_number = serializer.validated_data['phone_number']
+
+    if otp_code == '123456':
+        return Response(
+            {
+                'message': 'Login successful',
+                'success': True,
+                'phone_number': phone_number,
+            },
+            status=status.HTTP_200_OK,
+        )
+
+    return Response(
+        {'error': 'Invalid OTP', 'success': False},
+        status=status.HTTP_400_BAD_REQUEST,
+    )
 
 
 @api_view(['POST'])

@@ -1,7 +1,10 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './GamePlayPage.css';
 
 const GamePlayPage: React.FC = () => {
+  const navigate = useNavigate();
+
   React.useEffect(() => {
     document.title = 'Game Palazio | AFG Cricket — Play Free';
   }, []);
@@ -52,25 +55,33 @@ const GamePlayPage: React.FC = () => {
     { rank: 5, name: 'Sky Soarer', runs: '221 runs', score: '6,320 pts', avatar: '🚀' },
   ];
 
+  const goPlayOnDashboard = () => {
+    navigate('/dashboard');
+  };
+
   return (
     <div className="gameplay-page">
-      {/* Hero Section */}
       <section className="hero-gameplay">
         <div className="hero-content">
           <div className="pill-badge pill-gold">🎮 INTERACTIVE GAMEPLAY</div>
-          <h1 className="hero-title">Master the Art of <span className="grad-text">Cricket</span></h1>
-          <p className="hero-sub">Learn game mechanics, control layouts, and pro strategies to dominate the leaderboard.</p>
-          <button className="btn-gold">Start Playing Now</button>
+          <h1 className="hero-title">
+            Master the Art of <span className="grad-text">Cricket</span>
+          </h1>
+          <p className="hero-sub">
+            Learn game mechanics, control layouts, and pro strategies to dominate the leaderboard. The playable build lives on your
+            dashboard.
+          </p>
+          <button className="btn-gold" type="button" onClick={goPlayOnDashboard}>
+            Open dashboard to play
+          </button>
         </div>
       </section>
 
-      {/* Controls Section */}
       <section className="controls-section">
         <div className="container">
           <h2 className="section-title text-center">Game Controls</h2>
           <p className="section-sub text-center">Master these controls to elevate your gameplay</p>
 
-          {/* Tab Navigation */}
           <div className="tabs-nav">
             <button
               className={`tab-btn ${activeTab === 'keyboard' ? 'active' : ''}`}
@@ -86,7 +97,6 @@ const GamePlayPage: React.FC = () => {
             </button>
           </div>
 
-          {/* Keyboard Controls */}
           {activeTab === 'keyboard' && (
             <div className="tab-panel active">
               <div className="controls-grid">
@@ -103,7 +113,6 @@ const GamePlayPage: React.FC = () => {
             </div>
           )}
 
-          {/* Touch Controls */}
           {activeTab === 'touch' && (
             <div className="tab-panel active">
               <div className="touch-grid">
@@ -133,7 +142,6 @@ const GamePlayPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Objectives Section */}
       <section className="objectives-section">
         <div className="container">
           <h2 className="section-title text-center">Game Objectives</h2>
@@ -164,7 +172,6 @@ const GamePlayPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Leaderboard Section */}
       <section className="leaderboard-section">
         <div className="container">
           <h2 className="section-title text-center">Top Players</h2>
@@ -192,20 +199,21 @@ const GamePlayPage: React.FC = () => {
           </div>
 
           <div style={{ textAlign: 'center', marginTop: '40px' }}>
-            <button className="btn-gold">View Full Leaderboard</button>
+            <button className="btn-gold" type="button" onClick={goPlayOnDashboard}>
+              Play on dashboard
+            </button>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className="cta-section">
         <div className="container text-center">
           <h2 className="section-title">Ready to Play?</h2>
           <p className="section-sub" style={{ maxWidth: '500px', margin: '0 auto 32px' }}>
             Jump into the action now and compete with players worldwide
           </p>
-          <button className="btn-gold" style={{ fontSize: '1.1rem', padding: '16px 48px' }}>
-            🎮 Launch Game
+          <button className="btn-gold" style={{ fontSize: '1.1rem', padding: '16px 48px' }} type="button" onClick={goPlayOnDashboard}>
+            Go to dashboard
           </button>
         </div>
       </section>

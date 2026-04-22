@@ -1,32 +1,50 @@
 /* ============================================
-   GAMEPALAZIO APP STYLES
+   GAME PALAZIO — global design system
    ============================================ */
 
 :root {
-  --blue-deep: #1a3a8f;
-  --blue-sky: #5091cd;
-  --bg-dark: #050d1f;
-  --gold: #ffd700;
-  --gold-hot: #ffa500;
-  --orange: #ff6b35;
-  --pink: #e8356e;
-  --purple: #7b2d8b;
-  --white: #ffffff;
+  --bg-base: #030712;
+  --bg-raised: #0a1628;
+  --bg-card: rgba(15, 23, 42, 0.55);
+  --blue-deep: #1e3a8a;
+  --blue-sky: #38bdf8;
+  --gold: #fbbf24;
+  --gold-soft: rgba(251, 191, 36, 0.14);
+  --orange: #fb923c;
+  --pink: #f472b6;
+  --purple: #a78bfa;
+  --white: #f8fafc;
   --muted: #94a3b8;
-  --grad2: linear-gradient(135deg, #ffd700, #ff6b35);
-  --grad-logo: linear-gradient(135deg, #c8e63c, #ff6b35, #e8356e, #7b2d8b);
-  --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.12);
+  --grad-hero: linear-gradient(135deg, #1e3a8a 0%, #312e81 40%, #4c1d95 100%);
+  --grad-cta: linear-gradient(135deg, #fbbf24 0%, #fb923c 55%, #ec4899 100%);
+  --grad-logo: linear-gradient(135deg, #fde047, #fb923c, #f472b6, #a78bfa);
+  --grad2: linear-gradient(135deg, #fbbf24, #fb923c);
+  --shadow-lg: 0 25px 60px rgba(0, 0, 0, 0.45);
+  --radius-lg: 20px;
+  --radius-xl: 24px;
 }
 
 .App {
-  background: var(--bg-dark);
+  background: var(--bg-base);
+  background-image: radial-gradient(ellipse 120% 80% at 50% -30%, rgba(30, 58, 138, 0.35), transparent 50%),
+    radial-gradient(ellipse 60% 40% at 100% 50%, rgba(88, 28, 135, 0.12), transparent);
   color: var(--white);
   min-height: 100vh;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', system-ui, sans-serif;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Logo Section */
+/* Legacy helpers still used in older markup */
+.text-gold {
+  background: var(--grad-logo);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 .logo-section {
   display: flex;
   align-items: center;
@@ -49,13 +67,6 @@
   letter-spacing: -0.5px;
 }
 
-.text-gold {
-  background: var(--grad-logo);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
 .tagline {
   font-size: 1.1rem;
   color: rgba(255, 255, 255, 0.75);
@@ -65,257 +76,54 @@
   text-transform: uppercase;
 }
 
-/* App Header */
 .App-header {
   padding: 60px 20px;
   text-align: center;
-  background: linear-gradient(135deg, rgba(26, 58, 143, 0.15), rgba(232, 53, 110, 0.08));
+  background: linear-gradient(135deg, rgba(30, 58, 138, 0.2), rgba(190, 24, 93, 0.08));
   position: relative;
   overflow: hidden;
-}
-
-.App-header::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  right: -10%;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(80, 145, 205, 0.1), transparent);
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-.App-header::after {
-  content: '';
-  position: absolute;
-  bottom: -30%;
-  left: -5%;
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(255, 165, 0, 0.08), transparent);
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-.App-header > * {
-  position: relative;
-  z-index: 2;
-}
-
-/* Navigation Menu */
-.nav-menu {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  margin-bottom: 40px;
-  flex-wrap: wrap;
 }
 
 .nav-menu a,
 .nav-menu Link {
   display: inline-block;
   padding: 10px 20px;
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 215, 0, 0.2);
-  border-radius: 8px;
-  color: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.88);
   text-decoration: none;
   font-weight: 500;
   font-size: 0.9rem;
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
   font-family: 'Rajdhani', sans-serif;
 }
 
-.nav-menu a:hover,
-.nav-menu Link:hover {
-  background: rgba(255, 215, 0, 0.15);
-  border-color: rgba(255, 215, 0, 0.5);
-  color: var(--gold);
-  transform: translateY(-2px);
-}
-
-/* Status, API Info, Features Boxes */
 .status,
 .api-info,
 .features {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
   padding: 28px;
   margin: 24px auto;
-  border-radius: 16px;
+  border-radius: var(--radius-lg);
   max-width: 700px;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
 }
 
-.status h2,
-.api-info h2,
-.features h2 {
-  margin-top: 0;
-  margin-bottom: 16px;
-  font-size: 1.4rem;
-  font-weight: 700;
-  font-family: 'Rajdhani', sans-serif;
-  color: var(--white);
-}
-
-.status p,
-.api-info p {
-  margin: 12px 0;
-  font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.85);
-}
-
-.status a,
-.api-info a {
-  color: var(--gold);
-  text-decoration: none;
-  font-weight: 600;
-  transition: color 0.3s ease;
-}
-
-.status a:hover,
-.api-info a:hover {
-  color: var(--gold-hot);
-  text-decoration: underline;
-}
-
-.api-info ul,
-.features ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  text-align: left;
-}
-
-.api-info li,
-.features li {
-  padding: 12px 16px;
-  margin: 8px 0;
-  background: rgba(255, 215, 0, 0.04);
-  border: 1px solid rgba(255, 215, 0, 0.1);
-  border-radius: 8px;
-  font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.85);
-  transition: all 0.3s ease;
-}
-
-.api-info li:hover,
-.features li:hover {
-  background: rgba(255, 215, 0, 0.1);
-  border-color: rgba(255, 215, 0, 0.3);
-  transform: translateX(4px);
-}
-
-.api-info li a,
-.features li a {
-  text-decoration: none;
-  color: var(--white);
-  font-weight: 600;
-  transition: color 0.3s ease;
-}
-
-.api-info li a:hover,
-.features li a:hover {
-  color: var(--gold);
-}
-
-.features li {
-  margin-bottom: 8px;
-}
-
-/* Animations */
 @media (prefers-reduced-motion: no-preference) {
   .App-header {
-    animation: slideInDown 0.6s ease-out;
-  }
-
-  .logo-section {
-    animation: scaleIn 0.8s ease-out;
+    animation: slideInDown 0.55s ease-out;
   }
 }
 
 @keyframes slideInDown {
   from {
     opacity: 0;
-    transform: translateY(-30px);
+    transform: translateY(-20px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-@keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .App-header {
-    padding: 40px 20px;
-  }
-
-  .logo-section h1 {
-    font-size: 1.8rem;
-  }
-
-  .tagline {
-    font-size: 0.9rem;
-  }
-
-  .nav-menu {
-    gap: 8px;
-  }
-
-  .nav-menu a,
-  .nav-menu Link {
-    padding: 8px 14px;
-    font-size: 0.8rem;
-  }
-
-  .status,
-  .api-info,
-  .features {
-    padding: 20px;
-  }
-
-  .status h2,
-  .api-info h2,
-  .features h2 {
-    font-size: 1.2rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .logo-section {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .logo-svg {
-    width: 40px;
-    height: 40px;
-  }
-
-  .logo-section h1 {
-    font-size: 1.4rem;
-  }
-
-  .nav-menu {
-    flex-direction: column;
-  }
-
-  .nav-menu a,
-  .nav-menu Link {
-    width: 100%;
-    text-align: center;
   }
 }

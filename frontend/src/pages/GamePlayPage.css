@@ -598,3 +598,44 @@
     font-size: 0.95rem;
   }
 }
+
+/* ===== 2026 polish overrides ===== */
+.gameplay-page .hero-gameplay,
+.gameplay-page .controls-section,
+.gameplay-page .objectives-section,
+.gameplay-page .leaderboard-section,
+.gameplay-page .cta-section {
+  background: transparent;
+}
+
+.gameplay-page .container {
+  max-width: 1320px;
+}
+
+.gameplay-page .section-title {
+  letter-spacing: -0.02em;
+}
+
+.gameplay-page .tab-panel,
+.gameplay-page .pro-tips,
+.gameplay-page .obj-item,
+.gameplay-page .lb-row,
+.gameplay-page .touch-card,
+.gameplay-page .ctrl-card {
+  background: rgba(15, 23, 42, 0.5);
+  border-color: rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  backdrop-filter: blur(12px);
+}
+
+.gameplay-page .obj-item:hover,
+.gameplay-page .lb-row:hover,
+.gameplay-page .ctrl-card:hover,
+.gameplay-page .touch-card:hover {
+  border-color: rgba(251, 191, 36, 0.25);
+}
+
+.gameplay-page .btn-gold {
+  background: linear-gradient(135deg, #fbbf24, #fb923c);
+  color: #111827;
+}

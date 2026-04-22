@@ -1,27 +1,112 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './DashboardPage.css';
+import {
+  AFG_CRICKET_GAME_URL,
+  AFG_CRICKET_ITCH_URL,
+  AFG_CRICKET_IFRAME_ALLOW,
+  LIVE_STREAM_HLS_URL,
+  getWindowHls,
+} from '../config/afgCricket';
+import type { HlsLite } from '../config/afgCricket';
 
 const DashboardPage: React.FC = () => {
+  const navigate = useNavigate();
   const [activeGameTab, setActiveGameTab] = React.useState('keyboard');
   const [selectedStream, setSelectedStream] = React.useState(0);
+  const [gameIframeLoading, setGameIframeLoading] = React.useState(true);
   const gameIframeRef = useRef<HTMLIFrameElement>(null);
   const streamVideoRef = useRef<HTMLVideoElement>(null);
   const gameContainerRef = useRef<HTMLDivElement>(null);
   const streamContainerRef = useRef<HTMLDivElement>(null);
+  const streamHlsRef = useRef<HlsLite | null>(null);
 
   useEffect(() => {
     document.title = 'Game Palazio | AFG Cricket — Play Free';
   }, []);
 
-  // Game URLs
-  const GAME_URL = 'https://html-classic.itch.zone/html/16844939/Build%204/index.html?v=1773811903';
-  const STREAM_URL = 'https://d1clrt8nxj7onv.cloudfront.net/live/myStream/playlist.m3u8';
-
-  // Reload game
-  const handleReloadGame = () => {
-    if (gameIframeRef.current) {
-      gameIframeRef.current.src = GAME_URL;
+  const teardownStream = useCallback(() => {
+    if (streamHlsRef.current) {
+      try {
+        streamHlsRef.current.destroy();
+      } catch {
+        /* ignore */
+      }
+      streamHlsRef.current = null;
     }
+    const video = streamVideoRef.current;
+    if (video) {
+      try {
+        video.pause();
+      } catch {
+        /* ignore */
+      }
+      video.removeAttribute('src');
+      try {
+        video.load();
+      } catch {
+        /* ignore */
+      }
+    }
+  }, []);
+
+  const initLiveStream = useCallback(() => {
+    teardownStream();
+    const video = streamVideoRef.current;
+    if (!video) return;
+
+    const u = LIVE_STREAM_HLS_URL;
+    const HlsCtor = getWindowHls();
+
+    if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      video.src = u;
+    } else if (HlsCtor?.isSupported?.()) {
+      const hls = new HlsCtor({ lowLatencyMode: true, backBufferLength: 30 });
+      hls.loadSource(u);
+      hls.attachMedia(video);
+      streamHlsRef.current = hls;
+    } else {
+      video.src = u;
+    }
+
+    const p = video.play();
+    if (p !== undefined && typeof p.catch === 'function') {
+      p.catch(() => {
+        /* autoplay may require user gesture */
+      });
+    }
+  }, [teardownStream]);
+
+  // Start HLS after the game iframe — reduces GPU / autoplay contention with Unity WebGL on the same page.
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      initLiveStream();
+    }, 1600);
+    return () => {
+      clearTimeout(timer);
+      teardownStream();
+    };
+  }, [initLiveStream, teardownStream]);
+
+  useEffect(() => {
+    const t = window.setTimeout(() => setGameIframeLoading(false), 8000);
+    return () => clearTimeout(t);
+  }, []);
+
+  const handleGameIframeLoad = () => {
+    window.setTimeout(() => setGameIframeLoading(false), 800);
+  };
+
+  // Reload game (same pattern as working static index.html: blank src, then restore)
+  const handleReloadGame = () => {
+    setGameIframeLoading(true);
+    const el = gameIframeRef.current;
+    if (!el) return;
+    const src = AFG_CRICKET_GAME_URL;
+    el.src = '';
+    window.setTimeout(() => {
+      el.src = src;
+    }, 100);
   };
 
   // Toggle game fullscreen
@@ -39,11 +124,12 @@ const DashboardPage: React.FC = () => {
     }
   };
 
-  // Reload stream
   const handleReloadStream = () => {
-    if (streamVideoRef.current) {
-      streamVideoRef.current.load();
-    }
+    initLiveStream();
+  };
+
+  const scrollToGame = () => {
+    document.getElementById('dashboard-game-embed')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
 
   // Toggle stream fullscreen
@@ -93,7 +179,7 @@ const DashboardPage: React.FC = () => {
       viewers: '45.2K',
       image: '🏏',
       quality: '1080p',
-      url: STREAM_URL,
+      url: LIVE_STREAM_HLS_URL,
     },
     {
       id: 2,
@@ -102,7 +188,7 @@ const DashboardPage: React.FC = () => {
       viewers: '32.5K',
       image: '🎮',
       quality: 'HD',
-      url: STREAM_URL,
+      url: LIVE_STREAM_HLS_URL,
     },
     {
       id: 3,
@@ -111,7 +197,7 @@ const DashboardPage: React.FC = () => {
       viewers: '18.9K',
       image: '🎵',
       quality: '1080p',
-      url: STREAM_URL,
+      url: LIVE_STREAM_HLS_URL,
     },
   ];
 
@@ -145,21 +231,59 @@ const DashboardPage: React.FC = () => {
             <div className="column-header">
               <h2 className="column-title">🏏 AFG Cricket Game</h2>
               <div className="header-controls">
-                <button className="icon-btn" onClick={handleReloadGame} title="Reload Game">↺</button>
-                <button className="icon-btn" onClick={handleGameFullscreen} title="Fullscreen">⛶</button>
+                <button type="button" className="icon-btn" onClick={handleReloadGame} title="Reload Game">
+                  ↺
+                </button>
+                <button type="button" className="icon-btn" onClick={handleGameFullscreen} title="Fullscreen">
+                  ⛶
+                </button>
+                <a
+                  className="icon-btn"
+                  href={AFG_CRICKET_ITCH_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="Open on itch.io"
+                >
+                  ↗
+                </a>
               </div>
             </div>
 
-            {/* Game Embed Container */}
-            <div className="game-embed-container" ref={gameContainerRef}>
+            <p className="game-embed-hint">
+              Click inside the game once so keyboard and touch go to WebGL (embedded games need focus).
+            </p>
+
+            {/* Game embed: loader is removed from the DOM when done so it cannot block clicks */}
+            <div className="game-embed-container" id="dashboard-game-embed" ref={gameContainerRef}>
+              {gameIframeLoading && (
+                <div className="game-embed-loader" aria-live="polite" aria-busy>
+                  <div className="game-embed-spinner" />
+                  <p className="game-embed-loader-text">Loading AFG Cricket…</p>
+                </div>
+              )}
               <iframe
                 ref={gameIframeRef}
-                src={GAME_URL}
+                src={AFG_CRICKET_GAME_URL}
                 title="AFG Cricket Game"
                 className="game-embed"
                 allowFullScreen
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allow={AFG_CRICKET_IFRAME_ALLOW}
+                loading="eager"
+                referrerPolicy="strict-origin-when-cross-origin"
+                onLoad={handleGameIframeLoad}
               />
+            </div>
+
+            <div className="game-fallback-strip">
+              <p>Game not loading? Try opening on itch.io — some browsers block embedded WebGL until you interact.</p>
+              <a
+                href={AFG_CRICKET_ITCH_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="game-fallback-link"
+              >
+                Open full game on itch.io
+              </a>
             </div>
 
             {/* Game Controls Info */}
@@ -232,8 +356,21 @@ const DashboardPage: React.FC = () => {
             <div className="column-header">
               <h2 className="column-title">📺 Live Stream</h2>
               <div className="header-controls">
-                <button className="icon-btn" onClick={handleReloadStream} title="Reload Stream">↺</button>
-                <button className="icon-btn" onClick={handleStreamFullscreen} title="Fullscreen">⛶</button>
+                <button type="button" className="icon-btn" onClick={handleReloadStream} title="Reload Stream">
+                  ↺
+                </button>
+                <button type="button" className="icon-btn" onClick={handleStreamFullscreen} title="Fullscreen">
+                  ⛶
+                </button>
+                <a
+                  className="icon-btn"
+                  href={LIVE_STREAM_HLS_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="Open stream URL"
+                >
+                  ↗
+                </a>
               </div>
             </div>
 
@@ -243,12 +380,14 @@ const DashboardPage: React.FC = () => {
                 ref={streamVideoRef}
                 className="stream-embed"
                 controls
+                playsInline
+                muted
+                preload="none"
                 poster="https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=600&q=80"
-              >
-                <source src={currentStream.url} type="application/x-mpegURL" />
-                Your browser does not support HTML5 video.
-              </video>
+                title="Live stream"
+              />
             </div>
+            <p className="stream-hint">Tip: unmute after playback starts (browsers often require muted autoplay).</p>
 
             {/* Stream Info */}
             <div className="stream-info-section">
@@ -330,8 +469,12 @@ const DashboardPage: React.FC = () => {
           <h2 className="section-title">Start Your Journey</h2>
           <p className="section-sub">Join millions of gamers and streamers today</p>
           <div className="cta-buttons-dashboard">
-            <button className="btn-gold">🎮 Start Gaming</button>
-            <button className="btn-outline">📺 Watch Streams</button>
+            <button className="btn-gold" type="button" onClick={scrollToGame}>
+              Start gaming
+            </button>
+            <button className="btn-outline" onClick={() => navigate('/streaming')}>
+              Watch streams
+            </button>
           </div>
         </div>
       </section>

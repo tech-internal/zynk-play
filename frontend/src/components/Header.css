@@ -1,49 +1,49 @@
-/* =============================================
-   HEADER / NAVBAR COMPONENT - SHARED
-   ============================================= */
+/* Refined top navigation */
 
 .navbar {
   position: sticky;
   top: 0;
-  z-index: 100;
-  background: rgba(5, 13, 31, 0.95);
-  border-bottom: 1px solid rgba(255, 215, 0, 0.1);
-  backdrop-filter: blur(10px);
-  padding: 12px 20px;
+  z-index: 200;
+  padding: 14px 22px;
+  background: rgba(3, 7, 18, 0.82);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px) saturate(1.2);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset;
 }
 
 .navbar-content {
-  max-width: 1400px;
+  max-width: 1320px;
   margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 30px;
+  gap: 24px;
 }
 
 .navbar-logo {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   text-decoration: none;
-  color: #ffffff;
+  color: #f8fafc;
   font-weight: 700;
-  font-family: 'Rajdhani', 'Arial', sans-serif;
-  font-size: 1.1rem;
-  transition: opacity 0.3s ease;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.12rem;
+  letter-spacing: -0.02em;
+  transition: opacity 0.2s ease;
 }
 
 .navbar-logo:hover {
-  opacity: 0.85;
+  opacity: 0.88;
 }
 
 .navbar-logo-svg {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
 }
 
 .text-gold {
-  background: linear-gradient(135deg, #c8e63c, #ff6b35, #e8356e, #7b2d8b);
+  background: linear-gradient(135deg, #fde047, #fb923c, #f472b6, #a78bfa);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -51,30 +51,83 @@
 
 .navbar-links {
   display: flex;
-  gap: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
   align-items: center;
+  justify-content: flex-end;
 }
 
-.navbar-links a {
-  padding: 8px 16px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 215, 0, 0.15);
-  border-radius: 6px;
-  color: rgba(255, 255, 255, 0.85);
+.navbar-links > a:not(.navbar-login) {
+  padding: 9px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  color: rgba(226, 232, 240, 0.92);
   text-decoration: none;
-  font-size: 0.85rem;
-  font-weight: 500;
-  font-family: 'Rajdhani', 'Arial', sans-serif;
-  transition: all 0.3s ease;
+  font-size: 0.82rem;
+  font-weight: 600;
+  font-family: 'Rajdhani', sans-serif;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
-.navbar-links a:hover {
-  background: rgba(255, 215, 0, 0.15);
-  border-color: rgba(255, 215, 0, 0.4);
-  color: #ffd700;
+.navbar-links > a:not(.navbar-login):hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: #fff;
+}
+
+.navbar-login {
+  padding: 10px 20px !important;
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.18), rgba(251, 113, 133, 0.12)) !important;
+  border: 1px solid rgba(251, 191, 36, 0.35) !important;
+  border-radius: 999px !important;
+  color: #fde047 !important;
+  font-weight: 700 !important;
+  font-size: 0.85rem !important;
+}
+
+.navbar-login:hover {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.28), rgba(251, 113, 133, 0.18)) !important;
+  border-color: rgba(253, 224, 71, 0.5) !important;
+  color: #fef08a !important;
+}
+
+.navbar-user {
+  padding: 8px 14px;
+  font-size: 0.8rem;
+  color: rgba(203, 213, 225, 0.95);
+  font-weight: 600;
+  font-family: 'Rajdhani', sans-serif;
+  max-width: 130px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.navbar-logout {
+  padding: 9px 16px;
+  font-size: 0.82rem;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  color: rgba(248, 250, 252, 0.9);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.navbar-logout:hover {
+  background: rgba(244, 63, 94, 0.12);
+  border-color: rgba(244, 63, 94, 0.35);
+  color: #fecdd3;
 }
 
 @media (max-width: 768px) {
+  .navbar {
+    padding: 12px 14px;
+  }
+
   .navbar-content {
     gap: 12px;
   }
@@ -83,13 +136,13 @@
     gap: 6px;
   }
 
-  .navbar-links a {
-    padding: 6px 10px;
-    font-size: 0.7rem;
+  .navbar-links > a:not(.navbar-login) {
+    padding: 7px 10px;
+    font-size: 0.72rem;
   }
 
   .navbar-logo {
-    font-size: 0.95rem;
+    font-size: 0.98rem;
   }
 
   .navbar-logo-svg {

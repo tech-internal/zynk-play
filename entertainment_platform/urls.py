@@ -18,6 +18,9 @@ urlpatterns = [
     path('api/v1/auth/send-otp', views.send_otp, name='send_otp'),
     path('api/v1/auth/verify-otp', views.verify_otp, name='verify_otp'),
     path('api/v1/auth/refresh', views.refresh_token, name='refresh_token'),
+
+    path('api/v1/mock/auth/send-otp', views.mock_send_otp, name='mock_send_otp'),
+    path('api/v1/mock/auth/verify-otp', views.mock_verify_otp, name='mock_verify_otp'),
     
     # =====================================================================
     # USER ENDPOINTS

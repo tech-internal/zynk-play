@@ -601,3 +601,52 @@
     justify-content: center;
   }
 }
+
+/* ===== 2026 polish overrides ===== */
+.streaming-page .hero-streaming,
+.streaming-page .featured-stream,
+.streaming-page .categories-section,
+.streaming-page .recommendations-section,
+.streaming-page .features-section,
+.streaming-page .cta-streaming {
+  background: transparent;
+}
+
+.streaming-page .container {
+  max-width: 1320px;
+}
+
+.streaming-page .section-title {
+  letter-spacing: -0.02em;
+}
+
+.streaming-page .featured-player,
+.streaming-page .carousel-card,
+.streaming-page .category-card,
+.streaming-page .reco-card,
+.streaming-page .feature-card {
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.28);
+}
+
+.streaming-page .featured-player {
+  padding: 22px;
+  gap: 28px;
+}
+
+.streaming-page .player-mock {
+  border-color: rgba(251, 191, 36, 0.28);
+}
+
+.streaming-page .btn-gold {
+  background: linear-gradient(135deg, #fbbf24, #fb923c);
+  color: #111827;
+  border: none;
+}
+
+.streaming-page .btn-outline {
+  border-color: rgba(255, 255, 255, 0.16);
+}

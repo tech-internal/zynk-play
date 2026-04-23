@@ -15,6 +15,9 @@ const DashboardPage: React.FC = () => {
   const [activeGameTab, setActiveGameTab] = React.useState('keyboard');
   const [selectedStream, setSelectedStream] = React.useState(0);
   const [gameIframeLoading, setGameIframeLoading] = React.useState(true);
+  const [gameIframeLoaded, setGameIframeLoaded] = React.useState(false);
+  const [showGameFallback, setShowGameFallback] = React.useState(false);
+  const [activeControlTip, setActiveControlTip] = React.useState('Pick a control to see pro guidance.');
   const gameIframeRef = useRef<HTMLIFrameElement>(null);
   const streamVideoRef = useRef<HTMLVideoElement>(null);
   const gameContainerRef = useRef<HTMLDivElement>(null);
@@ -22,7 +25,7 @@ const DashboardPage: React.FC = () => {
   const streamHlsRef = useRef<HlsLite | null>(null);
 
   useEffect(() => {
-    document.title = 'Game Palazio | AFG Cricket — Play Free';
+    document.title = 'Game Palazio | MI India Cricket — Play Free';
   }, []);
 
   const teardownStream = useCallback(() => {
@@ -89,17 +92,26 @@ const DashboardPage: React.FC = () => {
   }, [initLiveStream, teardownStream]);
 
   useEffect(() => {
-    const t = window.setTimeout(() => setGameIframeLoading(false), 8000);
+    const t = window.setTimeout(() => {
+      if (!gameIframeLoaded) {
+        setGameIframeLoading(false);
+        setShowGameFallback(true);
+      }
+    }, 10000);
     return () => clearTimeout(t);
-  }, []);
+  }, [gameIframeLoaded]);
 
   const handleGameIframeLoad = () => {
+    setGameIframeLoaded(true);
+    setShowGameFallback(false);
     window.setTimeout(() => setGameIframeLoading(false), 800);
   };
 
   // Reload game (same pattern as working static index.html: blank src, then restore)
   const handleReloadGame = () => {
     setGameIframeLoading(true);
+    setGameIframeLoaded(false);
+    setShowGameFallback(false);
     const el = gameIframeRef.current;
     if (!el) return;
     const src = AFG_CRICKET_GAME_URL;
@@ -164,6 +176,22 @@ const DashboardPage: React.FC = () => {
     { gesture: 'Tap', arrow: '●', action: 'Quick Single' },
   ];
 
+  const keyboardTutorial = [
+    'Click inside the game frame once to lock focus for keyboard control.',
+    'Use Arrow keys or WASD to position your batsman before each ball.',
+    'Press SPACE for normal shots; use timing to target gaps in the field.',
+    'Use SHIFT for power hits when the ball is in your preferred zone.',
+    'If controls stop responding, click game frame again and continue.',
+  ];
+
+  const touchTutorial = [
+    'Tap the game area first so touch gestures are fully active.',
+    'Swipe right for power drive and left for pull-shot direction control.',
+    'Swipe up for lofted strokes and swipe down for safer defense.',
+    'Quick tap can trigger fast run/single opportunities.',
+    'Play in landscape mode for better control visibility and reaction time.',
+  ];
+
   const leaderboard = [
     { rank: 1, name: 'Champion Striker', runs: '342 runs', score: '8.5K', avatar: '⭐' },
     { rank: 2, name: 'Power Hitter', runs: '298 runs', score: '7.8K', avatar: '🔥' },
@@ -220,6 +248,35 @@ const DashboardPage: React.FC = () => {
             Gaming & <span className="grad-text">Streaming</span>
           </h1>
           <p className="hero-sub">Play games and watch live streams all in one place</p>
+          <div className="hero-meta-pills">
+            <span>Equal-size game + stream panels</span>
+            <span>Keyboard and touch tutorials</span>
+            <span>Quick fullscreen + reload tools</span>
+          </div>
+        </div>
+      </section>
+
+      <section className="dashboard-top-leaderboard">
+        <div className="container">
+          <div className="top-board-wrap">
+            <div className="top-board-head">
+              <h2>🏆 Live Top Players</h2>
+              <p>Updated rankings from recent MI India Cricket sessions.</p>
+            </div>
+            <div className="top-board-grid">
+              {leaderboard.map((player) => (
+                <article key={player.rank} className={`top-board-card r${player.rank}`}>
+                  <div className="top-board-rank">#{player.rank}</div>
+                  <div className="top-board-avatar">{player.avatar}</div>
+                  <div className="top-board-player">
+                    <h3>{player.name}</h3>
+                    <p>{player.runs}</p>
+                  </div>
+                  <strong className="top-board-score">{player.score}</strong>
+                </article>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
@@ -229,7 +286,7 @@ const DashboardPage: React.FC = () => {
           {/* Left Column - Gameplay with Game Embed */}
           <div className="dashboard-column">
             <div className="column-header">
-              <h2 className="column-title">🏏 AFG Cricket Game</h2>
+              <h2 className="column-title">🏏 MI India Cricket</h2>
               <div className="header-controls">
                 <button type="button" className="icon-btn" onClick={handleReloadGame} title="Reload Game">
                   ↺
@@ -250,7 +307,8 @@ const DashboardPage: React.FC = () => {
             </div>
 
             <p className="game-embed-hint">
-              Click inside the game once so keyboard and touch go to WebGL (embedded games need focus).
+              If the game looks stuck, click inside once, then wait a few seconds. Some browsers require user interaction
+              before embedded WebGL can start.
             </p>
 
             {/* Game embed: loader is removed from the DOM when done so it cannot block clicks */}
@@ -258,13 +316,13 @@ const DashboardPage: React.FC = () => {
               {gameIframeLoading && (
                 <div className="game-embed-loader" aria-live="polite" aria-busy>
                   <div className="game-embed-spinner" />
-                  <p className="game-embed-loader-text">Loading AFG Cricket…</p>
+                  <p className="game-embed-loader-text">Loading MI India Cricket…</p>
                 </div>
               )}
               <iframe
                 ref={gameIframeRef}
                 src={AFG_CRICKET_GAME_URL}
-                title="AFG Cricket Game"
+                title="MI India Cricket Game"
                 className="game-embed"
                 allowFullScreen
                 allow={AFG_CRICKET_IFRAME_ALLOW}
@@ -274,20 +332,34 @@ const DashboardPage: React.FC = () => {
               />
             </div>
 
-            <div className="game-fallback-strip">
-              <p>Game not loading? Try opening on itch.io — some browsers block embedded WebGL until you interact.</p>
-              <a
-                href={AFG_CRICKET_ITCH_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="game-fallback-link"
-              >
-                Open full game on itch.io
-              </a>
-            </div>
+            {showGameFallback && (
+              <div className="game-fallback-strip">
+                <p>
+                  Embedded WebGL may be blocked in this browser session. Try: click inside the game, press reload, or open
+                  on itch.io.
+                </p>
+                <div className="header-controls">
+                  <button type="button" className="icon-btn" onClick={handleReloadGame} title="Reload Game">
+                    ↺
+                  </button>
+                  <a
+                    href={AFG_CRICKET_ITCH_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="game-fallback-link"
+                  >
+                    Open full game on itch.io
+                  </a>
+                </div>
+              </div>
+            )}
 
             {/* Game Controls Info */}
             <div className="controls-section">
+              <div className="controls-header">
+                <h3 className="section-mini-title">🎯 Gameplay controls</h3>
+                <p>Switch keyboard or touch mode and follow each move exactly while playing.</p>
+              </div>
               <div className="controls-tabs">
                 <button
                   className={`tab-btn ${activeGameTab === 'keyboard' ? 'active' : ''}`}
@@ -304,51 +376,71 @@ const DashboardPage: React.FC = () => {
               </div>
 
               <div className="controls-list">
+                <div className="controls-tip-live" aria-live="polite">
+                  <span className="dot" />
+                  <p>{activeControlTip}</p>
+                </div>
                 {activeGameTab === 'keyboard' ? (
                   <div className="controls-grid">
-                    {keyboardControls.map((ctrl, idx) => (
-                      <div key={idx} className="control-item">
+                    {keyboardControls.map((ctrl) => (
+                      <button
+                        key={ctrl.action}
+                        type="button"
+                        className="control-item control-item-button"
+                        onMouseEnter={() => setActiveControlTip(`${ctrl.action}: ${ctrl.desc}`)}
+                        onFocus={() => setActiveControlTip(`${ctrl.action}: ${ctrl.desc}`)}
+                        onClick={() => setActiveControlTip(`${ctrl.action}: ${ctrl.desc}`)}
+                      >
                         <div className="ctrl-key">{ctrl.key}</div>
                         <div className="ctrl-content">
                           <div className="ctrl-action">{ctrl.action}</div>
                           <div className="ctrl-desc">{ctrl.desc}</div>
                         </div>
-                      </div>
+                      </button>
                     ))}
                   </div>
                 ) : (
                   <div className="controls-grid">
-                    {touchControls.map((ctrl, idx) => (
-                      <div key={idx} className="control-item">
+                    {touchControls.map((ctrl) => (
+                      <button
+                        key={ctrl.action}
+                        type="button"
+                        className="control-item control-item-button"
+                        onMouseEnter={() => setActiveControlTip(`${ctrl.gesture}: ${ctrl.action}`)}
+                        onFocus={() => setActiveControlTip(`${ctrl.gesture}: ${ctrl.action}`)}
+                        onClick={() => setActiveControlTip(`${ctrl.gesture}: ${ctrl.action}`)}
+                      >
                         <span className="touch-emoji">{ctrl.arrow}</span>
                         <div className="ctrl-content">
                           <div className="ctrl-action">{ctrl.gesture}</div>
                           <div className="ctrl-desc">→ {ctrl.action}</div>
                         </div>
-                      </div>
+                      </button>
                     ))}
                   </div>
                 )}
               </div>
             </div>
 
-            {/* Leaderboard */}
-            <div className="mini-leaderboard">
-              <h3 className="section-mini-title">⭐ Top Players</h3>
-              <div className="leaderboard-list">
-                {leaderboard.map((player, idx) => (
-                  <div key={idx} className="lb-item">
-                    <div className={`lb-rank r${player.rank}`}>{player.rank}</div>
-                    <div className="lb-avatar">{player.avatar}</div>
-                    <div className="lb-details">
-                      <div className="lb-name">{player.name}</div>
-                      <div className="lb-info">{player.runs}</div>
-                    </div>
-                    <div className="lb-score">{player.score}</div>
-                  </div>
-                ))}
-              </div>
+            <div className="gameplay-tutorials">
+              <article className="tutorial-box">
+                <p className="tutorial-box-kicker">Windows / keyboard guide</p>
+                <ol>
+                  {keyboardTutorial.map((step) => (
+                    <li key={step}>{step}</li>
+                  ))}
+                </ol>
+              </article>
+              <article className="tutorial-box tutorial-box-touch">
+                <p className="tutorial-box-kicker">Mobile / touch guide</p>
+                <ol>
+                  {touchTutorial.map((step) => (
+                    <li key={step}>{step}</li>
+                  ))}
+                </ol>
+              </article>
             </div>
+
           </div>
 
           {/* Right Column - Streaming with Video Embed */}

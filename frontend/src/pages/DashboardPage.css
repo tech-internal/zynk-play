@@ -73,8 +73,107 @@
   line-height: 1.6;
 }
 
+.hero-meta-pills {
+  margin-top: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.hero-meta-pills span {
+  padding: 7px 11px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(226, 232, 240, 0.92);
+}
+
 .dashboard-content {
   padding: 24px 20px 56px;
+}
+
+.dashboard-top-leaderboard {
+  padding: 0 20px 20px;
+}
+
+.top-board-wrap {
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(15, 23, 42, 0.5);
+  padding: 16px;
+  backdrop-filter: blur(10px);
+}
+
+.top-board-head h2 {
+  margin: 0;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.3rem;
+}
+
+.top-board-head p {
+  margin: 4px 0 12px;
+  font-size: 0.8rem;
+  color: rgba(148, 163, 184, 0.95);
+}
+
+.top-board-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.top-board-card {
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 11px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(2, 6, 23, 0.48);
+}
+
+.top-board-card.r1 {
+  border-color: rgba(251, 191, 36, 0.45);
+}
+
+.top-board-rank {
+  font-weight: 700;
+  font-size: 0.82rem;
+  color: rgba(226, 232, 240, 0.95);
+}
+
+.top-board-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #fde047, #fb923c);
+  color: #111827;
+}
+
+.top-board-player h3 {
+  margin: 0;
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.top-board-player p {
+  margin: 2px 0 0;
+  font-size: 0.72rem;
+  color: rgba(148, 163, 184, 0.95);
+}
+
+.top-board-score {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1rem;
+  color: #fde047;
 }
 
 .container {
@@ -287,6 +386,21 @@ a.icon-btn {
   margin-bottom: 16px;
 }
 
+.controls-header {
+  margin-bottom: 10px;
+}
+
+.controls-header .section-mini-title {
+  margin-bottom: 3px;
+}
+
+.controls-header p {
+  margin: 0;
+  font-size: 0.74rem;
+  color: rgba(148, 163, 184, 0.95);
+  line-height: 1.45;
+}
+
 .controls-tabs {
   display: flex;
   gap: 8px;
@@ -323,6 +437,32 @@ a.icon-btn {
   gap: 10px;
 }
 
+.controls-tip-live {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 9px 10px;
+  border-radius: 10px;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.26);
+}
+
+.controls-tip-live .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #34d399;
+  margin-top: 5px;
+  box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.2);
+}
+
+.controls-tip-live p {
+  margin: 0;
+  font-size: 0.74rem;
+  line-height: 1.4;
+  color: rgba(203, 213, 225, 0.95);
+}
+
 .controls-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -340,9 +480,20 @@ a.icon-btn {
   transition: all 0.2s ease;
 }
 
+.control-item-button {
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
 .control-item:hover {
   border-color: rgba(251, 191, 36, 0.24);
   background: rgba(251, 191, 36, 0.07);
+}
+
+.control-item-button:focus-visible {
+  outline: 2px solid rgba(56, 189, 248, 0.6);
+  outline-offset: 2px;
 }
 
 .ctrl-key {
@@ -379,6 +530,47 @@ a.icon-btn {
   font-size: 1.2rem;
   min-width: 30px;
   text-align: center;
+}
+
+.gameplay-tutorials {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.tutorial-box {
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(2, 6, 23, 0.44);
+  padding: 12px;
+}
+
+.tutorial-box-touch {
+  border-color: rgba(96, 165, 250, 0.28);
+}
+
+.tutorial-box-kicker {
+  margin: 0 0 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #7dd3fc;
+}
+
+.tutorial-box ol {
+  margin: 0;
+  padding-left: 17px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tutorial-box li {
+  font-size: 0.74rem;
+  line-height: 1.45;
+  color: rgba(226, 232, 240, 0.9);
 }
 
 .mini-leaderboard,
@@ -694,6 +886,10 @@ a.icon-btn {
   .dashboard-content .container {
     grid-template-columns: 1fr;
   }
+
+  .top-board-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 767px) {
@@ -736,6 +932,10 @@ a.icon-btn {
   }
 
   .controls-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gameplay-tutorials {
     grid-template-columns: 1fr;
   }
 

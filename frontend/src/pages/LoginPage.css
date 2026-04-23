@@ -147,6 +147,40 @@
   backdrop-filter: blur(20px);
 }
 
+.login-stepper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.login-stepper-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  border: 2px solid rgba(148, 163, 184, 0.5);
+  background: rgba(100, 116, 139, 0.4);
+  transition: all 0.2s ease;
+}
+
+.login-stepper-dot.is-active {
+  border-color: rgba(251, 191, 36, 0.9);
+  background: #fde047;
+  box-shadow: 0 0 0 6px rgba(251, 191, 36, 0.15);
+}
+
+.login-stepper-dot.is-complete {
+  border-color: rgba(74, 222, 128, 0.9);
+  background: #4ade80;
+}
+
+.login-stepper-line {
+  flex: 1;
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(74, 222, 128, 0.7), rgba(148, 163, 184, 0.35));
+}
+
 .login-kicker {
   font-size: 0.72rem;
   font-weight: 700;
@@ -234,6 +268,12 @@
   padding-left: 1.1em;
 }
 
+.login-meta-hint {
+  margin: 2px 0 2px;
+  font-size: 0.78rem;
+  color: rgba(148, 163, 184, 0.9);
+}
+
 .login-sent {
   margin: 0 0 6px;
   font-size: 0.88rem;
@@ -262,6 +302,33 @@
   background: linear-gradient(135deg, #fde047, #fb923c);
   border-radius: 8px;
   border: none;
+}
+
+.login-otp-preview {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.login-otp-cell {
+  min-height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  background: rgba(2, 6, 23, 0.4);
+  color: #e2e8f0;
+  font-size: 1rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+}
+
+.login-otp-cell.is-filled {
+  border-color: rgba(251, 191, 36, 0.5);
+  background: rgba(251, 191, 36, 0.1);
+  transform: translateY(-1px);
 }
 
 .login-msg {
@@ -344,6 +411,12 @@
   cursor: not-allowed;
 }
 
+.login-btn-resend {
+  margin-top: 2px;
+  text-align: left;
+  padding: 8px 0 0;
+}
+
 .login-legal {
   margin: 28px 0 0;
   font-size: 0.75rem;
@@ -396,6 +469,20 @@
   .login-panel {
     padding: 28px 22px 28px;
     border-radius: 20px;
+  }
+
+  .login-input-otp {
+    letter-spacing: 0.28em;
+    padding-left: 0.82em;
+  }
+
+  .login-otp-preview {
+    gap: 6px;
+  }
+
+  .login-otp-cell {
+    min-height: 40px;
+    font-size: 0.94rem;
   }
 
   .login-actions {

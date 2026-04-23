@@ -1,9 +1,9 @@
-/** AFG Cricket (itch.io) — same embed targets as the standalone Game Palazio HTML portal */
+/** MI India Cricket (itch.io) */
 
 export const AFG_CRICKET_GAME_URL =
-  'https://html-classic.itch.zone/html/16844939/Build%204/index.html?v=1773811903';
+  'https://html-classic.itch.zone/html/17139371/Build%2011/index.html?v=1776004197';
 
-export const AFG_CRICKET_ITCH_URL = 'https://daredevil101.itch.io/afg-cricket';
+export const AFG_CRICKET_ITCH_URL = 'https://daredevil101.itch.io/mi-india-cricket';
 
 /** Permissions — match working static `index.html` iframe (Unity / WebGL + fullscreen) */
 export const AFG_CRICKET_IFRAME_ALLOW =

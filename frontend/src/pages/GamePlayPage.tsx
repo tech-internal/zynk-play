@@ -6,7 +6,7 @@ const GamePlayPage: React.FC = () => {
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    document.title = 'Game Palazio | AFG Cricket — Play Free';
+    document.title = 'Game Palazio | MI India Cricket — Play Free';
   }, []);
 
   const [activeTab, setActiveTab] = React.useState('keyboard');

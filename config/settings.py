@@ -148,6 +148,14 @@ CORS_ALLOWED_ORIGINS = [
 
 CORS_ALLOW_CREDENTIALS = True
 
+# In local development, frontend ports can vary (3000/3001/5173/etc.).
+# Allow localhost and 127.0.0.1 on any port to avoid false CORS failures.
+if DEBUG:
+    CORS_ALLOWED_ORIGIN_REGEXES = [
+        r'^http://localhost:\d+$',
+        r'^http://127\.0\.0\.1:\d+$',
+    ]
+
 # ============================================================================
 # PASSWORD VALIDATION
 # ============================================================================
@@ -191,6 +199,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # LOGGING
 # ============================================================================
 
+LOG_DIR = BASE_DIR / 'logs'
+LOG_DIR.mkdir(parents=True, exist_ok=True)
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -211,7 +222,7 @@ LOGGING = {
         },
         'file': {
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': BASE_DIR / 'logs' / 'platform.log',
+            'filename': LOG_DIR / 'platform.log',
             'maxBytes': 1024 * 1024 * 10,  # 10 MB
             'backupCount': 10,
             'formatter': 'verbose',

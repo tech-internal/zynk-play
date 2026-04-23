@@ -25,6 +25,15 @@ function ProtectedLayout() {
   return <ShellLayout />;
 }
 
+function PublicLayout() {
+  return (
+    <>
+      <Header />
+      <Outlet />
+    </>
+  );
+}
+
 function LoginRoute() {
   if (isAuthenticated()) {
     return <Navigate to="/dashboard" replace />;
@@ -38,13 +47,15 @@ function App() {
       <Router>
         <Routes>
           <Route path="/login" element={<LoginRoute />} />
-          <Route element={<ProtectedLayout />}>
+          <Route element={<PublicLayout />}>
             <Route path="/" element={<HomePage />} />
+          </Route>
+          <Route element={<ProtectedLayout />}>
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/streaming" element={<StreamingPage />} />
             <Route path="/gameplay" element={<GamePlayPage />} />
           </Route>
-          <Route path="*" element={<Navigate to={isAuthenticated() ? '/dashboard' : '/login'} replace />} />
+          <Route path="*" element={<Navigate to={isAuthenticated() ? '/dashboard' : '/'} replace />} />
         </Routes>
       </Router>
     </div>

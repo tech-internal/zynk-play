@@ -21,6 +21,7 @@ const LoginPage: React.FC = () => {
   const [otp, setOtp] = useState('');
   const [step, setStep] = useState<'phone' | 'otp'>('phone');
   const [loading, setLoading] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
@@ -32,12 +33,14 @@ const LoginPage: React.FC = () => {
   }, [navigate]);
 
   const fullPhoneNumber = `${countryCode}${phone.trim()}`;
+  const phoneDigits = phone.replace(/\D/g, '');
+  const canSubmitPhone = phoneDigits.length >= 7 && !loading;
+  const canSubmitOtp = otp.trim().length === 6 && !loading;
 
   const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setSuccessMsg(null);
-    const phoneDigits = phone.replace(/\D/g, '');
     if (phoneDigits.length < 7) {
       setError('Enter a valid phone number.');
       return;
@@ -47,8 +50,36 @@ const LoginPage: React.FC = () => {
       const res = await mockSendOtp(`${countryCode}${phoneDigits}`);
       setSuccessMsg(res.message);
       setStep('otp');
+      setResendCooldown(30);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not send OTP.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (step !== 'otp' || resendCooldown <= 0) {
+      return;
+    }
+    const timer = window.setTimeout(() => {
+      setResendCooldown((prev) => prev - 1);
+    }, 1000);
+    return () => window.clearTimeout(timer);
+  }, [resendCooldown, step]);
+
+  const handleResendCode = async () => {
+    if (resendCooldown > 0 || loading || phoneDigits.length < 7) {
+      return;
+    }
+    setError(null);
+    setLoading(true);
+    try {
+      const res = await mockSendOtp(`${countryCode}${phoneDigits}`);
+      setSuccessMsg(res.message);
+      setResendCooldown(30);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not resend code.');
     } finally {
       setLoading(false);
     }
@@ -122,6 +153,11 @@ const LoginPage: React.FC = () => {
       <main className="login-main">
         <div className="login-main-bg" aria-hidden="true" />
         <div className="login-panel">
+          <div className="login-stepper" aria-hidden="true">
+            <div className={`login-stepper-dot ${step === 'phone' ? 'is-active' : 'is-complete'}`} />
+            <span className="login-stepper-line" />
+            <div className={`login-stepper-dot ${step === 'otp' ? 'is-active' : ''}`} />
+          </div>
           <div className="login-panel-top">
             <p className="login-kicker">Sign in</p>
             <h1 className="login-heading">{step === 'phone' ? 'Enter your phone' : 'Verify it’s you'}</h1>
@@ -164,8 +200,9 @@ const LoginPage: React.FC = () => {
                 autoFocus
                 disabled={loading}
               />
+              <p className="login-meta-hint">We'll send a secure 6-digit verification code.</p>
               {error && <p className="login-msg login-msg-error">{error}</p>}
-              <button type="submit" className="login-btn-submit" disabled={loading}>
+              <button type="submit" className="login-btn-submit" disabled={!canSubmitPhone}>
                 {loading ? 'Sending code…' : 'Continue'}
               </button>
             </form>
@@ -194,6 +231,13 @@ const LoginPage: React.FC = () => {
                 autoFocus
                 disabled={loading}
               />
+              <div className="login-otp-preview" aria-hidden="true">
+                {[0, 1, 2, 3, 4, 5].map((index) => (
+                  <span key={index} className={`login-otp-cell ${otp[index] ? 'is-filled' : ''}`}>
+                    {otp[index] ?? ''}
+                  </span>
+                ))}
+              </div>
               <p className="login-demo-hint">
                 Try <kbd>123456</kbd>
               </p>
@@ -212,10 +256,18 @@ const LoginPage: React.FC = () => {
                 >
                   ← Different number
                 </button>
-                <button type="submit" className="login-btn-submit login-btn-submit-inline" disabled={loading}>
+                <button type="submit" className="login-btn-submit login-btn-submit-inline" disabled={!canSubmitOtp}>
                   {loading ? 'Signing in…' : 'Sign in'}
                 </button>
               </div>
+              <button
+                type="button"
+                className="login-btn-text login-btn-resend"
+                onClick={handleResendCode}
+                disabled={loading || resendCooldown > 0}
+              >
+                {resendCooldown > 0 ? `Resend code in ${resendCooldown}s` : 'Resend code'}
+              </button>
             </form>
           )}
 

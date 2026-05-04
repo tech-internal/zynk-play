@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { mockSendOtp, mockVerifyOtp } from '../api/mockAuth';
 import { isAuthenticated, saveMockAuthSession } from '../utils/authSession';
+import { useI18n } from '../i18n';
 import './LoginPage.css';
 
 const COUNTRY_OPTIONS = [
@@ -16,6 +17,7 @@ const COUNTRY_OPTIONS = [
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useI18n();
   const [countryCode, setCountryCode] = useState('+93');
   const [phone, setPhone] = useState('');
   const [otp, setOtp] = useState('');
@@ -26,11 +28,11 @@ const LoginPage: React.FC = () => {
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
   useEffect(() => {
-    document.title = 'Sign in — Game Palazio';
+    document.title = t('login.title', 'Sign in — Game Palazio');
     if (isAuthenticated()) {
       navigate('/dashboard', { replace: true });
     }
-  }, [navigate]);
+  }, [navigate, t]);
 
   const fullPhoneNumber = `${countryCode}${phone.trim()}`;
   const phoneDigits = phone.replace(/\D/g, '');
@@ -101,6 +103,9 @@ const LoginPage: React.FC = () => {
         phone_number: res.phone_number,
         loggedIn: true,
         country_code: countryCode,
+        access_token: res.access,
+        refresh_token: res.refresh,
+        user_id: res.user?.id ?? null,
       });
       navigate('/dashboard', { replace: true });
     } catch (err) {
@@ -131,9 +136,12 @@ const LoginPage: React.FC = () => {
               Game<span className="login-logo-gold">Palazio</span>
             </span>
           </Link>
-          <h2 className="login-brand-headline">Play. Watch. One account.</h2>
+          <h2 className="login-brand-headline">{t('login.brand.headline', 'Play. Watch. One account.')}</h2>
           <p className="login-brand-copy">
-            Stream live matches and launch games in the browser — secured with a quick code sent to your phone.
+            {t(
+              'login.brand.copy',
+              'Stream live matches and launch games in the browser — secured with a quick code sent to your phone.',
+            )}
           </p>
           <ul className="login-brand-list">
             <li>
@@ -159,8 +167,10 @@ const LoginPage: React.FC = () => {
             <div className={`login-stepper-dot ${step === 'otp' ? 'is-active' : ''}`} />
           </div>
           <div className="login-panel-top">
-            <p className="login-kicker">Sign in</p>
-            <h1 className="login-heading">{step === 'phone' ? 'Enter your phone' : 'Verify it’s you'}</h1>
+            <p className="login-kicker">{t('login.step.signin', 'Sign in')}</p>
+            <h1 className="login-heading">
+              {step === 'phone' ? t('login.step.enterPhone', 'Enter your phone') : t('login.step.verify', 'Verify it’s you')}
+            </h1>
             <p className="login-lede">
               {step === 'phone'
                 ? 'We’ll text you a one-time code. Standard rates may apply.'
@@ -171,7 +181,7 @@ const LoginPage: React.FC = () => {
           {step === 'phone' && (
             <form onSubmit={handleSendOtp} className="login-form" noValidate>
               <label className="login-label" htmlFor="countryCode">
-                Country / region
+                {t('login.form.country', 'Country / region')}
               </label>
               <select
                 id="countryCode"
@@ -187,7 +197,7 @@ const LoginPage: React.FC = () => {
                 ))}
               </select>
               <label className="login-label" htmlFor="phone">
-                Mobile number
+                {t('login.form.mobile', 'Mobile number')}
               </label>
               <input
                 id="phone"
@@ -203,7 +213,7 @@ const LoginPage: React.FC = () => {
               <p className="login-meta-hint">We'll send a secure 6-digit verification code.</p>
               {error && <p className="login-msg login-msg-error">{error}</p>}
               <button type="submit" className="login-btn-submit" disabled={!canSubmitPhone}>
-                {loading ? 'Sending code…' : 'Continue'}
+                {loading ? t('login.form.sending', 'Sending code…') : t('login.form.continue', 'Continue')}
               </button>
             </form>
           )}
@@ -215,7 +225,7 @@ const LoginPage: React.FC = () => {
               </p>
               {successMsg && <p className="login-msg login-msg-ok">{successMsg}</p>}
               <label className="login-label" htmlFor="otp">
-                6-digit code
+                {t('login.form.code', '6-digit code')}
               </label>
               <input
                 id="otp"
@@ -257,7 +267,7 @@ const LoginPage: React.FC = () => {
                   ← Different number
                 </button>
                 <button type="submit" className="login-btn-submit login-btn-submit-inline" disabled={!canSubmitOtp}>
-                  {loading ? 'Signing in…' : 'Sign in'}
+                  {loading ? t('login.form.signingIn', 'Signing in…') : t('login.form.signin', 'Sign in')}
                 </button>
               </div>
               <button
@@ -266,7 +276,7 @@ const LoginPage: React.FC = () => {
                 onClick={handleResendCode}
                 disabled={loading || resendCooldown > 0}
               >
-                {resendCooldown > 0 ? `Resend code in ${resendCooldown}s` : 'Resend code'}
+                {resendCooldown > 0 ? `${t('login.form.resend', 'Resend code')} ${resendCooldown}s` : t('login.form.resend', 'Resend code')}
               </button>
             </form>
           )}
@@ -275,7 +285,7 @@ const LoginPage: React.FC = () => {
             By continuing you agree to our terms for streaming and gaming access.
           </p>
           <Link to="/" className="login-home-link">
-            ← Back to home
+            ← {t('login.form.backHome', 'Back to home')}
           </Link>
         </div>
       </main>

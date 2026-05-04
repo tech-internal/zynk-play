@@ -31,8 +31,12 @@ urlpatterns = [
     # SUBSCRIPTION ENDPOINTS
     # =====================================================================
     path('api/v1/subscriptions/plans', views.list_plans, name='list_plans'),
+    path('api/v1/subscriptions/plans/manage', views.subscription_plans_manage_collection, name='subscription_plans_manage_collection'),
+    path('api/v1/subscriptions/plans/manage/<uuid:plan_id>', views.subscription_plans_manage_detail, name='subscription_plans_manage_detail'),
     path('api/v1/subscriptions/purchase', views.purchase_subscription, name='purchase_subscription'),
     path('api/v1/subscriptions/status', views.subscription_status, name='subscription_status'),
+    path('api/v1/subscriptions/me', views.subscription_me_list, name='subscription_me_list'),
+    path('api/v1/subscriptions/me/<uuid:subscription_id>', views.subscription_me_detail, name='subscription_me_detail'),
     
     # =====================================================================
     # STREAMING ENDPOINTS
@@ -50,6 +54,7 @@ urlpatterns = [
     # PAYMENT ENDPOINTS
     # =====================================================================
     path('api/v1/payments/webhook', views.payment_webhook, name='payment_webhook'),
+    path('api/v1/payments/demo-confirm', views.payment_demo_confirm, name='payment_demo_confirm'),
     path('api/v1/payments/history', views.payment_history, name='payment_history'),
     
     # =====================================================================

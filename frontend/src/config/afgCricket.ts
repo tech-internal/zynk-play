@@ -1,11 +1,12 @@
-/** MI India Cricket (itch.io) */
+/** MI India Cricket — WebGL build hosted on AWS S3 */
 
 export const AFG_CRICKET_GAME_URL =
-  'https://html-classic.itch.zone/html/17139371/Build%2011/index.html?v=1776004197';
+  'https://unitybucket67.s3.us-east-1.amazonaws.com/index.html';
 
-export const AFG_CRICKET_ITCH_URL = 'https://daredevil101.itch.io/mi-india-cricket';
+/** Same URL in a new tab (embed fallback / external play). */
+export const AFG_CRICKET_STANDALONE_URL = AFG_CRICKET_GAME_URL;
 
-/** Permissions — match working static `index.html` iframe (Unity / WebGL + fullscreen) */
+/** Permissions — match Unity WebGL iframe (fullscreen, gamepad, etc.) */
 export const AFG_CRICKET_IFRAME_ALLOW =
   'autoplay; fullscreen *; gamepad *; microphone; xr-spatial-tracking';
 

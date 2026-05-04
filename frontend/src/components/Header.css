@@ -123,6 +123,21 @@
   color: #fecdd3;
 }
 
+.navbar-lang {
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  color: #e2e8f0;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.navbar-lang option {
+  background: #0f172a;
+  color: #f8fafc;
+}
+
 @media (max-width: 768px) {
   .navbar {
     padding: 12px 14px;
@@ -134,6 +149,11 @@
 
   .navbar-links {
     gap: 6px;
+  }
+
+  .navbar-lang {
+    font-size: 0.72rem;
+    padding: 7px 9px;
   }
 
   .navbar-links > a:not(.navbar-login) {

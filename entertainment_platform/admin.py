@@ -7,9 +7,9 @@ from .models import (
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('phone_number', 'status', 'free_trial_used', 'last_login_at')
-    list_filter = ('status', 'free_trial_used')
-    search_fields = ('phone_number',)
+    list_display = ('phone_number', 'username', 'full_name', 'email', 'role', 'status', 'free_trial_used', 'last_login_at')
+    list_filter = ('status', 'free_trial_used', 'role')
+    search_fields = ('phone_number', 'username', 'email', 'full_name')
 
 @admin.register(OTPRequest)
 class OTPRequestAdmin(admin.ModelAdmin):
@@ -18,13 +18,13 @@ class OTPRequestAdmin(admin.ModelAdmin):
 
 @admin.register(SubscriptionPlan)
 class SubscriptionPlanAdmin(admin.ModelAdmin):
-    list_display = ('name', 'duration_hours', 'price_afn', 'status')
-    list_filter = ('status',)
+    list_display = ('name', 'billing_period', 'entitlement_type', 'duration_hours', 'price_afn', 'status')
+    list_filter = ('status', 'billing_period', 'entitlement_type')
 
 @admin.register(UserSubscription)
 class UserSubscriptionAdmin(admin.ModelAdmin):
-    list_display = ('user', 'plan', 'status', 'start_at', 'end_at')
-    list_filter = ('status', 'plan')
+    list_display = ('user', 'plan', 'entitlement_type', 'billing_period', 'status', 'start_at', 'end_at', 'purchase_phone_number')
+    list_filter = ('status', 'billing_period', 'entitlement_type')
 
 @admin.register(Transaction)
 class TransactionAdmin(admin.ModelAdmin):

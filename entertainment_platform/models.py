@@ -3,7 +3,6 @@
 
 import uuid
 from django.db import models
-from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 from django.core.validators import RegexValidator
 from datetime import timedelta
@@ -24,7 +23,23 @@ class User(models.Model):
         unique=True,
         validators=[RegexValidator(r'^\+?1?\d{9,15}$')]
     )
+    username = models.CharField(
+        max_length=30,
+        unique=True,
+        null=True,
+        blank=True,
+        db_index=True,
+        help_text='Public handle; set once from profile. Must be unique when present.',
+    )
+    full_name = models.CharField(max_length=120, blank=True, default='')
+    email = models.EmailField(blank=True, default='')
+    country = models.CharField(max_length=80, blank=True, default='', help_text='Optional country or region')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='active')
+    role = models.CharField(
+        max_length=20,
+        default='user',
+        help_text='user | staff — staff may manage subscription plans via API',
+    )
     free_trial_used = models.BooleanField(default=False)
     free_trial_used_at = models.DateTimeField(null=True, blank=True)
     last_login_at = models.DateTimeField(null=True, blank=True)
@@ -41,12 +56,36 @@ class User(models.Model):
     def __str__(self):
         return self.phone_number
 
+    @property
+    def is_authenticated(self):
+        return True
+
+    @property
+    def is_anonymous(self):
+        return False
+
+    @property
+    def is_active(self):
+        return self.status == 'active'
+
+    def active_subscriptions(self):
+        return self.user_subscriptions.filter(status='active', end_at__gt=timezone.now())
+
+    def has_game_entitlement(self):
+        for sub in self.active_subscriptions():
+            if sub.entitlement_type in ('game_only', 'game_and_streaming'):
+                return True
+        return False
+
+    def has_streaming_entitlement(self):
+        for sub in self.active_subscriptions():
+            if sub.entitlement_type in ('streaming_only', 'game_and_streaming'):
+                return True
+        return False
+
     def has_active_subscription(self):
-        """Check if user has active subscription"""
-        return self.user_subscriptions.filter(
-            status='active',
-            end_at__gt=timezone.now()
-        ).exists()
+        """Any non-expired active subscription (legacy + UI)."""
+        return self.active_subscriptions().exists()
 
     def can_use_free_trial(self):
         """Check if user is eligible for free trial"""
@@ -107,16 +146,38 @@ class OTPRequest(models.Model):
 
 
 class SubscriptionPlan(models.Model):
-    """Available subscription plans"""
+    """Available subscription plans (duration × entitlement)."""
     STATUS_CHOICES = [
         ('active', 'Active'),
         ('inactive', 'Inactive'),
     ]
-    
+    BILLING_PERIOD_CHOICES = [
+        ('daily', 'Daily pass'),
+        ('weekly', 'Weekly'),
+        ('season', 'Season (~3 months)'),
+    ]
+    ENTITLEMENT_CHOICES = [
+        ('game_only', 'Game only'),
+        ('game_and_streaming', 'Game + streaming'),
+        ('streaming_only', 'Streaming only'),
+    ]
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100)
     description = models.TextField()
-    duration_hours = models.IntegerField()
+    billing_period = models.CharField(
+        max_length=20,
+        choices=BILLING_PERIOD_CHOICES,
+        default='daily',
+    )
+    entitlement_type = models.CharField(
+        max_length=32,
+        choices=ENTITLEMENT_CHOICES,
+        default='game_and_streaming',
+    )
+    duration_hours = models.IntegerField(
+        help_text='Wall-clock access length (e.g. 24 for daily, 2160 for ~90 days)',
+    )
     price_afn = models.DecimalField(max_digits=10, decimal_places=2)
     currency = models.CharField(max_length=3, default='AFN')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='active')
@@ -128,6 +189,7 @@ class SubscriptionPlan(models.Model):
         db_table = 'subscription_plans'
         indexes = [
             models.Index(fields=['status']),
+            models.Index(fields=['billing_period', 'entitlement_type']),
         ]
 
     def __str__(self):
@@ -148,6 +210,17 @@ class UserSubscription(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='active')
     start_at = models.DateTimeField()
     end_at = models.DateTimeField()
+    entitlement_type = models.CharField(max_length=32, default='game_and_streaming')
+    billing_period = models.CharField(max_length=20, default='daily')
+    price_paid_afn = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    plan_name_snapshot = models.CharField(max_length=160, blank=True, default='')
+    purchase_phone_number = models.CharField(
+        max_length=20,
+        blank=True,
+        default='',
+        help_text='Mobile number recorded at purchase (same as account phone unless overridden later)',
+    )
+    metadata = models.JSONField(default=dict, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -157,6 +230,7 @@ class UserSubscription(models.Model):
             models.Index(fields=['user']),
             models.Index(fields=['status']),
             models.Index(fields=['end_at']),
+            models.Index(fields=['entitlement_type']),
         ]
 
     def is_active(self):
@@ -177,6 +251,13 @@ class Transaction(models.Model):
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='transactions')
+    plan = models.ForeignKey(
+        SubscriptionPlan,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='transactions',
+    )
     subscription = models.ForeignKey(UserSubscription, on_delete=models.SET_NULL, null=True, blank=True)
     transaction_ref = models.CharField(max_length=100, unique=True)
     provider_ref = models.CharField(max_length=100, null=True, blank=True)

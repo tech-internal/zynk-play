@@ -5,6 +5,8 @@ import os
 from pathlib import Path
 from datetime import timedelta
 
+from decouple import config
+
 # ============================================================================
 # CORE DJANGO SETTINGS
 # ============================================================================
@@ -30,6 +32,7 @@ INSTALLED_APPS = [
     
     # Local apps
     'entertainment_platform',
+    'psp',
 ]
 
 MIDDLEWARE = [
@@ -66,13 +69,31 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # ============================================================================
 # DATABASE
 # ============================================================================
+# PostgreSQL when DB_ENGINE=postgresql and DB_NAME is set (see .env.example).
+# Otherwise SQLite (db.sqlite3) for zero-config local runs.
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+_db_engine = config('DB_ENGINE', default='').strip()
+_db_name = config('DB_NAME', default='').strip()
+
+if _db_engine == 'django.db.backends.postgresql' and _db_name:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': _db_name,
+            'USER': config('DB_USER', default='postgres'),
+            'PASSWORD': config('DB_PASSWORD', default=''),
+            'HOST': config('DB_HOST', default='localhost'),
+            'PORT': config('DB_PORT', default='5432'),
+            'CONN_MAX_AGE': int(config('DB_CONN_MAX_AGE', default='0')),
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 # ============================================================================
 # CACHING
@@ -91,7 +112,7 @@ CACHES = {
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'entertainment_platform.authentication.PlatformUserJWTAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
@@ -120,8 +141,8 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
-    'ROTATE_REFRESH_TOKENS': True,
-    'BLACKLIST_AFTER_ROTATION': True,
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': False,
     'UPDATE_LAST_LOGIN': True,
     'ALGORITHM': 'HS256',
     'SIGNING_KEY': SECRET_KEY,
@@ -291,6 +312,11 @@ PAYMENT_PROVIDER_URL = os.getenv('PAYMENT_PROVIDER_URL', '')
 PAYMENT_API_KEY = os.getenv('PAYMENT_API_KEY', '')
 PAYMENT_MERCHANT_ID = os.getenv('PAYMENT_MERCHANT_ID', '')
 PAYMENT_WEBHOOK_SECRET = os.getenv('PAYMENT_WEBHOOK_SECRET', '')
+# Shared with mock Palzio PSP (checkout token + webhook HMAC). Falls back to PAYMENT_WEBHOOK_SECRET in code when empty.
+PALZIO_PSP_SHARED_SECRET = os.getenv('PALZIO_PSP_SHARED_SECRET', '')
+PALZIO_CHECKOUT_TTL_SECONDS = int(os.getenv('PALZIO_CHECKOUT_TTL_SECONDS', '3600'))
+# Where the psp app POSTs payment results (full URL). Default is derived from SITE_URL in psp.views.
+PLATFORM_PAYMENT_WEBHOOK_URL = os.getenv('PLATFORM_PAYMENT_WEBHOOK_URL', '')
 
 # SMS Settings
 SMS_SERVICE_URL = os.getenv('SMS_SERVICE_URL', '')

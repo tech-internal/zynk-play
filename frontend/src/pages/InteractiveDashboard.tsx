@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './DashboardPage.css';
+import { AFG_CRICKET_GAME_URL } from '../config/afgCricket';
 
 declare global {
   namespace JSX {
@@ -90,8 +91,7 @@ const DashboardPage: React.FC = () => {
     { icon: '📱', title: 'Mobile Ready', desc: 'Play anywhere' },
   ];
 
-  // Game iframe URL
-  const GAME_URL = 'https://html-classic.itch.zone/html/16844939/Build%204/index.html?v=1773811903';
+  const GAME_URL = AFG_CRICKET_GAME_URL;
 
   // Get current stream
   const currentStream = streams.find(s => s.id === selectedStream);

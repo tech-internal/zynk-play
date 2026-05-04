@@ -1,4 +1,4 @@
-const API_BASE = process.env.REACT_APP_API_URL ?? 'http://127.0.0.1:8000';
+import { API_BASE } from './client';
 
 function formatError(data: Record<string, unknown>): string {
   if (typeof data.detail === 'string') return data.detail;
@@ -20,10 +20,16 @@ export async function mockSendOtp(phone_number: string): Promise<{ message: stri
   return data as { message: string };
 }
 
-export async function mockVerifyOtp(
-  phone_number: string,
-  otp_code: string
-): Promise<{ message: string; success: boolean; phone_number: string }> {
+export type MockVerifySuccess = {
+  message: string;
+  success: boolean;
+  phone_number: string;
+  access: string;
+  refresh: string;
+  user: { id: string; phone_number: string; has_game_entitlement?: boolean; has_streaming_entitlement?: boolean };
+};
+
+export async function mockVerifyOtp(phone_number: string, otp_code: string): Promise<MockVerifySuccess> {
   const res = await fetch(`${API_BASE}/api/v1/mock/auth/verify-otp`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -31,5 +37,5 @@ export async function mockVerifyOtp(
   });
   const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
   if (!res.ok) throw new Error(formatError(data));
-  return data as { message: string; success: boolean; phone_number: string };
+  return data as unknown as MockVerifySuccess;
 }

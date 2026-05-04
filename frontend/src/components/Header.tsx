@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { clearMockAuthSession, getMockAuthSession } from '../utils/authSession';
+import { useI18n } from '../i18n';
 import './Header.css';
 
 const Header: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [phone, setPhone] = useState<string | null>(null);
+  const { language, setLanguage, t } = useI18n();
 
   useEffect(() => {
     const session = getMockAuthSession();
@@ -44,22 +46,33 @@ const Header: React.FC = () => {
           </span>
         </Link>
         <div className="navbar-links">
-          <Link to="/">Home</Link>
-          <Link to="/dashboard">Dashboard</Link>
-          <Link to="/streaming">Streaming</Link>
-          <Link to="/gameplay">Gameplay</Link>
+          <Link to="/">{t('header.home', 'Home')}</Link>
+          <Link to="/dashboard">{t('header.dashboard', 'Dashboard')}</Link>
+          <Link to="/profile">{t('header.profile', 'Profile')}</Link>
+          <Link to="/streaming">{t('header.streaming', 'Streaming')}</Link>
+          <Link to="/gameplay">{t('header.gameplay', 'Gameplay')}</Link>
+          <select
+            className="navbar-lang"
+            value={language}
+            onChange={(e) => setLanguage(e.target.value as 'en' | 'fa' | 'ps')}
+            aria-label="Language selector"
+          >
+            <option value="en">{t('lang.en', 'English')}</option>
+            <option value="fa">{t('lang.fa', 'Dari')}</option>
+            <option value="ps">{t('lang.ps', 'Pashto')}</option>
+          </select>
           {phone ? (
             <>
               <span className="navbar-user" title={phone}>
                 {displayPhone}
               </span>
               <button type="button" className="navbar-logout" onClick={logout}>
-                Log out
+                {t('header.logout', 'Log out')}
               </button>
             </>
           ) : (
             <Link to="/login" className="navbar-login">
-              Log in
+              {t('header.login', 'Log in')}
             </Link>
           )}
         </div>

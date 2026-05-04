@@ -1,9 +1,10 @@
-import React, { useRef, useEffect, useCallback } from 'react';
+import React, { useRef, useEffect, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './DashboardPage.css';
+import { fetchSubscriptionStatus } from '../api/subscriptions';
 import {
   AFG_CRICKET_GAME_URL,
-  AFG_CRICKET_ITCH_URL,
+  AFG_CRICKET_STANDALONE_URL,
   AFG_CRICKET_IFRAME_ALLOW,
   LIVE_STREAM_HLS_URL,
   getWindowHls,
@@ -12,6 +13,8 @@ import type { HlsLite } from '../config/afgCricket';
 
 const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
+  const [gameLocked, setGameLocked] = useState(true);
+  const [subGateMessage, setSubGateMessage] = useState<string | null>(null);
   const [activeGameTab, setActiveGameTab] = React.useState('keyboard');
   const [selectedStream, setSelectedStream] = React.useState(0);
   const [gameIframeLoading, setGameIframeLoading] = React.useState(true);
@@ -26,6 +29,40 @@ const DashboardPage: React.FC = () => {
 
   useEffect(() => {
     document.title = 'Game Palazio | MI India Cricket — Play Free';
+  }, []);
+
+  useEffect(() => {
+    if (gameLocked) {
+      return;
+    }
+    const el = gameIframeRef.current;
+    if (!el) {
+      return;
+    }
+    setGameIframeLoading(true);
+    setGameIframeLoaded(false);
+    setShowGameFallback(false);
+    el.src = AFG_CRICKET_GAME_URL;
+  }, [gameLocked]);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const st = await fetchSubscriptionStatus();
+        if (cancelled) return;
+        setGameLocked(!st.has_game_entitlement);
+        setSubGateMessage(null);
+      } catch {
+        if (!cancelled) {
+          setGameLocked(true);
+          setSubGateMessage('Could not verify subscription. Ensure the API is running and you are signed in.');
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const teardownStream = useCallback(() => {
@@ -296,10 +333,10 @@ const DashboardPage: React.FC = () => {
                 </button>
                 <a
                   className="icon-btn"
-                  href={AFG_CRICKET_ITCH_URL}
+                  href={AFG_CRICKET_STANDALONE_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  title="Open on itch.io"
+                  title="Open game in new tab"
                 >
                   ↗
                 </a>
@@ -321,7 +358,7 @@ const DashboardPage: React.FC = () => {
               )}
               <iframe
                 ref={gameIframeRef}
-                src={AFG_CRICKET_GAME_URL}
+                src={gameLocked ? 'about:blank' : AFG_CRICKET_GAME_URL}
                 title="MI India Cricket Game"
                 className="game-embed"
                 allowFullScreen
@@ -330,25 +367,45 @@ const DashboardPage: React.FC = () => {
                 referrerPolicy="strict-origin-when-cross-origin"
                 onLoad={handleGameIframeLoad}
               />
+              {gameLocked && (
+                <div className="game-subscription-gate" role="dialog" aria-modal="true" aria-labelledby="sub-gate-title">
+                  <div className="game-subscription-gate-card">
+                    <h3 id="sub-gate-title">Subscription required to play</h3>
+                    <p>
+                      Choose a plan that includes <strong>game</strong> or <strong>game + streaming</strong>, then
+                      complete checkout from your profile.
+                    </p>
+                    {subGateMessage && <p className="game-subscription-gate-warn">{subGateMessage}</p>}
+                    <div className="game-subscription-gate-actions">
+                      <button type="button" className="btn-gold" onClick={() => navigate('/profile')}>
+                        View plans &amp; subscribe
+                      </button>
+                      <button type="button" className="btn-outline" onClick={() => navigate('/profile')}>
+                        Open profile
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             {showGameFallback && (
               <div className="game-fallback-strip">
                 <p>
                   Embedded WebGL may be blocked in this browser session. Try: click inside the game, press reload, or open
-                  on itch.io.
+                  the hosted build in a new tab.
                 </p>
                 <div className="header-controls">
                   <button type="button" className="icon-btn" onClick={handleReloadGame} title="Reload Game">
                     ↺
                   </button>
                   <a
-                    href={AFG_CRICKET_ITCH_URL}
+                    href={AFG_CRICKET_STANDALONE_URL}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="game-fallback-link"
                   >
-                    Open full game on itch.io
+                    Open full game (hosted)
                   </a>
                 </div>
               </div>

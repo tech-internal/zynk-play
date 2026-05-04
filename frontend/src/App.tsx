@@ -7,7 +7,10 @@ import LoginPage from './pages/LoginPage';
 import GamePlayPage from './pages/GamePlayPage';
 import StreamingPage from './pages/StreamingPage';
 import DashboardPage from './pages/DashboardPage';
+import ProfilePage from './pages/ProfilePage';
+import PalzioCheckoutPage from './pages/PalzioCheckoutPage';
 import { isAuthenticated } from './utils/authSession';
+import { I18nProvider } from './i18n';
 
 function ShellLayout() {
   return (
@@ -44,20 +47,24 @@ function LoginRoute() {
 function App() {
   return (
     <div className="App">
-      <Router>
-        <Routes>
-          <Route path="/login" element={<LoginRoute />} />
-          <Route element={<PublicLayout />}>
-            <Route path="/" element={<HomePage />} />
-          </Route>
-          <Route element={<ProtectedLayout />}>
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/streaming" element={<StreamingPage />} />
-            <Route path="/gameplay" element={<GamePlayPage />} />
-          </Route>
-          <Route path="*" element={<Navigate to={isAuthenticated() ? '/dashboard' : '/'} replace />} />
-        </Routes>
-      </Router>
+      <I18nProvider>
+        <Router>
+          <Routes>
+            <Route path="/login" element={<LoginRoute />} />
+            <Route element={<PublicLayout />}>
+              <Route path="/" element={<HomePage />} />
+            </Route>
+            <Route element={<ProtectedLayout />}>
+              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/pay/palzio" element={<PalzioCheckoutPage />} />
+              <Route path="/streaming" element={<StreamingPage />} />
+              <Route path="/gameplay" element={<GamePlayPage />} />
+            </Route>
+            <Route path="*" element={<Navigate to={isAuthenticated() ? '/dashboard' : '/'} replace />} />
+          </Routes>
+        </Router>
+      </I18nProvider>
     </div>
   );
 }

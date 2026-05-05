@@ -1,0 +1,6 @@
+DEBUG=False
+SECRET_KEY=supersecretkey123
+ALLOWED_HOSTS=*
+
+# For demo (OK)
+DATABASE_URL=sqlite:///db.sqlite3

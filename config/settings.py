@@ -172,17 +172,15 @@ CORS_ALLOWED_ORIGINS = [
 
 CORS_ALLOW_CREDENTIALS = True
 
-# Match any Railway *.up.railway.app subdomain in production, and allow
-# localhost / 127.0.0.1 on any port during local development.
+# In local development, frontend ports can vary (3000/3001/5173/etc.).
+# Allow localhost and 127.0.0.1 on any port to avoid false CORS failures.
+# In production, also allow any *.up.railway.app subdomain to cover
+# current and future Railway deployments without further config changes.
 CORS_ALLOWED_ORIGIN_REGEXES = [
-    r'^https://.*\.up\.railway\.app$',
+    r'^http://localhost:[0-9]+$',
+    r'^http://127[.]0[.]0[.]1:[0-9]+$',
+    r'^https://[a-zA-Z0-9-]+[.]up[.]railway[.]app$',
 ]
-
-if DEBUG:
-    CORS_ALLOWED_ORIGIN_REGEXES += [
-        r'^http://localhost:\d+$',
-        r'^http://127\.0\.0\.1:\d+$',
-    ]
 
 # ============================================================================
 # PASSWORD VALIDATION

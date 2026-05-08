@@ -316,6 +316,11 @@ SMS_API_KEY = os.getenv('SMS_API_KEY', '')
 SITE_URL = os.getenv('SITE_URL', 'https://yourdomain.com')
 
 # Security Settings
+# Railway terminates TLS at the edge proxy; trust forwarded proto so Django
+# does not redirect HTTPS requests in a loop.
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
+
 SECURE_SSL_REDIRECT = not DEBUG
 SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG

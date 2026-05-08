@@ -165,15 +165,21 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://localhost:8000',
     'http://127.0.0.1:3000',
-    'https://yourdomain.com',
+    # Production Railway services
+    'https://zynk-play-frontend-odgr-production.up.railway.app',
+    'https://zynk-play.up.railway.app',
 ]
 
 CORS_ALLOW_CREDENTIALS = True
 
-# In local development, frontend ports can vary (3000/3001/5173/etc.).
-# Allow localhost and 127.0.0.1 on any port to avoid false CORS failures.
+# Match any Railway *.up.railway.app subdomain in production, and allow
+# localhost / 127.0.0.1 on any port during local development.
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r'^https://.*\.up\.railway\.app$',
+]
+
 if DEBUG:
-    CORS_ALLOWED_ORIGIN_REGEXES = [
+    CORS_ALLOWED_ORIGIN_REGEXES += [
         r'^http://localhost:\d+$',
         r'^http://127\.0\.0\.1:\d+$',
     ]

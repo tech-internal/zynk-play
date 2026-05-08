@@ -165,8 +165,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://localhost:8000',
     'http://127.0.0.1:3000',
-    'https://yourdomain.com',
-    # Production Railway URLs
+    # Production Railway services
     'https://zynk-play-frontend-odgr-production.up.railway.app',
     'https://zynk-play.up.railway.app',
 ]

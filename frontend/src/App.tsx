@@ -39,7 +39,7 @@ function PublicLayout() {
 
 function LoginRoute() {
   if (isAuthenticated()) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/profile?onboarding=1" replace />;
   }
   return <LoginPage />;
 }

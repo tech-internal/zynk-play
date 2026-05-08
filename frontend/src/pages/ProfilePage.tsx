@@ -15,6 +15,7 @@ import {
   type UserSubscriptionRow,
 } from '../api/subscriptions';
 import { fetchUserProfile, updateUserProfile, type UserProfile } from '../api/user';
+import ApiLoaderOverlay from '../components/ApiLoaderOverlay';
 import './ProfilePage.css';
 
 const periodLabels: Record<string, string> = {
@@ -28,6 +29,10 @@ const entitlementLabels: Record<string, string> = {
   game_and_streaming: 'Game + streaming',
   streaming_only: 'Streaming only',
 };
+
+function looksLikeEmail(value: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
 
 type TabId = 'account' | 'subscriptions' | 'transactions';
 
@@ -98,6 +103,22 @@ const ProfilePage: React.FC = () => {
 
   const selectedPlan = plans.find((p) => p.id === selectedPlanId);
   const selectedBlocked = Boolean(selectedPlan?.purchase_block_reason);
+  const onboardingRequested = new URLSearchParams(location.search).get('onboarding') === '1';
+  const needsProfile = Boolean(profile && !profile.profile_complete);
+  const needsSubscription = Boolean(status && !status.has_active_subscription);
+  const isOnboardingFlow = onboardingRequested || needsProfile || needsSubscription;
+  const onboardingStep = needsProfile ? 1 : needsSubscription ? 2 : 3;
+
+  useEffect(() => {
+    if (!isOnboardingFlow || loading) return;
+    if (needsProfile && tab !== 'account') {
+      setTab('account');
+      return;
+    }
+    if (!needsProfile && needsSubscription && tab !== 'subscriptions') {
+      setTab('subscriptions');
+    }
+  }, [isOnboardingFlow, loading, needsProfile, needsSubscription, tab]);
 
   const handlePurchase = async () => {
     if (!selectedPlanId || selectedBlocked) {
@@ -129,17 +150,38 @@ const ProfilePage: React.FC = () => {
   };
 
   const handleSaveAccount = async () => {
+    const trimmedUsername = accountForm.username.trim();
+    const trimmedName = accountForm.full_name.trim();
+    const trimmedEmail = accountForm.email.trim();
+
+    if (isOnboardingFlow) {
+      if (trimmedUsername.length < 3) {
+        setError('Please choose a username with at least 3 characters.');
+        return;
+      }
+      if (trimmedName.length < 2) {
+        setError('Please enter your full name to continue.');
+        return;
+      }
+      if (!looksLikeEmail(trimmedEmail)) {
+        setError('Please enter a valid email address to continue.');
+        return;
+      }
+    }
+
     setAccountBusy(true);
     setError(null);
     try {
-      const u = accountForm.username.trim();
       const updated = await updateUserProfile({
-        username: u.length ? u : null,
-        full_name: accountForm.full_name.trim(),
-        email: accountForm.email.trim(),
+        username: trimmedUsername.length ? trimmedUsername : null,
+        full_name: trimmedName,
+        email: trimmedEmail,
         country: accountForm.country.trim(),
       });
       setProfile(updated);
+      if (isOnboardingFlow && updated.profile_complete) {
+        setTab('subscriptions');
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Could not save profile.');
     } finally {
@@ -149,9 +191,17 @@ const ProfilePage: React.FC = () => {
 
   const tabTitle =
     tab === 'account' ? 'Account' : tab === 'subscriptions' ? 'Subscriptions & billing' : 'Transactions';
+  const overlayLabel = loading
+    ? 'Loading your player profile...'
+    : accountBusy
+      ? 'Saving your profile...'
+      : purchaseBusy
+        ? 'Preparing secure checkout...'
+        : 'Syncing account...';
 
   return (
     <div className="profile-page">
+      <ApiLoaderOverlay active={loading || accountBusy || purchaseBusy} label={overlayLabel} />
       <section className="profile-hero">
         <div className="profile-hero-inner">
           <p className="profile-kicker">Account</p>
@@ -160,6 +210,22 @@ const ProfilePage: React.FC = () => {
             Mobile sign-in: <strong>{session?.phone_number ?? profile?.phone_number ?? '—'}</strong>. Use the tabs
             below to edit your profile, manage plans, or review payments.
           </p>
+          {isOnboardingFlow && (
+            <div className="profile-onboarding-strip" role="status" aria-live="polite">
+              <p className="profile-onboarding-title">
+                {onboardingStep < 3
+                  ? `Step ${onboardingStep} of 2: ${onboardingStep === 1 ? 'Complete profile' : 'Choose plan and pay'}`
+                  : 'Onboarding complete'}
+              </p>
+              <p className="profile-onboarding-copy">
+                {onboardingStep === 1
+                  ? 'Add your profile details first, then continue to subscription.'
+                  : onboardingStep === 2
+                    ? 'Select a plan and finish payment now to unlock streaming and gameplay.'
+                    : 'Your account is ready. You can now use all features.'}
+              </p>
+            </div>
+          )}
           <div className="profile-actions">
             <Link to="/dashboard" className="btn-gold profile-btn">
               Back to dashboard
@@ -202,6 +268,14 @@ const ProfilePage: React.FC = () => {
             <p className="profile-muted">
               Username must be unique. Mobile comes from OTP sign-in and cannot be changed here.
             </p>
+            {isOnboardingFlow && (
+              <div className="profile-onboarding-card">
+                <strong>Complete your profile to continue</strong>
+                <p>
+                  Fill username, full name, and email. Once saved, we will take you straight to plans and payment.
+                </p>
+              </div>
+            )}
             <div className="profile-account-form">
               <div className="profile-field">
                 <label htmlFor="pf-phone">Mobile</label>
@@ -257,6 +331,16 @@ const ProfilePage: React.FC = () => {
               <button type="button" className="btn-gold profile-buy" disabled={accountBusy} onClick={() => void handleSaveAccount()}>
                 {accountBusy ? 'Saving…' : 'Save profile'}
               </button>
+              {isOnboardingFlow && (
+                <button
+                  type="button"
+                  className="profile-secondary-btn"
+                  onClick={() => setTab('subscriptions')}
+                  disabled={!profile.profile_complete}
+                >
+                  Continue to plans
+                </button>
+              )}
               {profile.profile_complete ? (
                 <p className="profile-muted" style={{ margin: 0 }}>
                   Profile looks complete. You can still update any field.
@@ -272,6 +356,14 @@ const ProfilePage: React.FC = () => {
 
         {!loading && tab === 'subscriptions' && status && (
           <>
+            {isOnboardingFlow && (
+              <section className="profile-card profile-card-focus">
+                <h2>Choose a plan and pay now</h2>
+                <p className="profile-muted">
+                  Your account is set up. Pick a plan below and complete Palzio checkout to start watching and playing.
+                </p>
+              </section>
+            )}
             <section className="profile-card">
               <h2>Current access</h2>
               <ul className="profile-entitlements">
@@ -344,6 +436,11 @@ const ProfilePage: React.FC = () => {
               >
                 {purchaseBusy ? 'Starting checkout…' : 'Pay with Palzio (mock)'}
               </button>
+              {status.has_active_subscription && (
+                <p className="profile-muted" style={{ marginBottom: 0, marginTop: 12 }}>
+                  You already have active access. <Link to="/dashboard">Go to dashboard</Link>.
+                </p>
+              )}
             </section>
 
             {history.length > 0 && (

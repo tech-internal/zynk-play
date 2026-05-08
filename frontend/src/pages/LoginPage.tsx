@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { mockSendOtp, mockVerifyOtp } from '../api/mockAuth';
+import { fetchSubscriptionStatus } from '../api/subscriptions';
+import { fetchUserProfile } from '../api/user';
 import { isAuthenticated, saveMockAuthSession } from '../utils/authSession';
 import { useI18n } from '../i18n';
+import ApiLoaderOverlay from '../components/ApiLoaderOverlay';
 import './LoginPage.css';
 
 const COUNTRY_OPTIONS = [
@@ -26,12 +29,36 @@ const LoginPage: React.FC = () => {
   const [resendCooldown, setResendCooldown] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [pageLoading, setPageLoading] = useState(false);
+
+  const resolvePostLoginPath = async (): Promise<string> => {
+    try {
+      const [profile, subStatus] = await Promise.all([fetchUserProfile(), fetchSubscriptionStatus()]);
+      const needsOnboarding = !profile.profile_complete || !subStatus.has_active_subscription;
+      return needsOnboarding ? '/profile?onboarding=1' : '/dashboard';
+    } catch {
+      return '/profile?onboarding=1';
+    }
+  };
 
   useEffect(() => {
     document.title = t('login.title', 'Sign in — Game Palazio');
-    if (isAuthenticated()) {
-      navigate('/dashboard', { replace: true });
+    if (!isAuthenticated()) {
+      return;
     }
+    let cancelled = false;
+    (async () => {
+      setPageLoading(true);
+      const nextPath = await resolvePostLoginPath();
+      if (!cancelled) {
+        navigate(nextPath, { replace: true });
+        setPageLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+      setPageLoading(false);
+    };
   }, [navigate, t]);
 
   const fullPhoneNumber = `${countryCode}${phone.trim()}`;
@@ -97,6 +124,7 @@ const LoginPage: React.FC = () => {
       return;
     }
     setLoading(true);
+    setPageLoading(true);
     try {
       const res = await mockVerifyOtp(trimmedPhone, code);
       saveMockAuthSession({
@@ -107,16 +135,19 @@ const LoginPage: React.FC = () => {
         refresh_token: res.refresh,
         user_id: res.user?.id ?? null,
       });
-      navigate('/dashboard', { replace: true });
+      const nextPath = await resolvePostLoginPath();
+      navigate(nextPath, { replace: true });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Verification failed.');
     } finally {
       setLoading(false);
+      setPageLoading(false);
     }
   };
 
   return (
     <div className="login-layout">
+      <ApiLoaderOverlay active={pageLoading} label="Preparing your cricket lobby..." />
       <aside className="login-brand" aria-hidden="false">
         <div className="login-brand-inner">
           <Link to="/" className="login-brand-logo">

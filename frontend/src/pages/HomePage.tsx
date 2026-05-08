@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n';
 import './HomePage.css';
@@ -11,8 +11,58 @@ const LEADERBOARD = [
   { rank: 5, name: 'FastBowler', points: '84,920' },
 ];
 
+const MATCH_HIGHLIGHTS = [
+  {
+    title: 'IPL Match 35 Highlights',
+    summary: 'Top moments and key turning points from Match 35.',
+    duration: '5:02',
+    href: 'https://www.dropbox.com/scl/fo/mdz5gpl6vqzuktmpzp8l4/AMBT5ObD3c6hO2diUEmwFu8?dl=0&e=2&preview=IPL+-+MATCH+35.mp4&rlkey=dqfidsxim1p1w2uffpbas4tk7&st=sjoih86e',
+    image:
+      'https://images.unsplash.com/photo-1624880357913-a8539238245b?auto=format&fit=crop&w=900&q=80',
+  },
+  {
+    title: 'IPL Match 36 Highlights',
+    summary: 'Quick recap of wickets, boundaries, and final result.',
+    duration: '4:41',
+    href: 'https://www.dropbox.com/scl/fo/mdz5gpl6vqzuktmpzp8l4/AMBT5ObD3c6hO2diUEmwFu8?dl=0&e=2&preview=IPL+-+MATCH+36.mp4&rlkey=dqfidsxim1p1w2uffpbas4tk7&st=sjoih86e',
+    image:
+      'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=900&q=80',
+  },
+  {
+    title: 'IPL Match 37 Highlights',
+    summary: 'Best batting spells and game-changing overs in one clip.',
+    duration: '4:55',
+    href: 'https://www.dropbox.com/scl/fo/mdz5gpl6vqzuktmpzp8l4/AMBT5ObD3c6hO2diUEmwFu8?dl=0&e=2&preview=IPL+-+MATCH+37.mp4&rlkey=dqfidsxim1p1w2uffpbas4tk7&st=sjoih86e',
+    image:
+      'https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&w=900&q=80',
+  },
+  {
+    title: 'IPL Match 38 Highlights',
+    summary: 'Full summary of match momentum shifts and key finishes.',
+    duration: '5:18',
+    href: 'https://www.dropbox.com/scl/fo/mdz5gpl6vqzuktmpzp8l4/AMBT5ObD3c6hO2diUEmwFu8?dl=0&e=2&preview=IPL+-+MATCH+38.mp4&rlkey=dqfidsxim1p1w2uffpbas4tk7&st=sjoih86e',
+    image:
+      'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=900&q=80',
+  },
+  {
+    title: 'IPL Match 39 Highlights',
+    summary: 'Match 39 in minutes: major plays and final verdict.',
+    duration: '5:07',
+    href: 'https://www.dropbox.com/scl/fo/mdz5gpl6vqzuktmpzp8l4/AMBT5ObD3c6hO2diUEmwFu8?dl=0&e=2&preview=IPL+-+MATCH+39.mp4&rlkey=dqfidsxim1p1w2uffpbas4tk7&st=sjoih86e',
+    image:
+      'https://images.unsplash.com/photo-1512719994953-eabf50895df7?auto=format&fit=crop&w=900&q=80',
+  },
+];
+
 const HomePage: React.FC = () => {
   const { t } = useI18n();
+  const [activeHighlightIndex, setActiveHighlightIndex] = useState(0);
+
+  const activeHighlight = MATCH_HIGHLIGHTS[activeHighlightIndex];
+  const activeHighlightEmbedUrl = useMemo(
+    () => activeHighlight.href.replace('dl=0', 'raw=1'),
+    [activeHighlight],
+  );
 
   useEffect(() => {
     document.title = t('home.title', 'Premium Cricket Streaming Landing Page');
@@ -125,6 +175,56 @@ const HomePage: React.FC = () => {
                 <li>Cross-platform access</li>
               </ul>
             </article>
+          </div>
+        </div>
+      </section>
+
+      <section className="make-section make-section-highlights">
+        <div className="make-wrap">
+          <h2>Match Highlights</h2>
+          <p>Highlights keep rotating automatically. Select any match anytime.</p>
+          <div className="make-highlights-player">
+            <div className="make-highlights-player-top">
+              <div>
+                <h3>{activeHighlight.title}</h3>
+                <p>{activeHighlight.summary}</p>
+              </div>
+              <a
+                className="make-btn make-btn-secondary"
+                href={activeHighlight.href}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Open in New Tab
+              </a>
+            </div>
+            <iframe
+              title={activeHighlight.title}
+              src={activeHighlightEmbedUrl}
+              className="make-highlight-iframe"
+              allow="autoplay; fullscreen"
+            />
+            <div className="make-highlight-controls">
+              <button
+                type="button"
+                className="make-highlight-nav"
+                onClick={() =>
+                  setActiveHighlightIndex(
+                    (prev) => (prev - 1 + MATCH_HIGHLIGHTS.length) % MATCH_HIGHLIGHTS.length,
+                  )
+                }
+              >
+                Prev
+              </button>
+              <div className="make-highlight-current">{activeHighlight.title}</div>
+              <button
+                type="button"
+                className="make-highlight-nav"
+                onClick={() => setActiveHighlightIndex((prev) => (prev + 1) % MATCH_HIGHLIGHTS.length)}
+              >
+                Next
+              </button>
+            </div>
           </div>
         </div>
       </section>

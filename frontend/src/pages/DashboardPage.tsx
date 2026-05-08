@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './DashboardPage.css';
 import { fetchSubscriptionStatus } from '../api/subscriptions';
+import ApiLoaderOverlay from '../components/ApiLoaderOverlay';
 import {
   AFG_CRICKET_GAME_URL,
   AFG_CRICKET_STANDALONE_URL,
@@ -14,6 +15,7 @@ import type { HlsLite } from '../config/afgCricket';
 const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
   const [gameLocked, setGameLocked] = useState(true);
+  const [statusLoading, setStatusLoading] = useState(true);
   const [subGateMessage, setSubGateMessage] = useState<string | null>(null);
   const [activeGameTab, setActiveGameTab] = React.useState('keyboard');
   const [selectedStream, setSelectedStream] = React.useState(0);
@@ -48,6 +50,7 @@ const DashboardPage: React.FC = () => {
   useEffect(() => {
     let cancelled = false;
     (async () => {
+      setStatusLoading(true);
       try {
         const st = await fetchSubscriptionStatus();
         if (cancelled) return;
@@ -57,6 +60,10 @@ const DashboardPage: React.FC = () => {
         if (!cancelled) {
           setGameLocked(true);
           setSubGateMessage('Could not verify subscription. Ensure the API is running and you are signed in.');
+        }
+      } finally {
+        if (!cancelled) {
+          setStatusLoading(false);
         }
       }
     })();
@@ -273,22 +280,59 @@ const DashboardPage: React.FC = () => {
     { name: 'Technology', count: 8, icon: '💻' },
   ];
 
+  const heroHighlights = [
+    {
+      title: 'IPL Night Clash',
+      tag: 'LIVE',
+      image:
+        'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=1200&q=80',
+    },
+    {
+      title: 'Gaming Arena',
+      tag: 'HOT',
+      image:
+        'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=80',
+    },
+    {
+      title: 'Cricket Stadium Cam',
+      tag: 'TREND',
+      image:
+        'https://images.unsplash.com/photo-1624880357913-a8539238245b?auto=format&fit=crop&w=1200&q=80',
+    },
+  ];
+
   const currentStream = streams[selectedStream];
 
   return (
     <div className="dashboard-page">
+      <ApiLoaderOverlay active={statusLoading} label="Loading your gameplay access..." />
       {/* Hero Section */}
       <section className="hero-dashboard">
+        <div className="dashboard-bg-orb dashboard-bg-orb-a" aria-hidden="true" />
+        <div className="dashboard-bg-orb dashboard-bg-orb-b" aria-hidden="true" />
+        <div className="dashboard-bg-grid" aria-hidden="true" />
         <div className="hero-content">
           <div className="pill-badge pill-gold">🎮 🎬 ENTERTAINMENT HUB</div>
           <h1 className="hero-title">
-            Gaming & <span className="grad-text">Streaming</span>
+            Cricket <span className="grad-text">Battle Zone</span>
           </h1>
-          <p className="hero-sub">Play games and watch live streams all in one place</p>
+          <p className="hero-sub">Play, stream, and compete in a cricket-first gaming universe</p>
           <div className="hero-meta-pills">
-            <span>Equal-size game + stream panels</span>
-            <span>Keyboard and touch tutorials</span>
-            <span>Quick fullscreen + reload tools</span>
+            <span>Live cricket visuals</span>
+            <span>Arcade gameplay controls</span>
+            <span>High-energy streaming zone</span>
+          </div>
+          <div className="hero-highlights">
+            {heroHighlights.map((item) => (
+              <article key={item.title} className="hero-highlight-card">
+                <img src={item.image} alt={item.title} loading="lazy" />
+                <div className="hero-highlight-overlay" />
+                <div className="hero-highlight-content">
+                  <span>{item.tag}</span>
+                  <strong>{item.title}</strong>
+                </div>
+              </article>
+            ))}
           </div>
         </div>
       </section>

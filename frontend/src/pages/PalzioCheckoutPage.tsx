@@ -7,6 +7,7 @@ import {
   type PalzioMethod,
   type PalzioOutcome,
 } from "../api/palzio";
+import ApiLoaderOverlay from "../components/ApiLoaderOverlay";
 import "./PalzioCheckoutPage.css";
 
 const METHODS: { id: PalzioMethod; label: string; subtitle: string }[] = [
@@ -184,6 +185,7 @@ const PalzioCheckoutPage: React.FC = () => {
 
   return (
     <div className="pcheckout-page">
+      <ApiLoaderOverlay active={busy} label="Completing your payment..." />
       <div className="pcheckout-shell">
         <header className="pcheckout-topbar">
           <div className="pcheckout-brand">

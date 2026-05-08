@@ -1,351 +1,167 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useI18n } from '../i18n';
 import './HomePage.css';
 
-const LEADERBOARD = [
-  { rank: 1, name: 'CricketMaster', points: '98,750' },
-  { rank: 2, name: 'SixerKing', points: '95,320' },
-  { rank: 3, name: 'BoundaryHunter', points: '92,180' },
-  { rank: 4, name: 'SpinWizard', points: '87,450' },
-  { rank: 5, name: 'FastBowler', points: '84,920' },
-];
-
-const MATCH_HIGHLIGHTS = [
-  {
-    title: 'IPL Match 35 Highlights',
-    summary: 'Top moments and key turning points from Match 35.',
-    duration: '5:02',
-    href: 'https://www.dropbox.com/scl/fo/mdz5gpl6vqzuktmpzp8l4/AMBT5ObD3c6hO2diUEmwFu8?dl=0&e=2&preview=IPL+-+MATCH+35.mp4&rlkey=dqfidsxim1p1w2uffpbas4tk7&st=sjoih86e',
-    image:
-      'https://images.unsplash.com/photo-1624880357913-a8539238245b?auto=format&fit=crop&w=900&q=80',
-  },
-  {
-    title: 'IPL Match 36 Highlights',
-    summary: 'Quick recap of wickets, boundaries, and final result.',
-    duration: '4:41',
-    href: 'https://www.dropbox.com/scl/fo/mdz5gpl6vqzuktmpzp8l4/AMBT5ObD3c6hO2diUEmwFu8?dl=0&e=2&preview=IPL+-+MATCH+36.mp4&rlkey=dqfidsxim1p1w2uffpbas4tk7&st=sjoih86e',
-    image:
-      'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=900&q=80',
-  },
-  {
-    title: 'IPL Match 37 Highlights',
-    summary: 'Best batting spells and game-changing overs in one clip.',
-    duration: '4:55',
-    href: 'https://www.dropbox.com/scl/fo/mdz5gpl6vqzuktmpzp8l4/AMBT5ObD3c6hO2diUEmwFu8?dl=0&e=2&preview=IPL+-+MATCH+37.mp4&rlkey=dqfidsxim1p1w2uffpbas4tk7&st=sjoih86e',
-    image:
-      'https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&w=900&q=80',
-  },
-  {
-    title: 'IPL Match 38 Highlights',
-    summary: 'Full summary of match momentum shifts and key finishes.',
-    duration: '5:18',
-    href: 'https://www.dropbox.com/scl/fo/mdz5gpl6vqzuktmpzp8l4/AMBT5ObD3c6hO2diUEmwFu8?dl=0&e=2&preview=IPL+-+MATCH+38.mp4&rlkey=dqfidsxim1p1w2uffpbas4tk7&st=sjoih86e',
-    image:
-      'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=900&q=80',
-  },
-  {
-    title: 'IPL Match 39 Highlights',
-    summary: 'Match 39 in minutes: major plays and final verdict.',
-    duration: '5:07',
-    href: 'https://www.dropbox.com/scl/fo/mdz5gpl6vqzuktmpzp8l4/AMBT5ObD3c6hO2diUEmwFu8?dl=0&e=2&preview=IPL+-+MATCH+39.mp4&rlkey=dqfidsxim1p1w2uffpbas4tk7&st=sjoih86e',
-    image:
-      'https://images.unsplash.com/photo-1512719994953-eabf50895df7?auto=format&fit=crop&w=900&q=80',
-  },
-];
-
 const HomePage: React.FC = () => {
-  const { t } = useI18n();
-  const [activeHighlightIndex, setActiveHighlightIndex] = useState(0);
-
-  const activeHighlight = MATCH_HIGHLIGHTS[activeHighlightIndex];
-  const activeHighlightEmbedUrl = useMemo(
-    () => activeHighlight.href.replace('dl=0', 'raw=1'),
-    [activeHighlight],
-  );
-
   useEffect(() => {
-    document.title = t('home.title', 'Premium Cricket Streaming Landing Page');
-  }, [t]);
+    document.title = 'Game Plazio | The Sovereign Afghan Arena';
+  }, []);
 
   return (
-    <main className="make-landing">
-      <section className="make-hero">
-        <div className="make-hero-bg">
+    <main className="gp-home">
+      <section className="gp-hero stadium-gradient">
+        <div className="gp-hero-image">
           <img
-            src="https://images.unsplash.com/photo-1750716413444-c8a957fcf35c?auto=format&fit=crop&w=1920&q=80"
-            alt="Cricket stadium"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEAXvHj62SPf3ggNg3PbFDix7hXcKwe3PhbRXrMbM6ckZF-_ZWJiDG0S20X2u372FvI7wO9NM7EtUK1-rqsjjHFqbyKKLsrQYMXrIlahoNRuNCZpRleM3x4B96UEZbJUUfdESNLmdZKfjHPNkJ5fyCIC5YrmoOTOz9ANHSm4mCDcwKwpvk1y8Oz2-Jqf9FHDGxy9UYzraFJ8rSzWTxTFZ-ASPTBOzqKjhMIV6vfZjxJseskGlc-OC8DnD3e1gCogejRAnN9w1DcBNc"
+            alt="Cinematic Stadium"
           />
         </div>
-        <div className="make-hero-overlay" />
-        <div className="make-hero-noise" />
-        <div className="make-hero-beam" />
-        <div className="make-hero-glow make-hero-glow-left" />
-        <div className="make-hero-glow make-hero-glow-right" />
-        <div className="make-hero-glow make-hero-glow-mid" />
-
-        <div className="make-wrap">
-          <p className="make-badge">{t('home.hero.badge', 'Live matches streaming now')}</p>
-          <h1 className="make-title">{t('home.hero.heading', 'Watch. Play. Win.')}</h1>
-          <p className="make-subtitle">{t('home.hero.sub')}</p>
-
-          <div className="make-pill-row">
-            <span>HD Live Streaming</span>
-            <span>Real-Time Gaming</span>
-            <span>Win Big Prizes</span>
+        <div className="gp-container">
+          <div className="gp-badge">
+            <span className="gp-dot" />
+            <span>NOW LIVE: AFGHAN PREMIER LEAGUE</span>
           </div>
-
-          <div className="make-screen-grid">
-            <article className="make-screen-card make-screen-card-left">
-              <div className="make-screen-aura make-screen-aura-green" />
-              <div className="make-screen-top">
-                <span className="tag-live">LIVE</span>
-                <span className="tag-meta">WiFi • HD</span>
-              </div>
-              <img
-                src="https://images.unsplash.com/photo-1750716413444-c8a957fcf35c?auto=format&fit=crop&w=1200&q=80"
-                alt="Live cricket stream"
-              />
-              <div className="make-screen-info">
-                <strong>IND 284/4</strong>
-                <span>45.2 overs • Need 72 runs</span>
-                <div className="make-mini-tags">
-                  <em>KOHLI 89*</em>
-                  <em>DHONI 34*</em>
-                </div>
-              </div>
-            </article>
-
-            <article className="make-screen-card make-screen-card-right">
-              <div className="make-screen-aura make-screen-aura-blue" />
-              <div className="make-screen-top">
-                <span className="tag-news">NEWS</span>
-                <span className="tag-meta">18:45</span>
-              </div>
-              <img
-                src="https://images.unsplash.com/photo-1641135698530-8d919344c0e5?auto=format&fit=crop&w=1200&q=80"
-                alt="Sports news stream"
-              />
-              <div className="make-screen-info">
-                <strong>Breaking sports updates</strong>
-                <span>India wins thriller by 3 wickets</span>
-                <div className="make-ticker">
-                  <p>BREAKING: India wins thriller by 3 wickets • Kohli masterclass • Reactions coming up next</p>
-                </div>
-              </div>
-            </article>
+          <h1 className="gp-hero-title">
+            THE ARENA <br /> <span>IS YOURS</span>
+          </h1>
+          <p className="gp-hero-copy">
+            Experience the next generation of sports in Afghanistan. Watch Live, Play Fantasy, Earn Rewards,
+            and Share your moments in the world&apos;s first sovereign Game Plazio experience.
+          </p>
+          <div className="gp-hero-cta">
+            <Link to="/login" className="gp-btn gp-btn-primary">
+              ENTER THE ARENA
+            </Link>
+            <a className="gp-btn gp-btn-secondary" href="#fan-loop">
+              EXPLORE FEATURES
+            </a>
           </div>
-
-          <div className="make-cta-row">
-            <Link to="/login" className="make-btn make-btn-primary">
-              {t('home.hero.ctaContinue', 'Continue')}
-            </Link>
-            <Link to="/login" className="make-btn make-btn-secondary">
-              {t('home.hero.ctaTrial', 'Start Free 5-Min Trial')}
-            </Link>
+        </div>
+        <div className="gp-ticker-wrap">
+          <div className="gp-ticker">
+            <div>
+              <strong>ACTIVE FANS:</strong> <span>42,891</span>
+            </div>
+            <div>
+              <strong>XP EARNED TODAY:</strong> <span>1.2M+</span>
+            </div>
+            <div>
+              <strong>LIVE MATCHES:</strong> <span>04</span>
+            </div>
+            <div>
+              <strong>REWARDS DISTRIBUTED:</strong> <span>840GB</span>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="make-section">
-        <div className="make-wrap">
-          <h2>Try Before You Subscribe</h2>
-          <p>Experience the action with a free trial.</p>
-          <div className="make-card-grid make-card-grid-3">
-            <article className="make-card">
-              <h3>5-Min Free Trial</h3>
-              <p>Watch any live match for 5 minutes absolutely free.</p>
-              <strong className="price">FREE</strong>
+      <section id="fan-loop" className="gp-section gp-fan-loop">
+        <div className="gp-container">
+          <h2>THE FAN LOOP</h2>
+          <div className="gp-cards">
+            <article className="gp-card">
+              <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjurLB-FjDvPprXyC9k7qZSZXG4KdvC5u81wNIDL4qc8uIBk7sk8p1yXW9zsMIhVV5VZwGYuGCgLoyzGL6ZWFTpVwd9y0ozeYulMQ9FN5cBCMxyPg7snoqo9x1u4CKZU41oc5p2NaFoiFJt_ZHJhou4RoQ2ei8Ss3P5uqsXGvjAv6CMpdEwMUOVmKuqIbwM9lmVU8RO8eJsR2d_4dYmnDBfWhlZRakWrFp576cCSM47Id8D_1GPhVO00xx3i2K9nyXxOBsu7crJbD4" alt="Watch Live" />
+              <h3>WATCH</h3>
+              <p>Broadcast-grade live matches with multi-angle feeds, real-time heatmaps, and XP progression as you spectate.</p>
+              <Link to="/streaming">GO LIVE</Link>
             </article>
-            <article className="make-card make-card-popular">
-              <span className="popular-badge">Most Popular</span>
-              <h3>Daily Pass</h3>
-              <p>Unlimited streaming + gaming access for 24 hours.</p>
-              <strong className="price">₹20/day</strong>
-              <Link to="/login" className="make-btn make-btn-primary make-btn-full">
-                {t('home.pricing.continue', 'Continue to Login')}
-              </Link>
+            <article className="gp-card">
+              <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVJr2kMq1UD6LoT7VBzrBei5s6TGXvjAMihWeIx6_27K8IJh3936-uUJlI139L89UC_DHoQzSiyIg9qC09lo4CdQ2Cf_kTbKp7M60QN857vO8WkiuOzsQ3wl7890NnjtD1Oavr-IXBdreMB-w9sEg2tjcpnsWMLU8BV2CqrsyZER7n0GP3ia1oK_J4eGrZaSyDFM8SzT5e0k7P980y5mLmEDdjUIHb0uDhtQjXghu5wd_GPqCx0TeMNQrjXcgY-UCfMfrNRsgpA117" alt="Play Fantasy" />
+              <h3>PLAY</h3>
+              <p>Build your RPG avatar, join Fantasy leagues, and predict match outcomes to prove your sports knowledge.</p>
+              <Link to="/gameplay">DRAFT TEAM</Link>
             </article>
-            <article className="make-card">
-              <h3>What You Get</h3>
-              <ul>
-                <li>HD/4K live streaming</li>
-                <li>Real-time fantasy gaming</li>
-                <li>Leaderboard competition</li>
-                <li>Cross-platform access</li>
-              </ul>
+            <article className="gp-card">
+              <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFLLriKeW_CgqvwMUmwbJ7-xLW889BGrt8dhz33okP2-piYd0u1RcAzyBfSMO74ft1jeyhnhYbsqefjkWye7CVAerTR8U1U-Mff1qNeh0ip9rGG-nzvFIhaz8J8dN61ns1Vhvtnhm9Hvkav0fIcaWgxt2RA2s8T-LVONATcfUZiyOsUkr-B4ILmqdNMZPEWlTzMan98X_-_du-CE50xoNR-lvJZLgyxjZOFEN6Ii2jHjqKMLDSmhlefcIq8wh0UbGdCiLS4we_o8Xq" alt="Earn Rewards" />
+              <h3>EARN</h3>
+              <p>Convert your passion into Poolam tokens. Redeem your activity for real-world data packs, merch, and tickets.</p>
+              <Link to="/earn-share?view=earn">REDEEM XP</Link>
+            </article>
+            <article className="gp-card">
+              <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2xUoSIYUr-E3muExXHJBzY3BT8V_ddwsy3lCPfbkVD9HZ05cGbWzbZ2aC-n0YVfWCgSUl5y9qO1YZasD0WJXPnODikLTKoCDe408ShLKDAuZxMjP9ausiRzqwqLLxI76e0Lf8Uz67Ny5eVp4zUJ-kWIxmEAi5V9r-cw3nHqR6kydcGQySWIDf3q_RbioWj5IPrV5LvOKfmuutLW_lJYKKn4euHuOgizTL0cQlJUC0-o96jNEXyehy2MCnDrpYjARfAwQbcmcO-XQN" alt="Share Moments" />
+              <h3>SHARE</h3>
+              <p>Create AI-powered highlights with cultural calligraphy and climb the leaderboards to win creator multipliers.</p>
+              <Link to="/earn-share?view=share">CREATE CLIP</Link>
             </article>
           </div>
         </div>
       </section>
 
-      <section className="make-section make-section-highlights">
-        <div className="make-wrap">
-          <h2>Match Highlights</h2>
-          <p>Highlights keep rotating automatically. Select any match anytime.</p>
-          <div className="make-highlights-player">
-            <div className="make-highlights-player-top">
+      <section className="gp-section gp-activity">
+        <div className="gp-container gp-activity-grid">
+          <div className="gp-activity-panel">
+            <div className="gp-activity-head">
               <div>
-                <h3>{activeHighlight.title}</h3>
-                <p>{activeHighlight.summary}</p>
+                <h3>ARENA ACTIVITY</h3>
+                <p>Real-time engagement across Afghanistan</p>
               </div>
-              <a
-                className="make-btn make-btn-secondary"
-                href={activeHighlight.href}
-                target="_blank"
-                rel="noreferrer"
-              >
-                Open in New Tab
-              </a>
-            </div>
-            <iframe
-              title={activeHighlight.title}
-              src={activeHighlightEmbedUrl}
-              className="make-highlight-iframe"
-              allow="autoplay; fullscreen"
-            />
-            <div className="make-highlight-controls">
-              <button
-                type="button"
-                className="make-highlight-nav"
-                onClick={() =>
-                  setActiveHighlightIndex(
-                    (prev) => (prev - 1 + MATCH_HIGHLIGHTS.length) % MATCH_HIGHLIGHTS.length,
-                  )
-                }
-              >
-                Prev
-              </button>
-              <div className="make-highlight-current">{activeHighlight.title}</div>
-              <button
-                type="button"
-                className="make-highlight-nav"
-                onClick={() => setActiveHighlightIndex((prev) => (prev + 1) % MATCH_HIGHLIGHTS.length)}
-              >
-                Next
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="make-section make-section-alt">
-        <div className="make-wrap">
-          <h2>Gaming Meets Live Cricket</h2>
-          <p>Play fantasy games that sync with every ball bowled.</p>
-          <div className="make-feature-card">
-            <div className="make-feature-copy">
-              <p className="make-inline-kicker">Live Sync</p>
-              <h3>Real-Time Match Integration</h3>
-              <p>Make predictions, score points, and compete as the match unfolds.</p>
-              <div className="make-feature-list">
-                <article>
-                  <strong>Ball-by-Ball Predictions</strong>
-                  <span>Predict runs, wickets, and outcomes before each delivery.</span>
-                </article>
-                <article>
-                  <strong>Instant Updates</strong>
-                  <span>Scores update in real-time with minimal lag.</span>
-                </article>
+              <div>
+                <strong>12.4M</strong>
+                <span>TOTAL XP DISTRIBUTED</span>
               </div>
             </div>
-            <img
-              src="https://images.unsplash.com/photo-1593341646782-e0b495cff86d?auto=format&fit=crop&w=900&q=80"
-              alt="Cricket action"
-            />
+            <div className="gp-feed-item"><p>Ahmad Shah</p><small>JUST REDEEMED: 5GB DATA PACK</small><em>+500 XP</em></div>
+            <div className="gp-feed-item"><p>Kabul Kings Fan</p><small>PREDICTION STREAK: 5 MATCHES</small><em>+1,200 XP</em></div>
+            <div className="gp-feed-item"><p>Zaranj Warrior</p><small>WATCHING: AFG VS IND LIVE</small><em>+50 XP</em></div>
           </div>
-          <div className="make-device-cards">
-            <article className="make-card make-device-card">
-              <h3>Mobile Experience</h3>
-              <p>Optimized for iOS and Android with responsive gameplay and streaming.</p>
-              <div className="make-chip-row"><span>iOS</span><span>Android</span><span>PWA</span></div>
-            </article>
-            <article className="make-card make-device-card">
-              <h3>Desktop Power</h3>
-              <p>Immersive full-screen viewing with multi-view support and overlays.</p>
-              <div className="make-chip-row"><span>Web</span><span>4K</span><span>Multi-view</span></div>
-            </article>
+          <aside className="gp-partner-panel">
+            <h4>AWCC × ATN</h4>
+            <h3>POWERED BY NATIONAL PRIDE</h3>
+            <p>Exclusive zero-rated data access for AWCC Cloud+ subscribers and high-definition ATN broadcasts.</p>
+            <div className="gp-boost">
+              <strong>GAME PLAZIO BOOST</strong>
+              <p>Connect your AWCC account to get a 2x XP multiplier on all activities.</p>
+              <button type="button">LINK ACCOUNT</button>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section className="gp-section gp-cta">
+        <div className="gp-container">
+          <div className="gp-cta-card">
+            <h2>READY TO JOIN?</h2>
+            <p>The stadium is filling up. Claim your unique fan handle and start your journey today.</p>
+            <Link to="/login" className="gp-btn gp-btn-primary">
+              CREATE FREE ACCOUNT
+            </Link>
+            <small>NO DATA CHARGES FOR AWCC USERS</small>
           </div>
         </div>
       </section>
 
-      <section className="make-section">
-        <div className="make-wrap">
-          <h2>Compete & Win Big</h2>
-          <p>Climb the leaderboard and earn rewards.</p>
-          <div className="make-card-grid make-card-grid-2">
-            <article className="make-card make-leaderboard-card">
-              <h3>Top Players Today</h3>
-              <div className="make-leaderboard">
-                {LEADERBOARD.map((item) => (
-                  <div key={item.rank} className="make-leaderboard-row">
-                    <span>#{item.rank}</span>
-                    <strong>{item.name}</strong>
-                    <em>{item.points} pts</em>
-                  </div>
-                ))}
-              </div>
-            </article>
-            <article className="make-card make-reward-card">
-              <h3>Weekly Prizes</h3>
-              <ul>
-                <li>1st Place: ₹10,000</li>
-                <li>2nd Place: ₹5,000</li>
-                <li>3rd Place: ₹3,000</li>
-              </ul>
-              <h3>Daily Bonuses</h3>
-              <ul>
-                <li>First prediction: +500 pts</li>
-                <li>Perfect over: +1000 pts</li>
-                <li>Win streak bonus: +2000 pts</li>
-              </ul>
-            </article>
+      <footer className="gp-footer">
+        <div className="gp-container">
+          <div className="gp-footer-grid">
+            <div>
+              <h3>GAME PLAZIO</h3>
+              <p>The world&apos;s first digital sports ecosystem designed specifically for the Afghan fan community.</p>
+            </div>
+            <div>
+              <h4>ECOSYSTEM</h4>
+              <a href="#">Watch Live</a>
+              <a href="#">Fantasy Sports</a>
+              <a href="#">XP &amp; Rewards</a>
+              <a href="#">Poolam Tokens</a>
+            </div>
+            <div>
+              <h4>PARTNERS</h4>
+              <a href="#">AWCC</a>
+              <a href="#">ATN Network</a>
+              <a href="#">Cloud+ Apps</a>
+              <a href="#">Kabul Stadium</a>
+            </div>
+            <div>
+              <h4>LEGAL</h4>
+              <a href="#">Privacy Policy</a>
+              <a href="#">Terms of Service</a>
+              <a href="#">Cookie Settings</a>
+              <a href="#">Help Center</a>
+            </div>
           </div>
-        </div>
-      </section>
-
-      <section className="make-section make-section-alt">
-        <div className="make-wrap">
-          <h2>How It Works</h2>
-          <p>Get started in 4 simple steps.</p>
-          <div className="make-steps">
-            <article className="make-card"><h3>1. Start Watching</h3><p>Begin your free trial instantly.</p></article>
-            <article className="make-card"><h3>2. Make Predictions</h3><p>Predict outcomes ball by ball.</p></article>
-            <article className="make-card"><h3>3. Unlock Full Access</h3><p>Subscribe for ₹20/day access.</p></article>
-            <article className="make-card"><h3>4. Win Rewards</h3><p>Rise up the leaderboard and win.</p></article>
+          <div className="gp-footer-bottom">
+            <p>© 2024 GAME PLAZIO TECHNOLOGIES. BUILT WITH PASSION FOR AFGHANISTAN.</p>
           </div>
-        </div>
-      </section>
-
-      <section className="make-section">
-        <div className="make-wrap">
-          <h2>About GamePalazio</h2>
-          <p>The ultimate destination for cricket streaming and real-time gaming.</p>
-          <div className="make-card-grid make-card-grid-4">
-            <article className="make-card make-stat-card">
-              <strong>2M+</strong>
-              <span>Active Users</span>
-            </article>
-            <article className="make-card make-stat-card">
-              <strong>500+</strong>
-              <span>Live Matches</span>
-            </article>
-            <article className="make-card make-stat-card">
-              <strong>₹5Cr+</strong>
-              <span>Prizes Awarded</span>
-            </article>
-            <article className="make-card make-stat-card">
-              <strong>100%</strong>
-              <span>Secure & Fair</span>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <footer className="make-footer">
-        <div className="make-wrap">
-          <h3>GamePalazio</h3>
-          <p>© 2026 GamePalazio. All rights reserved. 18+ only. Play responsibly.</p>
         </div>
       </footer>
     </main>

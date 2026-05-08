@@ -46,25 +46,20 @@ const LoginPage: React.FC = () => {
     if (!isAuthenticated()) {
       return;
     }
-    let cancelled = false;
-    (async () => {
-      setPageLoading(true);
-      const nextPath = await resolvePostLoginPath();
-      if (!cancelled) {
-        navigate(nextPath, { replace: true });
-        setPageLoading(false);
-      }
-    })();
-    return () => {
-      cancelled = true;
-      setPageLoading(false);
-    };
+    // Session already exists: avoid calling onboarding/subscription APIs again.
+    navigate('/dashboard', { replace: true });
   }, [navigate, t]);
 
   const fullPhoneNumber = `${countryCode}${phone.trim()}`;
   const phoneDigits = phone.replace(/\D/g, '');
   const canSubmitPhone = phoneDigits.length >= 7 && !loading;
   const canSubmitOtp = otp.trim().length === 6 && !loading;
+  const resetToPhoneStep = () => {
+    setStep('phone');
+    setOtp('');
+    setError(null);
+    setSuccessMsg(null);
+  };
 
   const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -146,105 +141,64 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="login-layout">
+    <div className="login-page">
       <ApiLoaderOverlay active={pageLoading} label="Preparing your cricket lobby..." />
-      <aside className="login-brand" aria-hidden="false">
-        <div className="login-brand-inner">
-          <Link to="/" className="login-brand-logo">
-            <svg className="login-logo-svg" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="loginLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#c8e63c" />
-                  <stop offset="50%" stopColor="#ff6b35" />
-                  <stop offset="100%" stopColor="#7b2d8b" />
-                </linearGradient>
-              </defs>
-              <circle cx="19" cy="19" r="18" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)" strokeWidth="1" />
-              <path d="M8 26 Q10 10 19 8 Q28 6 30 12 Q32 18 26 26" stroke="url(#loginLogoGrad)" strokeWidth="3.5" strokeLinecap="round" fill="none" />
-              <circle cx="19" cy="22" r="4" fill="url(#loginLogoGrad)" />
-            </svg>
-            <span>
-              Game<span className="login-logo-gold">Palazio</span>
-            </span>
-          </Link>
-          <h2 className="login-brand-headline">{t('login.brand.headline', 'Play. Watch. One account.')}</h2>
-          <p className="login-brand-copy">
-            {t(
-              'login.brand.copy',
-              'Stream live matches and launch games in the browser — secured with a quick code sent to your phone.',
-            )}
-          </p>
-          <ul className="login-brand-list">
-            <li>
-              <span className="login-check">✓</span> No password to remember
-            </li>
-            <li>
-              <span className="login-check">✓</span> Built for big screens &amp; mobile
-            </li>
-            <li>
-              <span className="login-check">✓</span> Cricket, streams, and more
-            </li>
-          </ul>
+      <div className="login-stadium-bg" aria-hidden="true">
+        <div className="login-calligraphy-overlay">
+          <span>افغانستان</span>
         </div>
-        <div className="login-brand-glow" />
-      </aside>
+      </div>
 
-      <main className="login-main">
-        <div className="login-main-bg" aria-hidden="true" />
+      <main className="login-shell">
+        <header className="login-branding">
+          <Link to="/" className="login-brand-title">
+            GAME PLAZIO
+          </Link>
+          <div className="login-brand-line" />
+        </header>
+
         <div className="login-panel">
-          <div className="login-stepper" aria-hidden="true">
-            <div className={`login-stepper-dot ${step === 'phone' ? 'is-active' : 'is-complete'}`} />
-            <span className="login-stepper-line" />
-            <div className={`login-stepper-dot ${step === 'otp' ? 'is-active' : ''}`} />
-          </div>
           <div className="login-panel-top">
-            <p className="login-kicker">{t('login.step.signin', 'Sign in')}</p>
-            <h1 className="login-heading">
-              {step === 'phone' ? t('login.step.enterPhone', 'Enter your phone') : t('login.step.verify', 'Verify it’s you')}
-            </h1>
-            <p className="login-lede">
-              {step === 'phone'
-                ? 'We’ll text you a one-time code. Standard rates may apply.'
-                : 'Enter the code we sent. Demo environment: use 123456.'}
-            </p>
+            <h1 className="login-heading">{step === 'phone' ? 'SOVEREIGN ACCESS' : 'VERIFY ACCESS'}</h1>
+            <p className="login-lede">{step === 'phone' ? 'Watch and Play • Enter the Arena' : 'Enter the 6-digit OTP we sent to your number'}</p>
           </div>
 
           {step === 'phone' && (
             <form onSubmit={handleSendOtp} className="login-form" noValidate>
-              <label className="login-label" htmlFor="countryCode">
-                {t('login.form.country', 'Country / region')}
-              </label>
-              <select
-                id="countryCode"
-                className="login-input login-select"
-                value={countryCode}
-                onChange={(e) => setCountryCode(e.target.value)}
-                disabled={loading}
-              >
-                {COUNTRY_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
               <label className="login-label" htmlFor="phone">
-                {t('login.form.mobile', 'Mobile number')}
+                Phone Number
               </label>
-              <input
-                id="phone"
-                type="tel"
-                className="login-input"
-                placeholder="3001234567"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 15))}
-                autoComplete="tel"
-                autoFocus
-                disabled={loading}
-              />
-              <p className="login-meta-hint">We'll send a secure 6-digit verification code.</p>
+              <div className="login-phone-group">
+                <select
+                  id="countryCode"
+                  className="login-country-select"
+                  value={countryCode}
+                  onChange={(e) => setCountryCode(e.target.value)}
+                  disabled={loading}
+                  aria-label="Country code"
+                >
+                  {COUNTRY_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.value}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  id="phone"
+                  type="tel"
+                  className="login-input login-phone-input"
+                  placeholder="7XX XXX XXX"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 15))}
+                  autoComplete="tel"
+                  autoFocus
+                  disabled={loading}
+                />
+              </div>
               {error && <p className="login-msg login-msg-error">{error}</p>}
               <button type="submit" className="login-btn-submit" disabled={!canSubmitPhone}>
-                {loading ? t('login.form.sending', 'Sending code…') : t('login.form.continue', 'Continue')}
+                {loading ? t('login.form.sending', 'Sending code…') : 'REQUEST OTP'}
+                <span className="login-btn-arrow">→</span>
               </button>
             </form>
           )}
@@ -256,7 +210,7 @@ const LoginPage: React.FC = () => {
               </p>
               {successMsg && <p className="login-msg login-msg-ok">{successMsg}</p>}
               <label className="login-label" htmlFor="otp">
-                {t('login.form.code', '6-digit code')}
+                OTP Code
               </label>
               <input
                 id="otp"
@@ -279,26 +233,19 @@ const LoginPage: React.FC = () => {
                   </span>
                 ))}
               </div>
-              <p className="login-demo-hint">
-                Try <kbd>123456</kbd>
-              </p>
+              <p className="login-demo-hint">Demo OTP: <kbd>123456</kbd></p>
               {error && <p className="login-msg login-msg-error">{error}</p>}
               <div className="login-actions">
                 <button
                   type="button"
                   className="login-btn-text"
-                  onClick={() => {
-                    setStep('phone');
-                    setOtp('');
-                    setError(null);
-                    setSuccessMsg(null);
-                  }}
+                  onClick={resetToPhoneStep}
                   disabled={loading}
                 >
-                  ← Different number
+                  Different number
                 </button>
                 <button type="submit" className="login-btn-submit login-btn-submit-inline" disabled={!canSubmitOtp}>
-                  {loading ? t('login.form.signingIn', 'Signing in…') : t('login.form.signin', 'Sign in')}
+                  {loading ? t('login.form.signingIn', 'Signing in…') : 'VERIFY & ENTER'}
                 </button>
               </div>
               <button
@@ -312,14 +259,24 @@ const LoginPage: React.FC = () => {
             </form>
           )}
 
-          <p className="login-legal">
-            By continuing you agree to our terms for streaming and gaming access.
+          <div className="login-disclaimer">
+            <p>Identity verified via secure Afghan mobile networks.</p>
+          </div>
+        </div>
+
+        <footer className="login-footer">
+          <p>
+            By entering Game Plazio, you agree to the Digital Sovereign Charter and Privacy Protocol.
+            Securely encrypted by AF-CyberLink.
           </p>
-          <Link to="/" className="login-home-link">
-            ← {t('login.form.backHome', 'Back to home')}
-          </Link>
+        </footer>
+
+        <div className="login-live-orb" aria-hidden="true">
+          <div className="login-live-icon">🏟</div>
+          <span>LIVE ARENA</span>
         </div>
       </main>
+      <div className="login-vignette" aria-hidden="true" />
     </div>
   );
 };

@@ -1,237 +1,288 @@
 import React from 'react';
 import './StreamingPage.css';
+import { LIVE_STREAM_HLS_URL, getWindowHls } from '../config/afgCricket';
+
+const cameraAngles = [
+  {
+    id: 'main',
+    name: 'MAIN',
+    image:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuAHbhJ-aaAa_0zX166EXoZMKeyVwm4kUGvLuHckN3qrR24D5zN2fUrThovROx2PRmr-vIoEBjO9ulbugT8uuMVQSfeh-icFVTTSijecg-BeVilnr_JnvZxYYDbJn4AROBvi_5TYIRp5PgVFKPSHkb-XBXUrQqsZMz_v3oVkxGb8wbwZk69AkM7eUPi7Q3Dva707gK_BEWTgS68gHNcGnaGdfLPlnvWlJRBD6KyjGEGampk2RuVuJbZu9Hg874GzxRTKUL4sSOx8MPOR',
+    active: true,
+  },
+  {
+    id: 'tactical',
+    name: 'TACTICAL',
+    image:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuD0i-sXUW6MBLXEgYIEkYd5xX_TRiUzNYFWz6p2LXaY8c6--7XLkMQfX_5H9kJSeaKkDWOKaK7nKg9QJ7gksfDkEaKagTEDxAynYuBTKILAs-KATSKMHp9-Gr_LOvoDjqFnnlQcBnY4OEoWnP3l5XeGkRgyhTVeY0uPPGjgruOWgK0xcK8N7KAH9VWIWfl1-hSG242KuQBW80U6GVdL5rVGeflEcmUWK2cDqNtm-aBfS4WYC6bRMXidF68gm4QJmddRowNNH48yMMS1',
+    active: false,
+  },
+  {
+    id: 'skycam',
+    name: 'SKYCAM',
+    image:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuCN6MGGb4NDBi02oOiZe9aWwuPUB_5344jNbwWQr5q8OO9CkO_vfVSFY5XvS-1utYpOZNBkpQdfphce_iybvOaxMNn1cg6ar-M-4-_PbeTiLewod9Qg-aoR8DDdZrzkfKk3hUcB5gkPx7lI4UAamsd3-GpXeYIxaQlpACdh_gTc4SDNTe6_FmQ7QAnKWaAmzL9B8nR95aeNLvKfy585XigJ7FWBVIdufOIg1NPx6UfUoCPwPQ-OrNJR9Z0-SgRGPWi5lS27rtn_7ClO',
+    active: false,
+  },
+];
 
 const StreamingPage: React.FC = () => {
+  const videoRef = React.useRef<HTMLVideoElement | null>(null);
+
   React.useEffect(() => {
-    document.title = 'Game Palazio | AFG Cricket — Play Free';
+    document.title = 'Game Plazio | IPL 2026 Live Stream';
   }, []);
 
-  const [selectedStream, setSelectedStream] = React.useState(0);
+  React.useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
 
-  const streams = [
-    {
-      id: 1,
-      title: 'Live Cricket Tournament',
-      channel: 'Cricket Masters',
-      viewers: '12.5K',
-      image: '🏏',
-      category: 'Sports',
-      quality: '4K',
-    },
-    {
-      id: 2,
-      title: 'Gaming Legends Battle',
-      channel: 'Gaming Hub',
-      viewers: '8.3K',
-      image: '🎮',
-      category: 'Gaming',
-      quality: 'HD',
-    },
-    {
-      id: 3,
-      title: 'Music Festival Live',
-      channel: 'Entertainment Plus',
-      viewers: '15.7K',
-      image: '🎵',
-      category: 'Music',
-      quality: '4K',
-    },
-    {
-      id: 4,
-      title: 'Tech Talk Show',
-      channel: 'Tech Insider',
-      viewers: '5.2K',
-      image: '💻',
-      category: 'Technology',
-      quality: 'HD',
-    },
-  ];
+    const Hls = getWindowHls();
+    let hlsInstance: { loadSource: (url: string) => void; attachMedia: (media: HTMLVideoElement) => void; destroy: () => void } | null = null;
 
-  const categories = [
-    { name: 'All', count: 42 },
-    { name: 'Sports', count: 18 },
-    { name: 'Gaming', count: 25 },
-    { name: 'Music', count: 12 },
-    { name: 'Technology', count: 8 },
-  ];
+    if (Hls?.isSupported()) {
+      hlsInstance = new Hls();
+      hlsInstance.loadSource(LIVE_STREAM_HLS_URL);
+      hlsInstance.attachMedia(video);
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      video.src = LIVE_STREAM_HLS_URL;
+    }
 
-  const recommendations = [
-    { title: 'Best Cricket Moments', views: '2.3M', image: '🏆' },
-    { title: 'Gaming Highlights 2024', views: '1.8M', image: '⭐' },
-    { title: 'Live Music Sessions', views: '3.1M', image: '🎤' },
-  ];
+    return () => {
+      if (hlsInstance) hlsInstance.destroy();
+    };
+  }, []);
 
   return (
-    <div className="streaming-page">
-      {/* Hero Section */}
-      <section className="hero-streaming">
-        <div className="hero-content">
-          <div className="pill-badge pill-gold">🎬 LIVE STREAMING</div>
-          <h1 className="hero-title">
-            Watch Live <span className="grad-text">Entertainment</span>
-          </h1>
-          <p className="hero-sub">Stream cricket matches, gaming tournaments, music shows, and more in HD and 4K quality</p>
-          <button className="btn-gold">Explore Live Streams</button>
-        </div>
-      </section>
-
-      {/* Featured Stream */}
-      <section className="featured-stream">
-        <div className="container">
-          <h2 className="section-title">Featured Now</h2>
-          
-          <div className="featured-player">
-            <div className="player-area">
-              <div className="player-mock">
-                <div className="player-badge">LIVE</div>
-                <span style={{ fontSize: '4rem' }}>{streams[selectedStream].image}</span>
-              </div>
+    <div className="watch-page">
+      <main className="watch-main">
+        <section className="watch-broadcast-header">
+          <div>
+            <div className="watch-live-meta">
+              <span className="watch-live-pill">
+                <span className="dot" />
+                LIVE
+              </span>
+              <span className="watch-tournament">IPL 2026 - Live Broadcast</span>
             </div>
-            
-            <div className="player-info">
-              <div className="stream-header">
+            <h1>IPL 2026</h1>
+          </div>
+          <div className="watch-xp-block">
+            <div className="watch-xp-rate">
+              <span className="material-symbols-outlined filled">bolt</span>
+              <span>
+                45 XP <small>/min</small>
+              </span>
+            </div>
+            <div className="watch-energy-bar">
+              <span />
+              <span />
+              <span />
+              <span />
+              <span className="dim" />
+            </div>
+          </div>
+        </section>
+
+        <section className="watch-grid">
+          <div className="watch-left-col">
+            <div className="watch-player glass-panel">
+              <video
+                ref={videoRef}
+                controls
+                autoPlay
+                playsInline
+                muted
+                className="watch-video"
+                aria-label="IPL 2026 live stream player"
+              />
+
+              <div className="watch-signal">
+                <div className="halo-wrap">
+                  <div className="halo-ping" />
+                  <span className="material-symbols-outlined">rss_feed</span>
+                </div>
                 <div>
-                  <h3 className="stream-title">{streams[selectedStream].title}</h3>
-                  <p className="stream-channel">{streams[selectedStream].channel}</p>
-                </div>
-                <div className="stream-meta">
-                  <span className="viewers">👁️ {streams[selectedStream].viewers} Watching</span>
-                  <span className="quality">{streams[selectedStream].quality}</span>
+                  <div>AWCC 5G</div>
+                  <div>ULTRA-HD</div>
                 </div>
               </div>
-              
-              <p className="stream-desc">
-                Join thousands of viewers for an exciting live experience. High-quality streaming with interactive features and live chat.
-              </p>
-              
-              <div className="stream-actions">
-                <button className="btn-gold">Watch Now</button>
-                <button className="btn-outline">Share Stream</button>
-              </div>
-            </div>
-          </div>
 
-          {/* Stream Thumbnails */}
-          <div className="stream-carousel">
-            <h3 className="carousel-title">Other Live Streams</h3>
-            <div className="carousel-grid">
-              {streams.map((stream, idx) => (
-                <div
-                  key={stream.id}
-                  className={`carousel-card ${idx === selectedStream ? 'active' : ''}`}
-                  onClick={() => setSelectedStream(idx)}
-                >
-                  <div className="thumbnail">
-                    <span className="thumb-image">{stream.image}</span>
-                    <div className="thumb-overlay">
-                      <span className="live-badge">● LIVE</span>
-                    </div>
+              <div className="watch-angles">
+                {cameraAngles.map((angle) => (
+                  <button key={angle.id} className={`watch-angle-btn ${angle.active ? 'active' : ''}`} type="button">
+                    <img src={angle.image} alt={angle.name} />
+                    <span>{angle.name}</span>
+                  </button>
+                ))}
+              </div>
+
+            </div>
+
+            <div className="watch-interactions">
+              <div className="glass-panel watch-engagement">
+                <h3>Live Engagement</h3>
+                <div className="reaction-grid">
+                  <button type="button">
+                    <span>🔥</span>
+                    <small>12.4K</small>
+                  </button>
+                  <button type="button">
+                    <span>🙌</span>
+                    <small>8.1K</small>
+                  </button>
+                  <button type="button">
+                    <span>⚽</span>
+                    <small>24K</small>
+                  </button>
+                  <button type="button">
+                    <span>👏</span>
+                    <small>5.2K</small>
+                  </button>
+                </div>
+                <div className="xp-progress">
+                  <div className="xp-progress-head">
+                    <span>XP PROGRESSION</span>
+                    <b>850 / 1000 XP</b>
                   </div>
-                  <div className="thumb-info">
-                    <div className="thumb-title">{stream.title}</div>
-                    <div className="thumb-channel">{stream.channel}</div>
-                    <div className="thumb-viewers">👁️ {stream.viewers}</div>
+                  <div className="xp-progress-track">
+                    <div className="xp-progress-fill" />
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Categories Section */}
-      <section className="categories-section">
-        <div className="container">
-          <h2 className="section-title">Browse by Category</h2>
-          <p className="section-sub">Discover content that interests you</p>
-
-          <div className="categories-grid">
-            {categories.map((cat, idx) => (
-              <div key={idx} className="category-card">
-                <div className="cat-icon">
-                  {cat.name === 'Sports'
-                    ? '🏏'
-                    : cat.name === 'Gaming'
-                    ? '🎮'
-                    : cat.name === 'Music'
-                    ? '🎵'
-                    : cat.name === 'Technology'
-                    ? '💻'
-                    : '📺'}
-                </div>
-                <h3 className="cat-name">{cat.name}</h3>
-                <p className="cat-count">{cat.count} Streams</p>
-                <button className="cat-btn">Explore</button>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* Recommendations Section */}
-      <section className="recommendations-section">
-        <div className="container">
-          <h2 className="section-title">Popular Videos</h2>
-          <p className="section-sub">Recommended for you</p>
-
-          <div className="reco-grid">
-            {recommendations.map((reco, idx) => (
-              <div key={idx} className="reco-card">
-                <div className="reco-image">{reco.image}</div>
-                <div className="reco-info">
-                  <h4 className="reco-title">{reco.title}</h4>
-                  <p className="reco-views">👁️ {reco.views} views</p>
+              <div className="glass-panel watch-poll">
+                <span className="material-symbols-outlined poll-icon">query_stats</span>
+                <h3>Match Prediction</h3>
+                <p>Who scores the next goal?</p>
+                <div className="poll-options">
+                  <button type="button">
+                    <span>Faisal Shayesteh</span>
+                    <small>+250 XP</small>
+                  </button>
+                  <button type="button">
+                    <span>Farshad Noor</span>
+                    <small>+300 XP</small>
+                  </button>
+                  <button type="button">
+                    <span>No Goals</span>
+                    <small>+150 XP</small>
+                  </button>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="features-section">
-        <div className="container">
-          <h2 className="section-title text-center">Why Choose Us?</h2>
-          <p className="section-sub text-center">Best streaming experience guaranteed</p>
-
-          <div className="features-grid">
-            <div className="feature-card">
-              <div className="feat-icon">📺</div>
-              <h3>HD & 4K Quality</h3>
-              <p>Watch in crystal clear quality with adaptive streaming technology</p>
-            </div>
-            <div className="feature-card">
-              <div className="feat-icon">🌍</div>
-              <h3>Global Access</h3>
-              <p>Access streams from anywhere in the world with low latency</p>
-            </div>
-            <div className="feature-card">
-              <div className="feat-icon">💬</div>
-              <h3>Live Chat</h3>
-              <p>Interact with other viewers and creators in real-time</p>
-            </div>
-            <div className="feature-card">
-              <div className="feat-icon">⭐</div>
-              <h3>Premium Content</h3>
-              <p>Exclusive streams and behind-the-scenes content for subscribers</p>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* CTA Section */}
-      <section className="cta-streaming">
-        <div className="container text-center">
-          <h2 className="section-title">Start Streaming Today</h2>
-          <p className="section-sub" style={{ maxWidth: '500px', margin: '0 auto 32px' }}>
-            Don't miss out on live entertainment. Subscribe to never miss your favorite streams.
-          </p>
-          <div className="cta-buttons">
-            <button className="btn-gold">Subscribe Now</button>
-            <button className="btn-outline">Watch Free</button>
-          </div>
-        </div>
-      </section>
+          <aside className="watch-right-col">
+            <div className="glass-panel watch-chat">
+              <div className="chat-head">
+                <span>
+                  <span className="online-dot" /> FAN CHAT
+                </span>
+                <small>42.8K Watching</small>
+              </div>
+              <div className="chat-feed">
+                <div className="chat-msg">
+                  <b>CricketFan_21:</b>
+                  <span>What a yorker in the death overs! 🔥</span>
+                </div>
+                <div className="chat-msg">
+                  <b>MumbaiBlue:</b>
+                  <span>This IPL 2026 season is pure cinema! 💙</span>
+                </div>
+                <div className="chat-system">
+                  <div>
+                    <span className="material-symbols-outlined filled">stars</span>
+                    <b>SYSTEM:</b>
+                  </div>
+                  <span>Predictor poll just opened! Get your XP now.</span>
+                </div>
+                <div className="chat-msg">
+                  <b>PowerplayPro:</b>
+                  <span>That powerplay momentum changed the game.</span>
+                </div>
+              </div>
+              <div className="chat-input">
+                <input type="text" placeholder="Join the Game Plazio..." />
+                <span className="material-symbols-outlined">send</span>
+              </div>
+            </div>
+
+            <div className="glass-panel watch-stats">
+              <h3>MATCH STATS</h3>
+              <div className="score-row">
+                <div>
+                  <b>182</b>
+                  <small>TEAM A</small>
+                </div>
+                <span>VS</span>
+                <div>
+                  <b>175</b>
+                  <small>TEAM B</small>
+                </div>
+              </div>
+
+              <div className="stat-block">
+                <div className="stat-head">
+                  <span>POSSESSION</span>
+                  <b>48% / 52%</b>
+                </div>
+                <div className="stat-track">
+                  <div className="a" />
+                  <div className="b" />
+                </div>
+              </div>
+
+              <div className="stat-block">
+                <div className="stat-head">
+                  <span>SHOTS ON TARGET</span>
+                  <b>6 / 4</b>
+                </div>
+                <div className="stat-track">
+                  <div className="a strong" />
+                  <div className="b weak" />
+                </div>
+              </div>
+
+              <div className="heatmap-wrap">
+                <div className="heatmap-head">
+                  <span>HEATMAP</span>
+                  <span className="material-symbols-outlined">open_in_full</span>
+                </div>
+                <div className="heatmap-card">
+                  <img
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMActQXpX1JfLC-M4dU0FVFSCJ-W1T3omK4x9UhuR0FtAS8p0syZVTCJhXpYCtI8YY1GBR_NVWqvbSxabhPkk5FOcOmBXKqAxXoNY-7ARkvxYq6KKTX8cmqscl1x2PB_iL-5oFKn6U_RJwO9KhczM3r8rlaezAJWABiqXlyydjlo3LA0egdRdI1VoCVXKjkYYmpS33oHKoSAEyFXe-0DZ2NZatKcdGOpTKdqFUOfV8Cwk55f2FdQm41ThnCb116QmuVuiEFYvWttSO"
+                    alt="Match heat map"
+                  />
+                </div>
+              </div>
+            </div>
+          </aside>
+        </section>
+      </main>
+
+      <nav className="watch-mobile-nav">
+        <a href="/">
+          <span className="material-symbols-outlined">home</span>
+          <span>Home</span>
+        </a>
+        <a href="/streaming" className="active">
+          <span className="material-symbols-outlined filled">play_circle</span>
+          <span>Watch</span>
+        </a>
+        <a href="/gameplay">
+          <span className="material-symbols-outlined">sports_esports</span>
+          <span>Play</span>
+        </a>
+        <a href="/earn-share?view=earn">
+          <span className="material-symbols-outlined">payments</span>
+          <span>Earn</span>
+        </a>
+        <a href="/earn-share?view=share">
+          <span className="material-symbols-outlined">share</span>
+          <span>Share</span>
+        </a>
+      </nav>
     </div>
   );
 };

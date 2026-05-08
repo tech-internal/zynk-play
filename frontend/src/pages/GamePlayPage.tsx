@@ -1,222 +1,289 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import './GamePlayPage.css';
+import { AFG_CRICKET_GAME_URL, AFG_CRICKET_IFRAME_ALLOW } from '../config/afgCricket';
+
+type ArenaGame = {
+  title: string;
+  image: string;
+  available: boolean;
+  cta: string;
+};
+
+type PredictionCard = {
+  tag: string;
+  odds: string;
+  heading: string;
+  detail: string;
+  variant: 'primary' | 'gold' | 'error';
+  actions: [string, string];
+};
+
+const arenaCards: ArenaGame[] = [
+  {
+    title: 'Cricket',
+    image:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuCSKJoZAXMkfS7m6JUeaE907miV8fjhs6s2qIFkrpQkulkqd3aRRAUi49btrjEmwkO0yI_lb6wYXxUk_zkMgQSsJYbD2OmjKb7zEoOhPXXJB6J0vSZ1grNFHWZIgrrnqS6vyTYQEWqO4xejisflmeW8Ue8SqT8RTEg3dACzeAGN6ipvTSHkcCN6VjW4gtm9iLDAiq53o9xtPpBP33nyONx0rvWCCQWPW2dGd5BKrYjmHV-5xfQyJX6g98Qwl5u19p3XClZUIVKnIl1J',
+    available: true,
+    cta: 'Live Now',
+  },
+  {
+    title: 'FIFA',
+    image:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuC_Wbsw0hQWsYwD-_YNEHotpTrAJZu8tMLqc9eSkKUMKEeR7GjjeL-_N6G_Rj_fPod8HTOzTfJe774fzq_Zx2jYMKqvhY7DlS_UupjSQsesKoF0VgCPRJOoIYiweXb5rSwUrNHgfEEXXaXK1i-HvgyTW3TTYTqHlH7_QiR9-vTbcGKZuPAnGdRv1ItR6BxyzHGGyDrEF8tJ4lYtbv7m1YpIJYoWufKGbye0WsRQiCUFXChsqV0xRRjQe1BJOC8hiqik731RXwEmcQNX',
+    available: false,
+    cta: 'Coming Soon',
+  },
+  {
+    title: 'Basketball',
+    image:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuBXcdMflbRE63rXrZCgIGXvq2YuccvPUJLaYOU9Whih-wzzQG_zhVPVSQJM-e0kIpkUTG_D_1-nwZDO4-wuW2oq0loN-beIWo1s0CxzRRzMrdBaZhUDUE0BgxEpP1cGfjaLpqMcBUItfTau2lBMlJCksKr-ANKQN909XTN9ocEHI5tuc3k5N73_jE4uy9um2iJdx-NP53thTm7-XBH_4-qpAlaeDbSMvxYN0AFV7WZT9oV4aRh58t4Rsm1lqId_jYGQ9E36HPMNqQ49',
+    available: false,
+    cta: 'Coming Soon',
+  },
+  {
+    title: 'eSports',
+    image:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuB4x970T-yxOUWmxAJq9qnO0jcry0NVrx3F3lUjKUgTKunT4Z6a6MA9jJ-eMlBPQkIbXe_55qUboTuooeWL_yQT89tEVYLXWNZTGq9VWwZpff4ysSIyj9MXk8iP03wT_C8_5aBkPlm9doMw4RFwyLJ-LNjODg-kAz_WBPaz9AofYwihybMQwfI52Ho1h9HqhJjh1aLofrdZNJZn50eR2YCe2kOCGkq19Tosbk0pTBfWTWghsUIRIDO4FQWD0C5DimQIrj2rUkAYiOVi',
+    available: false,
+    cta: 'Coming Soon',
+  },
+  {
+    title: 'Kabaddi',
+    image: 'https://images.unsplash.com/photo-1560272564-c83b66b1ad12?auto=format&fit=crop&w=1000&q=80',
+    available: false,
+    cta: 'Coming Soon',
+  },
+];
+
+const predictionCards: PredictionCard[] = [
+  {
+    tag: 'Match Winner',
+    odds: '2.4x',
+    heading: 'Afghanistan vs India',
+    detail: 'Stake your skill tokens on the final winner.',
+    variant: 'primary',
+    actions: ['Stake Home', 'Stake Away'],
+  },
+  {
+    tag: 'Possession %',
+    odds: '4.8x',
+    heading: 'AFG > 55% possession?',
+    detail: 'Vote yes or no and multiply your prediction returns.',
+    variant: 'gold',
+    actions: ['Vote Yes', 'Vote No'],
+  },
+  {
+    tag: 'Top Scorer',
+    odds: '12.0x',
+    heading: 'First goalscorer bonus',
+    detail: 'Choose your player and lock the prediction early.',
+    variant: 'error',
+    actions: ['Pick Player', 'Stake 50'],
+  },
+];
 
 const GamePlayPage: React.FC = () => {
-  const navigate = useNavigate();
-
   React.useEffect(() => {
-    document.title = 'Game Palazio | MI India Cricket — Play Free';
+    document.title = 'Game Plazio | Play Cricket';
   }, []);
 
-  const [activeTab, setActiveTab] = React.useState('keyboard');
-
-  const keyboardControls = [
-    { key: '↑ / W', action: 'Move Forward', desc: 'Move the batsman forward' },
-    { key: '↓ / S', action: 'Move Backward', desc: 'Step back away from the ball' },
-    { key: '← / A', action: 'Move Left', desc: 'Move to the off side' },
-    { key: '→ / D', action: 'Move Right', desc: 'Move to the leg side' },
-    { key: 'SPACE', action: 'Play Shot', desc: 'Execute a batting shot' },
-    { key: 'SHIFT', action: 'Power Shot', desc: 'Perform a powerful stroke' },
-    { key: 'CTRL', action: 'Defensive', desc: 'Play a defensive shot' },
-  ];
-
-  const touchControls = [
-    { gesture: 'Swipe Right', arrow: '→', action: 'Power Drive' },
-    { gesture: 'Swipe Left', arrow: '←', action: 'Pull Shot' },
-    { gesture: 'Swipe Up', arrow: '↑', action: 'Lofted Shot' },
-    { gesture: 'Swipe Down', arrow: '↓', action: 'Defensive' },
-    { gesture: 'Tap', arrow: '●', action: 'Quick Single' },
-  ];
-
-  const objectives = [
-    {
-      num: '1',
-      title: 'Score More Runs',
-      desc: 'Outscore your opponents by hitting boundaries and running between wickets.',
-    },
-    {
-      num: '2',
-      title: 'Stay in Control',
-      desc: 'Master timing and positioning to play effective shots against varied bowling.',
-    },
-    {
-      num: '3',
-      title: 'Win the Match',
-      desc: 'Accumulate the highest score or dismiss all opposing batsmen to win.',
-    },
-  ];
-
-  const leaderboard = [
-    { rank: 1, name: 'Champion Striker', runs: '342 runs', score: '8,540 pts', avatar: '⭐' },
-    { rank: 2, name: 'Power Hitter', runs: '298 runs', score: '7,820 pts', avatar: '🔥' },
-    { rank: 3, name: 'Quick Runner', runs: '267 runs', score: '7,140 pts', avatar: '⚡' },
-    { rank: 4, name: 'Master Batsman', runs: '245 runs', score: '6,890 pts', avatar: '🎯' },
-    { rank: 5, name: 'Sky Soarer', runs: '221 runs', score: '6,320 pts', avatar: '🚀' },
-  ];
-
-  const goPlayOnDashboard = () => {
-    navigate('/dashboard');
-  };
+  const [isLoading, setIsLoading] = React.useState(true);
 
   return (
-    <div className="gameplay-page">
-      <section className="hero-gameplay">
-        <div className="hero-content">
-          <div className="pill-badge pill-gold">🎮 INTERACTIVE GAMEPLAY</div>
-          <h1 className="hero-title">
-            Master the Art of <span className="grad-text">Cricket</span>
-          </h1>
-          <p className="hero-sub">
-            Learn game mechanics, control layouts, and pro strategies to dominate the leaderboard. The playable build lives on your
-            dashboard.
-          </p>
-          <button className="btn-gold" type="button" onClick={goPlayOnDashboard}>
-            Open dashboard to play
-          </button>
-        </div>
-      </section>
+    <div className="play-page play-theme">
+      <main className="play-main">
+        <section className="play-avatar-zone">
+          <div className="play-avatar-grid">
+            <article className="play-avatar-visual-card">
+              <div className="play-avatar-glow" />
+              <img
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPxzjAw_z5CVMlhv9Vz7R85FSvhDoCCvsojoMpUgkGh6veyIS5pdAnHL1QWcd-UNRtPCy1oOhNXd_8hw6D4zlh1K1I0wC5qjNUH6ByNmoHkyNfWGW24CTCkAYpv8BGHCfEljKhqcbkZRWMMSO-BhUayGG0kQrTKg_EY06M2oMprsBshE2yCgXQ9PVGliJjX9c7-kLkNXjMdez396sazos6IRKSXPH_jo_b3qu2OYcf635lNgll39YVFJqqICbCwxuJUhiGzMUeUphL"
+                alt="Avatar visual"
+                loading="lazy"
+              />
+              <div className="play-avatar-footer">
+                <div>
+                  <p>Pro-Elite Rank</p>
+                  <h3>Ahmad Shah</h3>
+                </div>
+                <span>LVL 42</span>
+              </div>
+            </article>
 
-      <section className="controls-section">
-        <div className="container">
-          <h2 className="section-title text-center">Game Controls</h2>
-          <p className="section-sub text-center">Master these controls to elevate your gameplay</p>
+            <article className="play-avatar-stats-card">
+              <div className="play-section-head">
+                <h3>Avatar Hub</h3>
+                <span>Identity</span>
+              </div>
 
-          <div className="tabs-nav">
-            <button
-              className={`tab-btn ${activeTab === 'keyboard' ? 'active' : ''}`}
-              onClick={() => setActiveTab('keyboard')}
-            >
-              ⌨️ Keyboard
-            </button>
-            <button
-              className={`tab-btn ${activeTab === 'touch' ? 'active' : ''}`}
-              onClick={() => setActiveTab('touch')}
-            >
-              📱 Touch/Mobile
-            </button>
+              <div className="play-stat-cards">
+                <div className="play-stat-card">
+                  <p>Club Affiliation</p>
+                  <b>Kabul Lions</b>
+                </div>
+                <div className="play-stat-card">
+                  <p>Skill Tokens</p>
+                  <b>850</b>
+                </div>
+                <div className="play-stat-card">
+                  <p>Streak</p>
+                  <b>12 Days</b>
+                </div>
+              </div>
+
+              <div className="play-power-wrap">
+                <div className="play-power-head">
+                  <span>Power Evolution</span>
+                  <span>85% to next level</span>
+                </div>
+                <div className="play-power-track">
+                  <div className="play-power-fill" />
+                </div>
+              </div>
+
+              <div className="play-avatar-actions">
+                <button type="button" className="play-action-primary">
+                  Upgrade with Data Pack
+                </button>
+                <button type="button" className="play-action-outline">
+                  Customize Gear
+                </button>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section className="play-live-zone">
+          <div className="play-live-zone-head">
+            <h2>Play Live Cricket</h2>
+            <p>Real game running from your hosted cricket build.</p>
           </div>
 
-          {activeTab === 'keyboard' && (
-            <div className="tab-panel active">
-              <div className="controls-grid">
-                {keyboardControls.map((ctrl, idx) => (
-                  <div key={idx} className="ctrl-card">
-                    <div className="ctrl-key">{ctrl.key}</div>
-                    <div className="ctrl-info">
-                      <div className="ctrl-action">{ctrl.action}</div>
-                      <div className="ctrl-desc">{ctrl.desc}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+          <div className="play-live-card">
+            <div className="play-card-head">
+              <h3>Cricket Match Simulator</h3>
             </div>
-          )}
 
-          {activeTab === 'touch' && (
-            <div className="tab-panel active">
-              <div className="touch-grid">
-                {touchControls.map((ctrl, idx) => (
-                  <div key={idx} className="touch-card">
-                    <span className="touch-icon">{ctrl.arrow}</span>
-                    <div className="touch-gesture">{ctrl.gesture}</div>
-                    <div className="touch-arrow">→</div>
-                    <div className="touch-action">{ctrl.action}</div>
-                  </div>
-                ))}
+            <div className="play-media-frame">
+              {isLoading && (
+                <div className="play-loader">
+                  <div className="play-loader-spinner" />
+                  <p>Loading cricket game...</p>
+                </div>
+              )}
+              <iframe
+                className="play-media-frame-embed"
+                src={AFG_CRICKET_GAME_URL}
+                allow={AFG_CRICKET_IFRAME_ALLOW}
+                allowFullScreen
+                title="Afghan cricket game"
+                onLoad={() => setIsLoading(false)}
+              />
+            </div>
+            <p className="play-note">If the game does not load in-app, use "Open Fullscreen".</p>
+          </div>
+        </section>
+
+        <section className="play-feature-zone">
+          <div className="play-section-head">
+            <h3>Fantasy Arena</h3>
+            <span>Manage Squad & Multipliers</span>
+          </div>
+
+          <div className="play-fantasy-grid">
+            <article className="play-fantasy-main-card">
+              <div className="play-fantasy-head">
+                <h4>Active Squad: Elite XI</h4>
+                <span>2.5x Multiplier Active</span>
               </div>
-              <div className="phone-mock-wrap">
-                <div className="phone-mock">
-                  <div className="phone-notch"></div>
-                  <div className="phone-screen">
-                    <span style={{ fontSize: '2rem' }}>🏏</span>
-                    <div className="swipe-arrow">
-                      <span className="swipe-line"></span>
-                      SWIPE
-                    </div>
-                  </div>
+
+              <div className="play-pitch">
+                <div className="play-player-dot is-live">
+                  <img
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCiUyqBsGTjK0nOj1y69oSS1adFFYtAqjLFOsTmd0Hg_tR5O1JVta5q7F4KW0_D7P03Qtr1es7s7U5ssPVLH0_mD-hmnq0I--eao0kWCcGrhA5JBhfZrUhXgnpmnpFJyjZXwM79tOvwk9_22_qqF6X9fa4VouvEwi4h3ty1q7pUm13T-n_XZBleOwU5dOYxi25o8HdSrVBbpmp1inUsBpN_HZQe9LeI2zYdTx-chSnzZa8WijmxVPZZSBYTOoRoJFXUOAPV6VnsCiKs"
+                    alt="Captain"
+                  />
+                </div>
+                <div className="play-player-dot is-empty">+</div>
+                <div className="play-player-dot is-live">
+                  <img
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAE6_BbV0duTpSCQvD-NHqaQCpQ1SjS_dpX652qori7vMxaI4XtycsAXLnpddz-Eeb1BHkoUAKDxCIr9UCpL8eimGZlqkU5VlOEAUzt1HAC2rx5N_tqPurmyTvANvKeNHoUL3cSLHlFZhLTPjAiom_F7c8vy2_uFh5uXV6aVGPbTOyW_zs8zVQR4A9uJhVev0kfDjdKPccT9nH91OQ6Q4VGO4Jb3jBfyZ5lW4FA6PbGvsfixs0P1c1-_SDAJpgu88gqnchdcE3wFtN"
+                    alt="Player"
+                  />
                 </div>
               </div>
-            </div>
-          )}
-        </div>
-      </section>
 
-      <section className="objectives-section">
-        <div className="container">
-          <h2 className="section-title text-center">Game Objectives</h2>
-          <p className="section-sub text-center">Achieve these goals to master the game</p>
-
-          <div className="objectives-list">
-            {objectives.map((obj, idx) => (
-              <div key={idx} className="obj-item">
-                <div className="obj-num">{obj.num}</div>
-                <div className="obj-content">
-                  <div className="obj-title">{obj.title}</div>
-                  <div className="obj-desc">{obj.desc}</div>
+              <div className="play-fantasy-foot">
+                <div>
+                  <p>Live PTS</p>
+                  <b>480</b>
                 </div>
+                <div>
+                  <p>Global Rank</p>
+                  <b>#1,242</b>
+                </div>
+                <button type="button">Edit Squad</button>
               </div>
+            </article>
+
+            <article className="play-fantasy-side-card">
+              <h4>Streak Booster</h4>
+              <p>Win 3 more predictions today to unlock Gold Crystal XP multiplier.</p>
+              <div className="play-streak-progress">
+                <span>Progress</span>
+                <span>2/5 wins</span>
+              </div>
+              <div className="play-streak-bars">
+                <i className="is-on" />
+                <i className="is-on" />
+                <i />
+                <i />
+                <i />
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section className="play-prediction-zone">
+          <div className="play-section-head">
+            <h3>Prediction Arena</h3>
+            <span>Stake Skill Tokens</span>
+          </div>
+          <div className="play-prediction-rail">
+            {predictionCards.map((card) => (
+              <article key={card.tag} className={`play-prediction-card is-${card.variant}`}>
+                <div className="play-prediction-head">
+                  <span>{card.tag}</span>
+                  <b>{card.odds}</b>
+                </div>
+                <h4>{card.heading}</h4>
+                <p>{card.detail}</p>
+                <div className="play-prediction-actions">
+                  <button type="button">{card.actions[0]}</button>
+                  <button type="button">{card.actions[1]}</button>
+                </div>
+              </article>
             ))}
           </div>
+        </section>
 
-          <div className="pro-tips">
-            <h4>💡 Pro Tips</h4>
-            <ul>
-              <li>Perfect your timing for maximum power on shots</li>
-              <li>Use positioning to predict ball movement</li>
-              <li>Build momentum by scoring consistent runs</li>
-              <li>Watch opponent patterns and adapt your strategy</li>
-              <li>Practice special power shots for match-winning moments</li>
-            </ul>
+        <section className="play-arena">
+          <div className="play-section-head">
+            <h3>More Games</h3>
+            <span>Coming Soon</span>
           </div>
-        </div>
-      </section>
-
-      <section className="leaderboard-section">
-        <div className="container">
-          <h2 className="section-title text-center">Top Players</h2>
-          <p className="section-sub text-center">Global leaderboard - Can you reach the top?</p>
-
-          <div className="lb-table">
-            {leaderboard.map((player, idx) => (
-              <div
-                key={idx}
-                className={`lb-row ${
-                  player.rank === 1 ? 'top1' : player.rank === 2 ? 'top2' : player.rank === 3 ? 'top3' : ''
-                }`}
-              >
-                <div className={`lb-rank r${player.rank}`}>{player.rank}</div>
-                <div className="lb-avatar" style={{ background: '#FFD700' }}>
-                  {player.avatar}
-                </div>
-                <div className="lb-info">
-                  <div className="lb-name">{player.name}</div>
-                  <div className="lb-runs">{player.runs}</div>
-                </div>
-                <div className="lb-score">{player.score}</div>
-              </div>
+          <div className="play-arena-rail">
+            {arenaCards.map((card) => (
+              <article key={card.title} className={`play-arena-card ${card.available ? 'is-live' : 'is-coming'}`}>
+                <img src={card.image} alt={card.title} loading="lazy" />
+                <div className="play-arena-card-overlay" />
+                <div className={`play-badge ${card.available ? 'is-live' : 'is-coming'}`}>{card.cta}</div>
+                <h4>{card.title}</h4>
+              </article>
             ))}
           </div>
-
-          <div style={{ textAlign: 'center', marginTop: '40px' }}>
-            <button className="btn-gold" type="button" onClick={goPlayOnDashboard}>
-              Play on dashboard
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <section className="cta-section">
-        <div className="container text-center">
-          <h2 className="section-title">Ready to Play?</h2>
-          <p className="section-sub" style={{ maxWidth: '500px', margin: '0 auto 32px' }}>
-            Jump into the action now and compete with players worldwide
-          </p>
-          <button className="btn-gold" style={{ fontSize: '1.1rem', padding: '16px 48px' }} type="button" onClick={goPlayOnDashboard}>
-            Go to dashboard
-          </button>
-        </div>
-      </section>
+        </section>
+      </main>
     </div>
   );
 };

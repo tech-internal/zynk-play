@@ -23,6 +23,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             'id', 'phone_number', 'username', 'full_name', 'email', 'country',
+            'languages',
             'status', 'role', 'free_trial_used',
             'last_login_at', 'has_active_subscription', 'has_game_entitlement',
             'has_streaming_entitlement', 'can_use_free_trial', 'profile_complete',
@@ -63,6 +64,11 @@ class UserSerializer(serializers.ModelSerializer):
         if value is None:
             return ''
         return value.strip()
+
+    def validate_languages(self, value):
+        if value is None:
+            return ''
+        return value.strip()[:200]
 
     def validate(self, attrs):
         username = attrs.get('username', serializers.empty)

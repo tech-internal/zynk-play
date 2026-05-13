@@ -1,6 +1,8 @@
 import React from 'react';
 import './StreamingPage.css';
 import { LIVE_STREAM_HLS_URL, getWindowHls } from '../config/afgCricket';
+import PremiumAccessWall from '../components/PremiumAccessWall';
+import { useEntitlements } from '../context/EntitlementsContext';
 
 const cameraAngles = [
   {
@@ -28,6 +30,7 @@ const cameraAngles = [
 
 const StreamingPage: React.FC = () => {
   const videoRef = React.useRef<HTMLVideoElement | null>(null);
+  const { canWatchPlayEarn, loading: entLoading } = useEntitlements();
 
   React.useEffect(() => {
     document.title = 'Game Plazio | IPL 2026 Live Stream';
@@ -55,7 +58,10 @@ const StreamingPage: React.FC = () => {
 
   return (
     <div className="watch-page">
-      <main className="watch-main">
+      {!entLoading && !canWatchPlayEarn ? (
+        <PremiumAccessWall />
+      ) : (
+        <main className="watch-main">
         <section className="watch-broadcast-header">
           <div>
             <div className="watch-live-meta">
@@ -260,29 +266,7 @@ const StreamingPage: React.FC = () => {
           </aside>
         </section>
       </main>
-
-      <nav className="watch-mobile-nav">
-        <a href="/">
-          <span className="material-symbols-outlined">home</span>
-          <span>Home</span>
-        </a>
-        <a href="/streaming" className="active">
-          <span className="material-symbols-outlined filled">play_circle</span>
-          <span>Watch</span>
-        </a>
-        <a href="/gameplay">
-          <span className="material-symbols-outlined">sports_esports</span>
-          <span>Play</span>
-        </a>
-        <a href="/earn-share?view=earn">
-          <span className="material-symbols-outlined">payments</span>
-          <span>Earn</span>
-        </a>
-        <a href="/earn-share?view=share">
-          <span className="material-symbols-outlined">share</span>
-          <span>Share</span>
-        </a>
-      </nav>
+      )}
     </div>
   );
 };

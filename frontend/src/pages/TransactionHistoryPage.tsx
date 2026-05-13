@@ -10,6 +10,7 @@ type Tone = 'positive' | 'negative' | 'neutral';
 type DerivedTx = {
   raw: PaymentTransactionRow;
   tone: Tone;
+  isElite: boolean;
   icon: string;
   iconFill: boolean;
   title: string;
@@ -24,7 +25,7 @@ const FILTERS: Array<{ id: FilterId; label: string; icon: string }> = [
   { id: 'all', label: 'All Activity', icon: 'analytics' },
   { id: 'earned', label: 'Earned', icon: 'trending_up' },
   { id: 'spent', label: 'Spent', icon: 'trending_down' },
-  { id: 'subscription', label: 'Subscription', icon: 'workspace_premium' },
+  { id: 'subscription', label: 'Elite Pass', icon: 'workspace_premium' },
 ];
 
 const STATUS_LABEL: Record<string, string> = {
@@ -66,6 +67,7 @@ function deriveTransaction(row: PaymentTransactionRow): DerivedTx {
   const amount = parseAmount(row.amount);
   const status = (row.status || '').toLowerCase();
   const hasPlan = !!row.plan;
+  const isElite = hasPlan && status === 'completed';
 
   let tone: Tone = 'neutral';
   let signed = 0;
@@ -88,8 +90,8 @@ function deriveTransaction(row: PaymentTransactionRow): DerivedTx {
       iconFill = true;
       title = `${row.plan!.name}`;
       subtitle = row.plan!.billing_period
-        ? `${row.plan!.entitlement_type} • ${row.plan!.billing_period}`
-        : 'Subscription Renewal';
+        ? `Subscription Renewal — ${row.plan!.billing_period} • Status: ACTIVE`
+        : 'Subscription Renewal — Status: ACTIVE';
     } else {
       icon = 'shopping_bag';
       title = 'Marketplace Purchase';
@@ -115,6 +117,7 @@ function deriveTransaction(row: PaymentTransactionRow): DerivedTx {
   return {
     raw: row,
     tone,
+    isElite,
     icon,
     iconFill,
     title,
@@ -138,6 +141,20 @@ function deriveTransaction(row: PaymentTransactionRow): DerivedTx {
 
 const PAGE_SIZE = 8;
 
+function txRowToneClass(tx: DerivedTx): string {
+  if (tx.isElite) return 'thp-tx-elite';
+  if (tx.tone === 'positive') return 'thp-tx-earned';
+  if (tx.tone === 'negative') return 'thp-tx-spent';
+  return 'thp-tx-neutral';
+}
+
+function txIconClass(tx: DerivedTx): string {
+  if (tx.isElite) return 'thp-tx-icon thp-tx-icon-elite';
+  if (tx.tone === 'positive') return 'thp-tx-icon thp-tx-icon-earned';
+  if (tx.tone === 'negative') return 'thp-tx-icon thp-tx-icon-spent';
+  return 'thp-tx-icon thp-tx-icon-neutral';
+}
+
 const TransactionHistoryPage: React.FC = () => {
   const [transactions, setTransactions] = useState<PaymentTransactionRow[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -148,7 +165,7 @@ const TransactionHistoryPage: React.FC = () => {
   const [visibleCount, setVisibleCount] = useState<number>(PAGE_SIZE);
 
   useEffect(() => {
-    document.title = 'Game Plazio | Transaction History';
+    document.title = 'FANVERSE - Transaction History';
   }, []);
 
   useEffect(() => {
@@ -226,7 +243,7 @@ const TransactionHistoryPage: React.FC = () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `game-plazio-history-${Date.now()}.csv`;
+    a.download = `fanverse-ledger-${Date.now()}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -236,17 +253,19 @@ const TransactionHistoryPage: React.FC = () => {
       <main className="thp-main">
         <div className="thp-container">
           <header className="thp-hero">
-            <h1 className="thp-title">HISTORY</h1>
+            <h1 className="thp-title">History</h1>
             <p className="thp-lead">
-              A comprehensive ledger of your sovereign fan activities, rewards, and redemptions within the Game Plazio
-              ecosystem.
+              Elite Ledger: Live feed of sovereign fan activities, rewards, and redemptions within the Fanverse sector.
             </p>
           </header>
 
           <div className="thp-grid">
             <aside className="thp-sidebar">
               <div className="thp-panel">
-                <h3 className="thp-panel-title">CATEGORIES</h3>
+                <h3 className="thp-panel-title">
+                  <span className="thp-panel-title-bar" aria-hidden />
+                  Categories
+                </h3>
                 <nav className="thp-filter-list">
                   {FILTERS.map((f) => (
                     <button
@@ -266,7 +285,10 @@ const TransactionHistoryPage: React.FC = () => {
               </div>
 
               <div className="thp-panel">
-                <h3 className="thp-panel-title">DATE RANGE</h3>
+                <h3 className="thp-panel-title">
+                  <span className="thp-panel-title-bar" aria-hidden />
+                  Date scan
+                </h3>
                 <div className="thp-date-fields">
                   <label className="thp-date-input">
                     <span className="material-symbols-outlined">calendar_today</span>
@@ -277,7 +299,7 @@ const TransactionHistoryPage: React.FC = () => {
                         setStartDate(e.target.value);
                         setVisibleCount(PAGE_SIZE);
                       }}
-                      placeholder="Start Date"
+                      placeholder="Start timestamp"
                     />
                   </label>
                   <label className="thp-date-input">
@@ -289,7 +311,7 @@ const TransactionHistoryPage: React.FC = () => {
                         setEndDate(e.target.value);
                         setVisibleCount(PAGE_SIZE);
                       }}
-                      placeholder="End Date"
+                      placeholder="End timestamp"
                     />
                   </label>
                   {(startDate || endDate) && (
@@ -307,17 +329,6 @@ const TransactionHistoryPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="thp-panel thp-quick-links">
-                <h3 className="thp-panel-title">QUICK LINKS</h3>
-                <Link to="/subscription" className="thp-quick-link">
-                  <span className="material-symbols-outlined">workspace_premium</span>
-                  <span>Subscription Plans</span>
-                </Link>
-                <Link to="/profile" className="thp-quick-link">
-                  <span className="material-symbols-outlined">account_circle</span>
-                  <span>Profile &amp; Account</span>
-                </Link>
-              </div>
             </aside>
 
             <section className="thp-content">
@@ -325,15 +336,11 @@ const TransactionHistoryPage: React.FC = () => {
                 <div className="thp-stats-group">
                   <div className="thp-stat-card thp-stat-pos">
                     <span className="thp-stat-label">TOTAL EARNED</span>
-                    <span className="thp-stat-value">
-                      +{totals.earned.toLocaleString()} {totals.currency}
-                    </span>
+                    <span className="thp-stat-value">+{totals.earned.toLocaleString()} {totals.currency}</span>
                   </div>
                   <div className="thp-stat-card thp-stat-neg">
                     <span className="thp-stat-label">TOTAL SPENT</span>
-                    <span className="thp-stat-value">
-                      -{totals.spent.toLocaleString()} {totals.currency}
-                    </span>
+                    <span className="thp-stat-value">-{totals.spent.toLocaleString()} {totals.currency}</span>
                   </div>
                 </div>
                 <button
@@ -343,7 +350,7 @@ const TransactionHistoryPage: React.FC = () => {
                   disabled={filtered.length === 0}
                 >
                   <span className="material-symbols-outlined">download</span>
-                  EXPORT LEDGER
+                  EXPORT_LEDGER.LOG
                 </button>
               </div>
 
@@ -372,11 +379,15 @@ const TransactionHistoryPage: React.FC = () => {
                   </div>
                 )}
 
-                {!loading && !error &&
-                  visible.map((tx) => (
-                    <article key={tx.raw.id} className={`thp-tx thp-tx-${tx.tone}`}>
+                {!loading &&
+                  !error &&
+                  visible.map((tx, idx) => (
+                    <article
+                      key={tx.raw.id}
+                      className={`thp-tx ${txRowToneClass(tx)}${idx >= 4 ? ' thp-tx-faded' : ''}`}
+                    >
                       <div className="thp-tx-left">
-                        <div className={`thp-tx-icon thp-tx-icon-${tx.tone}`}>
+                        <div className={txIconClass(tx)}>
                           <span
                             className="material-symbols-outlined"
                             style={tx.iconFill ? { fontVariationSettings: "'FILL' 1" } : undefined}
@@ -404,7 +415,7 @@ const TransactionHistoryPage: React.FC = () => {
                     className="thp-load-more"
                     onClick={() => setVisibleCount((n) => n + PAGE_SIZE)}
                   >
-                    LOAD MORE TRANSACTIONS
+                    LOAD_NEXT_SECTOR
                   </button>
                 </div>
               )}

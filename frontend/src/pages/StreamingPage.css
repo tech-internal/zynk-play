@@ -713,42 +713,6 @@
   opacity: 0.45;
 }
 
-.watch-mobile-nav {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 50;
-  display: none;
-  justify-content: space-around;
-  align-items: center;
-  padding: 8px 16px 16px;
-  border-top: 1px solid rgb(79 218 217 / 20%);
-  background: rgb(48 54 54 / 90%);
-  backdrop-filter: blur(24px);
-  border-radius: 20px 20px 0 0;
-  box-shadow: 0 -5px 25px rgb(0 0 0 / 50%);
-}
-
-.watch-mobile-nav a {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-decoration: none;
-  color: var(--muted);
-  opacity: 0.75;
-  font-size: 11px;
-}
-
-.watch-mobile-nav a.active {
-  color: var(--primary);
-  opacity: 1;
-  background: rgb(79 218 217 / 10%);
-  border-radius: 10px;
-  padding: 6px;
-  box-shadow: 0 0 10px rgb(79 218 217 / 30%);
-}
-
 @keyframes pulse {
   0%,
   100% {
@@ -798,9 +762,5 @@
 
   .watch-interactions {
     grid-template-columns: 1fr;
-  }
-
-  .watch-mobile-nav {
-    display: flex;
   }
 }

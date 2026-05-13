@@ -1,0 +1,206 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&display=swap');
+
+.app-bottom-nav {
+  --bottom-surface: rgba(51, 53, 57, 0.95);
+  --bottom-primary: #4fdad9;
+  --bottom-primary-border: rgba(79, 218, 217, 0.3);
+  --bottom-tertiary: #e9c400;
+  --bottom-on-variant: #bbc9c9;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 12px 16px calc(24px + env(safe-area-inset-bottom, 0));
+  background: var(--bottom-surface);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border-top: 1px solid var(--bottom-primary-border);
+  border-radius: 24px 24px 0 0;
+}
+
+.app-bottom-link--btn {
+  appearance: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+  margin: 0;
+}
+
+.app-bottom-gate-root {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 24px 16px calc(32px + env(safe-area-inset-bottom, 0));
+  pointer-events: auto;
+}
+
+.app-bottom-gate-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  border: none;
+  cursor: pointer;
+}
+
+.app-bottom-gate-panel {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 400px;
+  padding: 20px 18px 18px;
+  border-radius: 20px 20px 16px 16px;
+  background: rgba(30, 32, 36, 0.98);
+  border: 1px solid rgba(79, 218, 217, 0.35);
+  box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.45);
+}
+
+.app-bottom-gate-panel h2 {
+  margin: 0 0 10px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #e8f4f3;
+}
+
+.app-bottom-gate-body {
+  margin: 0 0 16px;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: rgba(187, 201, 201, 0.95);
+}
+
+.app-bottom-gate-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.app-bottom-gate-primary {
+  padding: 12px 16px;
+  border-radius: 999px;
+  border: none;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: #0a1212;
+  background: linear-gradient(135deg, #4fdad9, #2ea8a7);
+}
+
+.app-bottom-gate-secondary {
+  padding: 8px;
+  border: none;
+  background: transparent;
+  color: rgba(187, 201, 201, 0.9);
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (min-width: 768px) {
+  .app-bottom-gate-root {
+    display: none;
+  }
+
+  .app-bottom-nav {
+    display: none;
+  }
+}
+
+.app-bottom-link {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  flex: 1;
+  text-decoration: none;
+  color: var(--bottom-on-variant);
+  opacity: 0.6;
+  font-size: 10px;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.app-bottom-link .material-symbols-outlined {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.app-bottom-link:hover {
+  opacity: 0.85;
+  color: var(--bottom-primary);
+}
+
+.app-bottom-link--earn-slot:hover {
+  color: var(--bottom-tertiary);
+  opacity: 0.9;
+}
+
+.app-bottom-link--active {
+  color: var(--bottom-primary);
+  opacity: 1;
+}
+
+.app-bottom-link--active:hover {
+  color: var(--bottom-primary);
+  opacity: 1;
+}
+
+.app-bottom-link--active-earn {
+  color: var(--bottom-tertiary);
+  opacity: 1;
+}
+
+.app-bottom-link--active-earn:hover {
+  color: var(--bottom-tertiary);
+  opacity: 1;
+}
+
+/* Earn tab keeps tertiary accent when idle (matches design reference). */
+.app-bottom-link--earn-slot {
+  color: var(--bottom-tertiary);
+  opacity: 0.72;
+}
+
+.app-bottom-link--earn-slot:hover {
+  color: var(--bottom-tertiary);
+  opacity: 0.9;
+}
+
+.app-bottom-link__pip {
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--bottom-primary);
+  box-shadow: 0 0 10px rgba(79, 218, 217, 0.85);
+}
+
+.app-bottom-link__pip--earn {
+  background: var(--bottom-tertiary);
+  box-shadow: 0 0 10px rgba(233, 196, 0, 0.75);
+}
+
+.app-bottom-label {
+  font-family: 'Space Grotesk', 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+}

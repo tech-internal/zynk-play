@@ -7,6 +7,7 @@ export type UserProfile = {
   full_name: string;
   email: string;
   country: string;
+  languages?: string;
   status: string;
   role: string;
   free_trial_used: boolean;
@@ -29,6 +30,7 @@ export async function updateUserProfile(partial: {
   full_name?: string;
   email?: string;
   country?: string;
+  languages?: string;
 }): Promise<UserProfile> {
   const res = await apiFetch('/api/v1/users/me', {
     method: 'PATCH',

@@ -8,6 +8,7 @@ import {
   type PalzioOutcome,
 } from "../api/palzio";
 import ApiLoaderOverlay from "../components/ApiLoaderOverlay";
+import { useEntitlements } from "../context/EntitlementsContext";
 import "./PalzioCheckoutPage.css";
 
 const METHODS: { id: PalzioMethod; label: string; subtitle: string }[] = [
@@ -76,6 +77,7 @@ function isPlausibleWalletId(s: string): boolean {
 const PalzioCheckoutPage: React.FC = () => {
   const [params] = useSearchParams();
   const navigate = useNavigate();
+  const { refresh } = useEntitlements();
   const transactionRef = params.get("transaction_ref") ?? "";
 
   const [checkoutToken, setCheckoutToken] = useState<string | null>(null);
@@ -158,7 +160,8 @@ const PalzioCheckoutPage: React.FC = () => {
           tone: "ok",
           text: "Payment completed. Your subscription is active when the platform accepted the callback.",
         });
-        setTimeout(() => navigate("/profile?paid=1"), 1600);
+        await refresh();
+        window.setTimeout(() => navigate("/dashboard", { replace: true }), 1600);
       } else if (outcome === "user_dropped") {
         clearPalzioCheckoutToken(transactionRef);
         setDoneMessage({
@@ -202,11 +205,10 @@ const PalzioCheckoutPage: React.FC = () => {
         {missing && (
           <div className="pcheckout-panel">
             <p className="pcheckout-error">
-              Missing checkout session. Choose a plan on Profile and use
-              &quot;Pay with Palzio (mock)&quot;.
+              Missing checkout session. Choose a plan on the subscription page and continue to payment.
             </p>
-            <Link to="/profile" className="pcheckout-link-btn">
-              Back to profile
+            <Link to="/subscription" className="pcheckout-link-btn">
+              View plans
             </Link>
           </div>
         )}
@@ -375,7 +377,7 @@ const PalzioCheckoutPage: React.FC = () => {
                   type="button"
                   className="pcheckout-cancel"
                   disabled={busy}
-                  onClick={() => navigate("/profile")}
+                  onClick={() => navigate("/subscription")}
                 >
                   Cancel
                 </button>

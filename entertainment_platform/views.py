@@ -329,7 +329,7 @@ def user_profile(request):
         return Response(serializer.data)
 
     if request.method in ('PUT', 'PATCH'):
-        allowed_fields = ['username', 'full_name', 'email', 'country']
+        allowed_fields = ['username', 'full_name', 'email', 'country', 'languages']
         data = {k: v for k, v in request.data.items() if k in allowed_fields}
 
         serializer = UserSerializer(user, data=data, partial=True)

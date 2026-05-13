@@ -2,15 +2,6 @@ import React, { useState, useEffect } from 'react';
 import './DashboardPage.css';
 import { AFG_CRICKET_GAME_URL } from '../config/afgCricket';
 
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      video: React.VideoHTMLAttributes<HTMLVideoElement>;
-      iframe: React.IframeHTMLAttributes<HTMLIFrameElement>;
-    }
-  }
-}
-
 const DashboardPage: React.FC = () => {
   const [activeGameTab, setActiveGameTab] = useState<'keyboard' | 'touch'>('keyboard');
   const [selectedStream, setSelectedStream] = useState(1);

@@ -7,7 +7,10 @@ from .models import (
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('phone_number', 'username', 'full_name', 'email', 'role', 'status', 'free_trial_used', 'last_login_at')
+    list_display = (
+        'phone_number', 'username', 'full_name', 'email', 'country', 'languages',
+        'role', 'status', 'free_trial_used', 'last_login_at',
+    )
     list_filter = ('status', 'free_trial_used', 'role')
     search_fields = ('phone_number', 'username', 'email', 'full_name')
 

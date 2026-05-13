@@ -164,7 +164,7 @@ const SubscriptionPage: React.FC = () => {
               Dashboard
             </Link>
             <span className="subpage-hero-links-sep" aria-hidden>
-              //
+              {'//'}
             </span>
             <Link to="/profile" className="subpage-text-link">
               Account

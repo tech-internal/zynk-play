@@ -4,7 +4,8 @@ html.fv-ldg-page,
 html.fv-ldg-page body,
 html.fv-ldg-page #root,
 html.fv-ldg-page .App {
-  background: var(--surface-0);
+  background: var(--page-background);
+  background-attachment: fixed;
   min-height: 100%;
 }
 
@@ -22,7 +23,7 @@ html.fv-ldg-page .App {
 
   position: relative;
   min-height: 100vh;
-  background: var(--surface-0);
+  background: transparent;
   color: var(--text-mid);
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 15px;
@@ -97,7 +98,7 @@ html.fv-ldg-page .App {
   justify-content: space-between;
   height: 64px;
   padding: var(--unit) var(--margin-mobile);
-  background: rgba(7, 10, 15, 0.92);
+  background: var(--glass-overlay-heavy);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(65, 71, 80, 0.2);
@@ -359,7 +360,7 @@ html.fv-ldg-page .App {
   width: 96px;
   flex-direction: column;
   align-items: center;
-  background: rgba(12, 14, 18, 0.95);
+  background: var(--glass-overlay-heavy);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border-right: 1px solid rgba(65, 71, 80, 0.1);
@@ -474,7 +475,7 @@ html.fv-ldg-page .App {
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: radial-gradient(circle at center, rgba(0, 100, 162, 0.4) 0%, rgba(2, 4, 8, 1) 70%);
+  background: radial-gradient(circle at center, rgba(142, 197, 240, 0.35) 0%, rgba(15, 39, 68, 0.92) 70%);
 }
 
 .fv-ldg-hero-scanline {
@@ -595,7 +596,7 @@ html.fv-ldg-page .App {
 .fv-ldg-mtile-grad {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, var(--surface-1) 0%, rgba(16, 23, 31, 0.65) 45%, transparent 100%);
+  background: linear-gradient(to top, var(--surface-1) 0%, rgba(28, 53, 84, 0.65) 45%, transparent 100%);
 }
 
 .fv-ldg-mtile-meta {
@@ -760,7 +761,7 @@ html.fv-ldg-page .App {
 }
 
 .fv-ldg-btn--ghost:hover {
-  background: rgba(16, 23, 31, 0.95);
+  background: var(--glass-overlay-heavy);
   box-shadow: 0 0 20px rgba(61, 214, 255, 0.35);
   color: var(--accent-secondary);
   border-color: var(--accent-secondary);
@@ -986,7 +987,7 @@ html.fv-ldg-page .App {
 .fv-ldg-card-grad {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, var(--surface-1) 0%, rgba(16, 23, 31, 0.55) 50%, transparent 100%);
+  background: linear-gradient(to top, var(--surface-1) 0%, rgba(28, 53, 84, 0.55) 50%, transparent 100%);
   pointer-events: none;
 }
 

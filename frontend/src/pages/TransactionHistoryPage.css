@@ -17,7 +17,7 @@
   --thp-on-surface-variant: var(--text-low);
   --thp-surface-container-highest: var(--surface-container-highest);
   --thp-glass-border: rgba(61, 214, 255, 0.15);
-  --thp-glass-bg: rgba(16, 23, 31, 0.6);
+  --thp-glass-bg: var(--glass-overlay-light);
   min-height: 100vh;
   color: var(--thp-on-bg);
   font-family: 'Inter', system-ui, sans-serif;
@@ -26,9 +26,9 @@
   font-weight: 500;
   letter-spacing: 0.2px;
   line-height: 1.6;
-  background-color: var(--thp-bg);
+  background-color: transparent;
   background-image:
-    radial-gradient(circle at 50% 0%, rgba(0, 98, 159, 0.15), transparent 40%),
+    radial-gradient(circle at 50% 0%, rgba(142, 197, 240, 0.18), transparent 40%),
     linear-gradient(rgba(155, 203, 255, 0.03) 1px, transparent 1px),
     linear-gradient(90deg, rgba(155, 203, 255, 0.03) 1px, transparent 1px);
   background-size: 100% 100%, 32px 32px, 32px 32px;

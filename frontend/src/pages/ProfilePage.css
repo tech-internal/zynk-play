@@ -31,10 +31,10 @@
 
 .fv-profile-root {
   min-height: calc(100vh - 56px);
-  background-color: var(--fv-bg);
+  background-color: transparent;
   color: var(--fv-on-bg);
   font-family: 'Inter', system-ui, sans-serif;
-  background-image: radial-gradient(circle at 2px 2px, rgba(0, 100, 162, 0.15) 1px, transparent 0);
+  background-image: radial-gradient(circle at 2px 2px, rgba(142, 197, 240, 0.12) 1px, transparent 0);
   background-size: 32px 32px;
   overflow-x: hidden;
   padding-bottom: 96px;
@@ -342,7 +342,7 @@
   padding: 16px;
   border-radius: 8px;
   border: 1px solid rgba(65, 71, 80, 0.25);
-  background: rgba(12, 14, 18, 0.5);
+  background: var(--glass-overlay-light);
   transition: border-color 0.25s ease;
 }
 
@@ -581,7 +581,7 @@
   padding: 16px;
   border: none;
   border-radius: 8px;
-  background: rgba(12, 14, 18, 0.35);
+  background: var(--glass-overlay-light);
   color: inherit;
   font: inherit;
   text-align: left;
@@ -736,7 +736,7 @@
   padding: 8px 16px;
   border-radius: 999px;
   background: linear-gradient(135deg, #f57921, #c45a12);
-  color: #0c0e12;
+  color: var(--surface-container-lowest);
   font-weight: 700;
   font-size: 0.8rem;
   text-decoration: none;

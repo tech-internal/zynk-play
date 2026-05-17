@@ -4,8 +4,16 @@
    GAME PALAZIO — global shell
    ============================================ */
 
+html,
+body,
+#root {
+  min-height: 100%;
+  background: var(--page-background);
+  background-attachment: fixed;
+}
+
 .App {
-  background: var(--surface-0);
+  background: transparent;
   color: var(--text-mid);
   min-height: 100vh;
   font-family: 'Inter', system-ui, sans-serif;

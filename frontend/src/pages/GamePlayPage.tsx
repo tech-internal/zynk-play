@@ -7,6 +7,7 @@ import {
 } from '../config/afgCricket';
 import PremiumAccessWall from '../components/PremiumAccessWall';
 import { useEntitlements } from '../context/EntitlementsContext';
+import { useI18n, usePageTitle } from '../i18n';
 
 type ArenaGame = {
   title: string;
@@ -106,6 +107,8 @@ async function exitGameFullscreen(): Promise<void> {
 }
 
 const GamePlayPage: React.FC = () => {
+  const { t } = useI18n();
+  usePageTitle('play.pageTitle', 'Game Plazio | Play Cricket');
   const { canWatchPlayEarn, loading: entLoading, profile } = useEntitlements();
 
   const playerName = React.useMemo(() => {
@@ -117,45 +120,37 @@ const GamePlayPage: React.FC = () => {
     return profile.phone_number;
   }, [profile]);
 
-  React.useEffect(() => {
-    document.title = 'Game Plazio | Play Cricket';
-  }, []);
-
-  const [gameOpen, setGameOpen] = React.useState(false);
-  const [isLoading, setIsLoading] = React.useState(true);
-  const hostRef = React.useRef<HTMLDivElement>(null);
+  const [gameFullscreen, setGameFullscreen] = React.useState(false);
+  const [gameReady, setGameReady] = React.useState(false);
+  const stageRef = React.useRef<HTMLDivElement>(null);
   const hadEnteredFsRef = React.useRef(false);
 
   React.useEffect(() => {
-    if (gameOpen) {
-      document.body.style.overflow = 'hidden';
-      setIsLoading(true);
-    } else {
-      document.body.style.overflow = '';
-    }
+    document.body.style.overflow = gameFullscreen ? 'hidden' : '';
     return () => {
       document.body.style.overflow = '';
     };
-  }, [gameOpen]);
+  }, [gameFullscreen]);
 
-  React.useLayoutEffect(() => {
-    if (!gameOpen || !hostRef.current) return;
+  const openGameFullscreen = React.useCallback(() => {
+    const el = stageRef.current;
+    if (!el) return;
+    setGameFullscreen(true);
     hadEnteredFsRef.current = false;
-    const el = hostRef.current;
     void requestGameFullscreen(el)
       .then(() => {
         hadEnteredFsRef.current = true;
       })
       .catch(() => {
-        /* fixed overlay fallback — still playable */
+        /* overlay fallback — game still visible in stage */
       });
-  }, [gameOpen]);
+  }, []);
 
   React.useEffect(() => {
     const onFs = () => {
       if (!getFullscreenElement() && hadEnteredFsRef.current) {
         hadEnteredFsRef.current = false;
-        setGameOpen(false);
+        setGameFullscreen(false);
       }
     };
     document.addEventListener('fullscreenchange', onFs);
@@ -166,24 +161,24 @@ const GamePlayPage: React.FC = () => {
     };
   }, []);
 
-  const closeGame = React.useCallback(async () => {
+  const exitGameFullscreenMode = React.useCallback(async () => {
     try {
       await exitGameFullscreen();
     } catch {
       /* ignore */
     }
     hadEnteredFsRef.current = false;
-    setGameOpen(false);
+    setGameFullscreen(false);
   }, []);
 
   React.useEffect(() => {
-    if (!gameOpen) return undefined;
+    if (!gameFullscreen) return undefined;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') void closeGame();
+      if (e.key === 'Escape') void exitGameFullscreenMode();
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [gameOpen, closeGame]);
+  }, [gameFullscreen, exitGameFullscreenMode]);
 
   return (
     <div className="play-page play-theme">
@@ -192,9 +187,71 @@ const GamePlayPage: React.FC = () => {
       ) : (
         <>
         <main className="play-main">
-        <section className="play-section play-avatar-zone" aria-labelledby="play-hud-heading">
-          <div className="play-inner">
-            <div className="play-avatar-grid">
+        <section className="play-broadcast-header play-inner">
+          <div>
+            <div className="play-live-meta">
+              <span className="play-live-pill">
+                <span className="dot" aria-hidden />
+                ARENA
+              </span>
+              <span className="play-broadcast-kicker">Cricket match simulator</span>
+            </div>
+            <h1 className="play-broadcast-title">{t('play.hudTitle')}</h1>
+          </div>
+          <div className="play-broadcast-actions">
+            <a
+              className="play-btn-ghost"
+              href={AFG_CRICKET_STANDALONE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span className="material-symbols-outlined play-ms-sm">open_in_new</span>
+              Open in new tab
+            </a>
+          </div>
+        </section>
+
+        <section className="play-inner play-game-section" aria-label="Cricket arena">
+            <div
+              ref={stageRef}
+              className={`play-game-stage play-hud-card${gameFullscreen ? ' play-game-stage--fullscreen' : ''}`}
+            >
+              {!gameReady && (
+                <div className="play-loader" role="status" aria-live="polite">
+                  <div className="play-loader-portal" aria-hidden>
+                    <span className="play-loader-ring play-loader-ring--outer" />
+                    <span className="play-loader-ring play-loader-ring--mid" />
+                    <span className="play-loader-core">
+                      <span className="material-symbols-outlined">sports_esports</span>
+                    </span>
+                  </div>
+                  <p className="play-loader-title">Loading arena</p>
+                  <p className="play-loader-sub">Preparing cricket simulator…</p>
+                </div>
+              )}
+              <iframe
+                className="play-game-iframe"
+                src={AFG_CRICKET_GAME_URL}
+                allow={AFG_CRICKET_IFRAME_ALLOW}
+                allowFullScreen
+                title="Afghan cricket game"
+                onLoad={() => setGameReady(true)}
+              />
+              {!gameFullscreen && gameReady && (
+                <button
+                  type="button"
+                  className="play-game-expand"
+                  onClick={openGameFullscreen}
+                  aria-label="Enter fullscreen arena"
+                >
+                  <span className="material-symbols-outlined">fullscreen</span>
+                  Enter fullscreen
+                </button>
+              )}
+            </div>
+        </section>
+
+        <section className="play-inner play-profile-row" aria-labelledby="play-hud-heading">
               <div className="play-avatar-visual play-hud-card play-holo">
                 <div className="play-avatar-bloom" aria-hidden />
                 <img src={AVATAR_HERO} alt="Elite player avatar" loading="eager" className="play-avatar-img" />
@@ -212,10 +269,9 @@ const GamePlayPage: React.FC = () => {
                   </div>
                 </div>
               </div>
-
-              <div className="play-hud-panel">
+          <aside className="play-hud-panel play-hud-card">
                 <div className="play-hud-panel-head">
-                  <h2 className="play-title-lg">Elite HUD terminal</h2>
+                  <h2 className="play-title-lg">{t('play.hudTitle')}</h2>
                   <div className="play-accent-bar" />
                 </div>
 
@@ -259,47 +315,7 @@ const GamePlayPage: React.FC = () => {
                     Customize elite gear
                   </button>
                 </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="play-section play-match-zone" aria-labelledby="play-match-heading">
-          <div className="play-inner">
-            <div className="play-zone-head">
-              <div>
-                <h2 id="play-match-heading" className="play-title-lg">
-                  Cricket match simulator
-                </h2>
-                <p className="play-subtitle">
-                  Launch the AWS-hosted WebGL build in fullscreen. Opens only after you tap play.
-                </p>
-              </div>
-              <div className="play-zone-actions">
-                <a
-                  className="play-btn-ghost"
-                  href={AFG_CRICKET_STANDALONE_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <span className="material-symbols-outlined play-ms-sm">open_in_new</span>
-                  Open in new tab
-                </a>
-              </div>
-            </div>
-
-            <button type="button" className="play-game-placeholder play-hud-card play-holo" onClick={() => setGameOpen(true)}>
-              <img className="play-game-placeholder-bg" src={arenaCards[0].image} alt="" />
-              <div className="play-game-placeholder-scrim" />
-              <div className="play-game-placeholder-body">
-                <span className="material-symbols-outlined play-game-placeholder-icon">sports_esports</span>
-                <p className="play-game-placeholder-kicker">Unity WebGL · S3</p>
-                <h3 className="play-game-placeholder-title">Enter full-screen arena</h3>
-                <p className="play-game-placeholder-hint">Tap to load the match simulator</p>
-              </div>
-            </button>
-            <p className="play-note">Use Esc or the close control to exit fullscreen and return here.</p>
-          </div>
+              </aside>
         </section>
 
         <section className="play-section play-fantasy-zone" aria-labelledby="play-fantasy-heading">
@@ -561,33 +577,6 @@ const GamePlayPage: React.FC = () => {
         </section>
       </main>
 
-      {gameOpen && (
-        <div ref={hostRef} className="play-fs-host" role="dialog" aria-modal="true" aria-label="Cricket game fullscreen">
-          <div className="play-fs-toolbar">
-            <p className="play-fs-title">Cricket match simulator</p>
-            <button type="button" className="play-fs-close" onClick={() => void closeGame()}>
-              <span className="material-symbols-outlined">close</span>
-              Exit
-            </button>
-          </div>
-          <div className="play-fs-frame">
-            {isLoading && (
-              <div className="play-loader" role="status">
-                <div className="play-loader-spinner" />
-                <p>Loading game…</p>
-              </div>
-            )}
-            <iframe
-              className="play-fs-iframe"
-              src={AFG_CRICKET_GAME_URL}
-              allow={AFG_CRICKET_IFRAME_ALLOW}
-              allowFullScreen
-              title="Afghan cricket game"
-              onLoad={() => setIsLoading(false)}
-            />
-          </div>
-        </div>
-      )}
         </>
       )}
     </div>

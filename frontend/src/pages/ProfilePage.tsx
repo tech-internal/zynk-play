@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { clearMockAuthSession } from '../utils/authSession';
 import { updateUserProfile } from '../api/user';
 import { useEntitlements } from '../context/EntitlementsContext';
+import { useI18n, usePageTitle } from '../i18n';
 import './ProfilePage.css';
 
 const AVATAR_URL =
@@ -19,6 +20,8 @@ function formatJoined(iso: string | undefined): string {
 }
 
 const ProfilePage: React.FC = () => {
+  const { t } = useI18n();
+  usePageTitle('profile.pageTitle', 'Fanverse - User Profile');
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { profile, subStatus, loading, error, refresh, needsProfileCompletion, needsSubscription } =
@@ -44,10 +47,6 @@ const ProfilePage: React.FC = () => {
     setCountry(profile.country ?? '');
     setLanguages(profile.languages ?? '');
   }, [profile]);
-
-  useEffect(() => {
-    document.title = 'Fanverse - User Profile';
-  }, []);
 
   const handleLogout = () => {
     clearMockAuthSession();
@@ -105,7 +104,7 @@ const ProfilePage: React.FC = () => {
       <main className="fv-profile-main">
         {paidOk && (
           <div className="fv-profile-banner fv-profile-banner--ok" role="status">
-            <span>Payment received. If your subscription is active, you can use Watch, Play, and Earn.</span>
+            <span>{t('profile.paymentOk')}</span>
             <button type="button" className="fv-profile-banner-dismiss" onClick={dismissPaid}>
               Dismiss
             </button>
@@ -115,10 +114,10 @@ const ProfilePage: React.FC = () => {
         {onboarding && (needsProfileCompletion || needsSubscription) && (
           <div className="fv-profile-banner" role="region" aria-label="Setup checklist">
             <div>
-              <strong>Finish setup</strong>
+              <strong>{t('profile.finishSetup')}</strong>
               <ol className="fv-profile-onboard-steps">
-                <li className={!needsProfileCompletion ? 'is-done' : ''}>Complete profile (name &amp; handle)</li>
-                <li className={!needsSubscription ? 'is-done' : ''}>Choose a plan and pay</li>
+                <li className={!needsProfileCompletion ? 'is-done' : ''}>{t('profile.stepProfile')}</li>
+                <li className={!needsSubscription ? 'is-done' : ''}>{t('profile.stepPlan')}</li>
               </ol>
             </div>
             {!needsProfileCompletion ? (

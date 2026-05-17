@@ -4,7 +4,7 @@ import { mockSendOtp, mockVerifyOtp } from '../api/mockAuth';
 import { fetchSubscriptionStatus } from '../api/subscriptions';
 import { fetchUserProfile } from '../api/user';
 import { isAuthenticated, saveMockAuthSession } from '../utils/authSession';
-import { useI18n } from '../i18n';
+import { useI18n, usePageTitle } from '../i18n';
 import ApiLoaderOverlay from '../components/ApiLoaderOverlay';
 import './LoginPage.css';
 
@@ -41,8 +41,9 @@ const LoginPage: React.FC = () => {
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [pageLoading, setPageLoading] = useState(false);
 
+  usePageTitle('login.pageTitle', 'FANVERSE | Elite HUD Access');
+
   useEffect(() => {
-    document.title = 'FANVERSE | Elite HUD Access';
     if (!isAuthenticated()) {
       return;
     }
@@ -74,7 +75,7 @@ const LoginPage: React.FC = () => {
     setError(null);
     setSuccessMsg(null);
     if (phoneDigits.length < 7) {
-      setError('Enter a valid phone number.');
+      setError(t('login.error.phone'));
       return;
     }
     setLoading(true);
@@ -84,7 +85,7 @@ const LoginPage: React.FC = () => {
       setStep('otp');
       setResendCooldown(30);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not send OTP.');
+      setError(err instanceof Error ? err.message : t('login.error.sendOtp'));
     } finally {
       setLoading(false);
     }
@@ -111,7 +112,7 @@ const LoginPage: React.FC = () => {
       setSuccessMsg(res.message);
       setResendCooldown(30);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not resend code.');
+      setError(err instanceof Error ? err.message : t('login.error.resend'));
     } finally {
       setLoading(false);
     }
@@ -123,7 +124,7 @@ const LoginPage: React.FC = () => {
     const trimmedPhone = fullPhoneNumber;
     const code = otp.trim();
     if (code.length !== 6) {
-      setError('Enter the 6-digit code.');
+      setError(t('login.error.code'));
       return;
     }
     setLoading(true);
@@ -141,7 +142,7 @@ const LoginPage: React.FC = () => {
       const nextPath = await resolvePostLoginPath();
       navigate(nextPath, { replace: true });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Verification failed.');
+      setError(err instanceof Error ? err.message : t('login.error.verify'));
     } finally {
       setLoading(false);
       setPageLoading(false);
@@ -150,12 +151,12 @@ const LoginPage: React.FC = () => {
 
   const handleAwccStub = () => {
     setError(null);
-    setSuccessMsg('Encrypted AWCC federated login is not enabled in this build.');
+    setSuccessMsg(t('login.awccStub'));
   };
 
   return (
     <div className="login-page">
-      <ApiLoaderOverlay active={pageLoading} label="Preparing your cricket lobby..." />
+      <ApiLoaderOverlay active={pageLoading} label={t('login.entering')} />
       <div className="login-stadium-bg" aria-hidden="true">
         <div className="login-scanline" />
       </div>
@@ -163,11 +164,11 @@ const LoginPage: React.FC = () => {
       <main className="login-shell">
         <header className="login-branding">
           <Link to="/" className="login-brand-title">
-            FANVERSE
+            {t('brand.fanverse')}
           </Link>
           <div className="login-brand-subrow">
             <div className="login-brand-bar" aria-hidden="true" />
-            <span className="login-brand-tag">Elite HUD System</span>
+            <span className="login-brand-tag">{t('brand.tagline')}</span>
             <div className="login-brand-bar" aria-hidden="true" />
           </div>
         </header>
@@ -183,10 +184,12 @@ const LoginPage: React.FC = () => {
               <span className="material-symbols-outlined login-icon-pulse" aria-hidden="true">
                 {step === 'phone' ? 'security' : 'verified_user'}
               </span>
-              <h1 className="login-heading">{step === 'phone' ? 'ELITE ACCESS' : 'VERIFY TOKEN'}</h1>
+              <h1 className="login-heading">
+                {step === 'phone' ? t('login.eliteAccess') : t('login.verifyToken')}
+              </h1>
             </div>
             <p className="login-lede">
-              {step === 'phone' ? 'Initialize encrypted authentication' : 'Confirm one-time passkey to enter'}
+              {step === 'phone' ? t('login.initAuth') : t('login.confirmOtp')}
             </p>
           </div>
 
@@ -195,7 +198,7 @@ const LoginPage: React.FC = () => {
               <div className="login-field-block">
                 <div className="login-field-label-row">
                   <label className="login-label" htmlFor="phone">
-                    Mobile ID
+                    {t('login.mobileId')}
                   </label>
                   <span className="login-hud-chip">SECURE_CHANNEL_AF</span>
                 </div>
@@ -232,7 +235,7 @@ const LoginPage: React.FC = () => {
               {error && <p className="login-msg login-msg-error">{error}</p>}
               {successMsg && !error && <p className="login-msg login-msg-ok">{successMsg}</p>}
               <button type="submit" className="login-btn-submit" disabled={!canSubmitPhone}>
-                {loading ? t('login.form.sending', 'Sending code…') : 'REQUEST OTP'}
+                {loading ? t('login.form.sending') : t('login.requestOtp')}
                 <span className="material-symbols-outlined" aria-hidden="true">
                   bolt
                 </span>
@@ -243,13 +246,13 @@ const LoginPage: React.FC = () => {
           {step === 'otp' && (
             <form onSubmit={handleVerify} className="login-form" noValidate>
               <p className="login-sent">
-                Sent to <strong>{fullPhoneNumber}</strong>
+                {t('login.sentTo')} <strong>{fullPhoneNumber}</strong>
               </p>
               {successMsg && <p className="login-msg login-msg-ok">{successMsg}</p>}
               <div className="login-field-block">
                 <div className="login-field-label-row">
                   <label className="login-label" htmlFor="otp">
-                    OTP Payload
+                    {t('login.otpPayload')}
                   </label>
                   <span className="login-hud-chip">ROTATING_KEY_6</span>
                 </div>
@@ -276,15 +279,15 @@ const LoginPage: React.FC = () => {
                 </div>
               </div>
               <p className="login-demo-hint">
-                Demo OTP: <kbd>123456</kbd>
+                {t('login.demoOtp')} <kbd>123456</kbd>
               </p>
               {error && <p className="login-msg login-msg-error">{error}</p>}
               <div className="login-actions">
                 <button type="button" className="login-btn-text" onClick={resetToPhoneStep} disabled={loading}>
-                  Different number
+                  {t('login.differentNumber')}
                 </button>
                 <button type="submit" className="login-btn-submit login-btn-submit-inline" disabled={!canSubmitOtp}>
-                  {loading ? t('login.form.signingIn', 'Signing in…') : 'VERIFY & ENTER'}
+                  {loading ? t('login.form.signingIn') : t('login.verifyEnter')}
                   <span className="material-symbols-outlined" aria-hidden="true">
                     sports_esports
                   </span>
@@ -297,8 +300,8 @@ const LoginPage: React.FC = () => {
                 disabled={loading || resendCooldown > 0}
               >
                 {resendCooldown > 0
-                  ? `${t('login.form.resend', 'Resend code')} ${resendCooldown}s`
-                  : t('login.form.resend', 'Resend code')}
+                  ? `${t('login.form.resend')} ${resendCooldown}s`
+                  : t('login.form.resend')}
               </button>
             </form>
           )}
@@ -307,7 +310,7 @@ const LoginPage: React.FC = () => {
             <>
               <div className="login-divider" role="separator">
                 <hr className="login-divider-line" />
-                <span className="login-divider-label">System override</span>
+                <span className="login-divider-label">{t('login.systemOverride')}</span>
                 <hr className="login-divider-line" />
               </div>
               <div className="login-secondary-stack">
@@ -315,13 +318,13 @@ const LoginPage: React.FC = () => {
                   <span className="material-symbols-outlined" aria-hidden="true">
                     fingerprint
                   </span>
-                  Encrypted AWCC login
+                  {t('login.awccLogin')}
                 </button>
                 <Link to="/" className="login-btn-secondary-ghost">
                   <span className="material-symbols-outlined" aria-hidden="true">
                     person_search
                   </span>
-                  Guest protocol
+                  {t('login.guestProtocol')}
                 </Link>
               </div>
             </>
@@ -335,7 +338,7 @@ const LoginPage: React.FC = () => {
             <div className="login-footer-line login-footer-line-r" />
           </div>
           <p>
-            Access restricted to authorized personnel. End-to-end encryption active via AF-CyberLink v4.2.
+            {t('login.footerLegal')}
           </p>
         </footer>
 
@@ -347,7 +350,7 @@ const LoginPage: React.FC = () => {
           <div className="login-hud-icon-wrap">
             <span className="material-symbols-outlined">sports_esports</span>
           </div>
-          <span className="login-hud-status">Arena status: Live</span>
+          <span className="login-hud-status">{t('login.arenaLive')}</span>
         </div>
       </main>
       <div className="login-vignette" aria-hidden="true" />

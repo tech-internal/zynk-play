@@ -18,7 +18,7 @@
 
   position: relative;
   min-height: 100vh;
-  background: var(--surface-0);
+  background: transparent;
   color: var(--text-mid);
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 15px;
@@ -54,7 +54,7 @@
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  background: radial-gradient(circle, rgba(255, 106, 26, 0.03) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(142, 197, 240, 0.12) 0%, transparent 70%);
 }
 
 .dash-hub__bg-grid {
@@ -64,8 +64,8 @@
   z-index: 0;
   opacity: 0.6;
   background-image:
-    linear-gradient(rgba(61, 214, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(61, 214, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(rgba(142, 197, 240, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(197, 208, 224, 0.05) 1px, transparent 1px);
   background-size: 40px 40px;
 }
 
@@ -82,7 +82,7 @@
   right: 0;
   width: min(800px, 90vw);
   height: min(800px, 90vw);
-  background: rgba(255, 106, 26, 0.1);
+  background: rgba(197, 208, 224, 0.14);
   transform: translate(25%, -50%);
 }
 
@@ -91,7 +91,7 @@
   left: 0;
   width: min(700px, 80vw);
   height: min(700px, 80vw);
-  background: rgba(61, 214, 255, 0.1);
+  background: rgba(96, 165, 250, 0.18);
   transform: translate(-25%, 50%);
 }
 
@@ -132,11 +132,26 @@
   height: 180px;
   overflow: hidden;
   padding: 0;
+  border: 1px solid transparent;
   border-radius: var(--radius-md);
   background: var(--hub-surface);
   cursor: pointer;
   text-align: left;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.35s ease;
+}
+
+.dash-hub__portal:focus-visible {
+  outline: 2px solid var(--hub-primary);
+  outline-offset: 3px;
+}
+
+.dash-hub__portal--secondary:focus-visible {
+  outline-color: var(--hub-secondary);
 }
 
 .dash-hub__portal--primary {
@@ -162,18 +177,34 @@
   }
 }
 
-.dash-hub__portal--primary:hover {
-  transform: translateY(-2px);
-  border-width: 2px;
+.dash-hub__portal--primary:is(:hover, :active, :focus-visible) {
+  transform: translateY(-4px) scale(1.01);
   border-color: var(--hub-primary);
-  box-shadow: 0 0 18px var(--accent-glow), inset 0 0 1px 1px rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.45),
+    0 0 24px var(--accent-glow),
+    inset 0 0 1px 1px rgba(255, 255, 255, 0.1);
 }
 
-.dash-hub__portal--secondary:hover {
-  transform: translateY(-2px);
-  border-width: 2px;
+.dash-hub__portal--secondary:is(:hover, :active, :focus-visible) {
+  transform: translateY(-4px) scale(1.01);
   border-color: var(--hub-secondary);
-  box-shadow: 0 0 18px rgba(61, 214, 255, 0.45), inset 0 0 1px 1px rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.45),
+    0 0 24px rgba(61, 214, 255, 0.5),
+    inset 0 0 1px 1px rgba(255, 255, 255, 0.1);
+}
+
+@media (hover: hover) {
+  .dash-hub__portal--primary:active {
+    transform: translateY(-2px) scale(0.998);
+    transition-duration: 0.12s;
+  }
+
+  .dash-hub__portal--secondary:active {
+    transform: translateY(-2px) scale(0.998);
+    transition-duration: 0.12s;
+  }
 }
 
 .dash-hub__portal-img {
@@ -183,11 +214,16 @@
   height: 100%;
   object-fit: cover;
   opacity: 0.72;
-  transition: transform 1s ease;
+  transition:
+    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.35s ease,
+    filter 0.35s ease;
 }
 
-.dash-hub__portal:hover .dash-hub__portal-img {
-  transform: scale(1.1);
+.dash-hub__portal:is(:hover, :active, :focus-visible) .dash-hub__portal-img {
+  transform: scale(1.08);
+  opacity: 0.88;
+  filter: brightness(1.08) saturate(1.12);
 }
 
 .dash-hub__portal-overlay {
@@ -195,11 +231,30 @@
   inset: 0;
   background: linear-gradient(
     to top,
-    rgba(7, 10, 15, 0.95) 0%,
-    rgba(7, 10, 15, 0.4) 50%,
+    rgba(15, 31, 50, 0.88) 0%,
+    rgba(15, 31, 50, 0.35) 50%,
     transparent 100%
   );
   pointer-events: none;
+  transition: opacity 0.35s ease, background 0.35s ease;
+}
+
+.dash-hub__portal--primary:is(:hover, :active, :focus-visible) .dash-hub__portal-overlay {
+  background: linear-gradient(
+    to top,
+    rgba(15, 31, 50, 0.78) 0%,
+    rgba(255, 106, 26, 0.12) 45%,
+    transparent 100%
+  );
+}
+
+.dash-hub__portal--secondary:is(:hover, :active, :focus-visible) .dash-hub__portal-overlay {
+  background: linear-gradient(
+    to top,
+    rgba(15, 31, 50, 0.78) 0%,
+    rgba(61, 214, 255, 0.1) 45%,
+    transparent 100%
+  );
 }
 
 .dash-hub__scanline {
@@ -218,6 +273,20 @@
   bottom: 100%;
   animation: dash-hub-scanline 8s linear infinite;
   pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+
+.dash-hub__portal:is(:hover, :active, :focus-visible) .dash-hub__scanline {
+  opacity: 0.35;
+}
+
+.dash-hub__portal--secondary .dash-hub__scanline {
+  background: linear-gradient(
+    0deg,
+    rgba(61, 214, 255, 0) 0%,
+    rgba(61, 214, 255, 0.06) 50%,
+    rgba(61, 214, 255, 0) 100%
+  );
 }
 
 @keyframes dash-hub-scanline {
@@ -253,6 +322,19 @@
   line-height: 16px;
   font-weight: 600;
   letter-spacing: 1.5px;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), text-shadow 0.35s ease;
+}
+
+.dash-hub__portal:is(:hover, :active, :focus-visible) .dash-hub__portal-num {
+  transform: translateX(4px);
+}
+
+.dash-hub__portal--primary:is(:hover, :active, :focus-visible) .dash-hub__portal-num {
+  text-shadow: 0 0 12px var(--accent-glow);
+}
+
+.dash-hub__portal--secondary:is(:hover, :active, :focus-visible) .dash-hub__portal-num {
+  text-shadow: 0 0 12px rgba(61, 214, 255, 0.55);
 }
 
 .dash-hub__portal--primary .dash-hub__portal-num {
@@ -277,7 +359,24 @@
   text-transform: uppercase;
   letter-spacing: 1px;
   color: #f2f4f7;
-  transition: transform 0.3s ease;
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.35s ease,
+    text-shadow 0.35s ease;
+}
+
+.dash-hub__portal:is(:hover, :active, :focus-visible) .dash-hub__portal-title {
+  transform: translateX(6px);
+}
+
+.dash-hub__portal--primary:is(:hover, :active, :focus-visible) .dash-hub__portal-title {
+  color: #fff;
+  text-shadow: 0 0 20px rgba(255, 106, 26, 0.35);
+}
+
+.dash-hub__portal--secondary:is(:hover, :active, :focus-visible) .dash-hub__portal-title {
+  color: #fff;
+  text-shadow: 0 0 20px rgba(61, 214, 255, 0.35);
 }
 
 @media (min-width: 768px) {
@@ -285,8 +384,8 @@
     font-size: 36px;
   }
 
-  .dash-hub__portal:hover .dash-hub__portal-title {
-    transform: translateX(8px);
+  .dash-hub__portal:is(:hover, :active, :focus-visible) .dash-hub__portal-title {
+    transform: translateX(10px);
   }
 }
 
@@ -297,13 +396,7 @@
 }
 
 .dash-hub__portal-meta {
-  display: none;
-}
-
-@media (min-width: 480px) {
-  .dash-hub__portal-meta {
-    display: block;
-  }
+  display: block;
 }
 
 .dash-hub__portal-kicker {
@@ -312,6 +405,12 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.15em;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease;
+}
+
+.dash-hub__portal:is(:hover, :active, :focus-visible) .dash-hub__portal-kicker {
+  transform: translateY(-2px);
+  opacity: 1;
 }
 
 .dash-hub__portal--primary .dash-hub__portal-kicker {
@@ -335,6 +434,12 @@
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: rgba(224, 226, 234, 0.6);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), color 0.35s ease;
+}
+
+.dash-hub__portal:is(:hover, :active, :focus-visible) .dash-hub__portal-sub {
+  transform: translateY(-2px);
+  color: rgba(242, 244, 247, 0.92);
 }
 
 @media (min-width: 768px) {
@@ -349,7 +454,12 @@
   justify-content: center;
   padding: 6px;
   border-radius: 8px;
-  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  transition:
+    background 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.35s ease,
+    border-color 0.35s ease,
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s ease;
 }
 
 .dash-hub__portal--primary .dash-hub__portal-icon-wrap {
@@ -372,6 +482,7 @@
 
 .dash-hub__portal-icon-wrap .material-symbols-outlined {
   font-size: 18px;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @media (min-width: 768px) {
@@ -380,16 +491,99 @@
   }
 }
 
-.dash-hub__portal--primary:hover .dash-hub__portal-icon-wrap {
+.dash-hub__portal--primary:is(:hover, :active, :focus-visible) .dash-hub__portal-icon-wrap {
   background: var(--hub-primary);
   color: var(--hub-on-primary);
-  filter: drop-shadow(0 0 12px rgba(255, 106, 26, 0.6));
+  transform: scale(1.12) rotate(-4deg);
+  box-shadow: 0 0 16px rgba(255, 106, 26, 0.65);
 }
 
-.dash-hub__portal--secondary:hover .dash-hub__portal-icon-wrap {
+.dash-hub__portal--primary:is(:hover, :active, :focus-visible)
+  .dash-hub__portal-icon-wrap
+  .material-symbols-outlined {
+  transform: scale(1.05);
+}
+
+.dash-hub__portal--secondary:is(:hover, :active, :focus-visible) .dash-hub__portal-icon-wrap {
   background: var(--hub-secondary);
   color: var(--surface-0);
-  filter: drop-shadow(0 0 12px rgba(61, 214, 255, 0.5));
+  transform: scale(1.12) rotate(4deg);
+  box-shadow: 0 0 16px rgba(61, 214, 255, 0.55);
+}
+
+.dash-hub__portal--secondary:is(:hover, :active, :focus-visible)
+  .dash-hub__portal-icon-wrap
+  .material-symbols-outlined {
+  transform: scale(1.05);
+}
+
+/* Mobile: stronger tap feedback on small tiles */
+@media (max-width: 767px) {
+  .dash-hub__portal--primary:is(:hover, :active, :focus-visible),
+  .dash-hub__portal--secondary:is(:hover, :active, :focus-visible) {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow:
+      0 8px 24px rgba(0, 0, 0, 0.5),
+      0 0 20px var(--accent-glow);
+  }
+
+  .dash-hub__portal--secondary:is(:hover, :active, :focus-visible) {
+    box-shadow:
+      0 8px 24px rgba(0, 0, 0, 0.5),
+      0 0 20px rgba(61, 214, 255, 0.55);
+  }
+
+  .dash-hub__portal:is(:hover, :active, :focus-visible) .dash-hub__portal-img {
+    transform: scale(1.06);
+  }
+
+  .dash-hub__portal-foot {
+    gap: 6px;
+  }
+
+  .dash-hub__portal-kicker {
+    font-size: 7px;
+    letter-spacing: 0.12em;
+  }
+
+  .dash-hub__portal-sub {
+    font-size: 7px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dash-hub__portal,
+  .dash-hub__portal-img,
+  .dash-hub__portal-overlay,
+  .dash-hub__portal-num,
+  .dash-hub__portal-title,
+  .dash-hub__portal-kicker,
+  .dash-hub__portal-sub,
+  .dash-hub__portal-icon-wrap,
+  .dash-hub__portal-icon-wrap .material-symbols-outlined {
+    transition: none;
+  }
+
+  .dash-hub__portal:is(:hover, :active, :focus-visible) {
+    transform: none;
+  }
+
+  .dash-hub__portal:is(:hover, :active, :focus-visible) .dash-hub__portal-img {
+    transform: none;
+    filter: none;
+  }
+
+  .dash-hub__portal:is(:hover, :active, :focus-visible) .dash-hub__portal-title,
+  .dash-hub__portal:is(:hover, :active, :focus-visible) .dash-hub__portal-num,
+  .dash-hub__portal:is(:hover, :active, :focus-visible) .dash-hub__portal-kicker,
+  .dash-hub__portal:is(:hover, :active, :focus-visible) .dash-hub__portal-sub {
+    transform: none;
+  }
+
+  .dash-hub__portal--primary:is(:hover, :active, :focus-visible) .dash-hub__portal-icon-wrap,
+  .dash-hub__portal--secondary:is(:hover, :active, :focus-visible) .dash-hub__portal-icon-wrap {
+    transform: none;
+  }
 }
 
 /* Upcoming & live matches */
@@ -552,7 +746,7 @@
   padding: 16px;
   border: 1px solid rgba(90, 65, 55, 0.3);
   border-radius: 12px;
-  background: rgba(29, 32, 37, 0.4);
+  background: var(--glass-overlay-light);
 }
 
 @media (min-width: 768px) {
@@ -831,7 +1025,7 @@
   margin-top: var(--space-9);
   padding: var(--space-8) 0;
   border-top: 1px solid rgba(31, 41, 55, 0.3);
-  background: rgba(12, 14, 18, 0.8);
+  background: var(--glass-overlay);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
@@ -988,7 +1182,7 @@
   position: absolute;
   inset: 0;
   border: 0;
-  background: rgba(7, 10, 15, 0.85);
+  background: var(--glass-overlay);
   cursor: pointer;
 }
 

@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import type { DashboardMatch } from '../api/sportsDb';
 import { useUpcomingMatches } from '../hooks/useUpcomingMatches';
+import { useI18n, usePageTitle } from '../i18n';
 import './UpcomingMatchesPage.css';
 
 function TeamBadge({ team }: { team: DashboardMatch['home'] }) {
@@ -79,11 +80,9 @@ function MatchSection({ id, title, icon, matches, emptyLabel }: MatchSectionProp
 }
 
 const UpcomingMatchesPage: React.FC = () => {
+  const { t } = useI18n();
+  usePageTitle('upcoming.pageTitle', 'Upcoming Matches | Fanverse');
   const { feed, loading, error, refresh } = useUpcomingMatches();
-
-  useEffect(() => {
-    document.title = 'Upcoming Matches | Fanverse';
-  }, []);
 
   return (
     <main className="upm-page">
@@ -92,12 +91,12 @@ const UpcomingMatchesPage: React.FC = () => {
           <span className="material-symbols-outlined" aria-hidden>
             arrow_back
           </span>
-          Dashboard
+          {t('upcoming.back')}
         </Link>
-        <h1 className="upm-title">Upcoming Matches</h1>
-        <p className="upm-sub">Soccer and cricket fixtures from TheSportsDB</p>
+        <h1 className="upm-title">{t('upcoming.title')}</h1>
+        <p className="upm-sub">{t('upcoming.sub')}</p>
         <button type="button" className="upm-refresh" onClick={refresh} disabled={loading}>
-          {loading ? 'Loading…' : 'Refresh'}
+          {loading ? t('common.loading') : t('upcoming.refresh')}
         </button>
       </header>
 

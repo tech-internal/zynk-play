@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+﻿import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useI18n, usePageTitle } from '../i18n';
 import './HomePage.css';
 
 const portalImg =
@@ -15,21 +16,22 @@ const imgShare =
   'https://lh3.googleusercontent.com/aida-public/AB6AXuCyFk0SnZOVJVJWtZ6y1FvyrRhrm0mKZQcvtx94y6zyfz0wqQ1VYA0T9mSZPzKaF-vL7NlifjzxXs7NqMKD9cPRfdoQfJOaW8hZ8Hpw1Xd83vryguvfMnl5X7VClSQbCqFAGrXI76NibbkBJCIu3oMX7t7fdl5W1Z7oTxAPwwy3kToVwne3_CJxYYsOfHls3IANhzElyzaaXsmkpR9OBMP7wM5nlV9gv3W57tRWuXQaMgu-DjI2b8RQ2mL2jSd_cMrabNWJC11jodHD';
 
 function TickerLoop(): React.ReactElement {
+  const { t } = useI18n();
   return (
     <>
       <div className="fv-ldg-ticker-seg">
-        <span className="fv-ldg-ticker-tag fv-ldg-ticker-tag--secondary">NEW CHALLENGE</span>
-        <span className="fv-ldg-ticker-msg">Player778 started &quot;Urban Strike&quot; Blitz</span>
+        <span className="fv-ldg-ticker-tag fv-ldg-ticker-tag--secondary">{t('home.ticker.challenge')}</span>
+        <span className="fv-ldg-ticker-msg">{t('home.ticker.challengeMsg')}</span>
       </div>
       <div className="fv-ldg-ticker-dot" aria-hidden />
       <div className="fv-ldg-ticker-seg">
-        <span className="fv-ldg-ticker-tag fv-ldg-ticker-tag--tertiary">XP MULTIPLIER</span>
-        <span className="fv-ldg-ticker-msg">Global 2X Boost active for 00:14:22</span>
+        <span className="fv-ldg-ticker-tag fv-ldg-ticker-tag--tertiary">{t('home.ticker.xp')}</span>
+        <span className="fv-ldg-ticker-msg">{t('home.ticker.xpMsg')}</span>
       </div>
       <div className="fv-ldg-ticker-dot" aria-hidden />
       <div className="fv-ldg-ticker-seg">
-        <span className="fv-ldg-ticker-tag fv-ldg-ticker-tag--primary">DROP ALERT</span>
-        <span className="fv-ldg-ticker-msg">Legendary Skins dropping in Sector 4</span>
+        <span className="fv-ldg-ticker-tag fv-ldg-ticker-tag--primary">{t('home.ticker.drop')}</span>
+        <span className="fv-ldg-ticker-msg">{t('home.ticker.dropMsg')}</span>
       </div>
       <div className="fv-ldg-ticker-dot" aria-hidden />
     </>
@@ -37,8 +39,10 @@ function TickerLoop(): React.ReactElement {
 }
 
 const HomePage: React.FC = () => {
+  const { t } = useI18n();
+  usePageTitle('home.pageTitle', 'Fanverse | Pro League Arena');
+
   useEffect(() => {
-    document.title = 'Fanverse | Pro League Arena';
     const root = document.documentElement;
     root.classList.add('fv-ldg-page', 'dark');
     return () => {
@@ -48,35 +52,35 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="fv-ldg">
-      <aside className="fv-ldg-sidenav" aria-label="Command">
+      <aside className="fv-ldg-sidenav" aria-label={t('a11y.command')}>
         <div className="fv-ldg-sidenav-head">
-          <span className="fv-ldg-sidenav-label">COMMAND</span>
-          <span className="fv-ldg-sidenav-sub">PRO LEAGUE</span>
+          <span className="fv-ldg-sidenav-label">{t('home.command')}</span>
+          <span className="fv-ldg-sidenav-sub">{t('home.proLeague')}</span>
         </div>
         <div className="fv-ldg-sidenav-items">
           <Link to="/streaming" className="fv-ldg-sidenav-item fv-ldg-sidenav-item--active">
             <span className="material-symbols-outlined fv-ldg-icon-fill" aria-hidden>
               live_tv
             </span>
-            <span className="fv-ldg-sidenav-item-label">Watch</span>
+            <span className="fv-ldg-sidenav-item-label">{t('nav.watch')}</span>
           </Link>
           <Link to="/gameplay" className="fv-ldg-sidenav-item">
             <span className="material-symbols-outlined" aria-hidden>
               sports_esports
             </span>
-            <span className="fv-ldg-sidenav-item-label">Play</span>
+            <span className="fv-ldg-sidenav-item-label">{t('nav.play')}</span>
           </Link>
           <Link to="/earn-share?view=earn" className="fv-ldg-sidenav-item">
             <span className="material-symbols-outlined" aria-hidden>
               monetization_on
             </span>
-            <span className="fv-ldg-sidenav-item-label">Earn</span>
+            <span className="fv-ldg-sidenav-item-label">{t('nav.earn')}</span>
           </Link>
           <Link to="/earn-share?view=share" className="fv-ldg-sidenav-item">
             <span className="material-symbols-outlined" aria-hidden>
               hub
             </span>
-            <span className="fv-ldg-sidenav-item-label">Share</span>
+            <span className="fv-ldg-sidenav-item-label">{t('nav.share')}</span>
           </Link>
         </div>
       </aside>
@@ -96,7 +100,7 @@ const HomePage: React.FC = () => {
                 <div className="fv-ldg-mtile-grad" />
                 <div className="fv-ldg-mtile-meta">
                   <span className="fv-ldg-mtile-num fv-ldg-mtile-num--accent">01</span>
-                  <span className="fv-ldg-mtile-title">Watch</span>
+                  <span className="fv-ldg-mtile-title">{t('nav.watch')}</span>
                 </div>
               </Link>
               <Link to="/gameplay" className="fv-ldg-mtile fv-ldg-mtile--accent">
@@ -104,7 +108,7 @@ const HomePage: React.FC = () => {
                 <div className="fv-ldg-mtile-grad" />
                 <div className="fv-ldg-mtile-meta">
                   <span className="fv-ldg-mtile-num fv-ldg-mtile-num--accent">02</span>
-                  <span className="fv-ldg-mtile-title">Play</span>
+                  <span className="fv-ldg-mtile-title">{t('nav.play')}</span>
                 </div>
               </Link>
               <Link to="/earn-share?view=earn" className="fv-ldg-mtile fv-ldg-mtile--cyan">
@@ -112,7 +116,7 @@ const HomePage: React.FC = () => {
                 <div className="fv-ldg-mtile-grad" />
                 <div className="fv-ldg-mtile-meta">
                   <span className="fv-ldg-mtile-num fv-ldg-mtile-num--cyan">03</span>
-                  <span className="fv-ldg-mtile-title">Earn</span>
+                  <span className="fv-ldg-mtile-title">{t('nav.earn')}</span>
                 </div>
               </Link>
               <Link to="/earn-share?view=share" className="fv-ldg-mtile fv-ldg-mtile--cyan">
@@ -120,46 +124,44 @@ const HomePage: React.FC = () => {
                 <div className="fv-ldg-mtile-grad" />
                 <div className="fv-ldg-mtile-meta">
                   <span className="fv-ldg-mtile-num fv-ldg-mtile-num--cyan">04</span>
-                  <span className="fv-ldg-mtile-title">Share</span>
+                  <span className="fv-ldg-mtile-title">{t('nav.share')}</span>
                 </div>
               </Link>
             </div>
 
             <div className="fv-ldg-badge">
               <span className="fv-ldg-badge-dot" aria-hidden />
-              <span className="fv-ldg-badge-text">Live Arena Entry Authorized</span>
+              <span className="fv-ldg-badge-text">{t('home.badge')}</span>
             </div>
 
             <h1 className="fv-ldg-hero-title">
-              The Arena <span className="fv-ldg-hero-accent">is Yours</span>
+              {t('home.heroTitle')} <span className="fv-ldg-hero-accent">{t('home.heroAccent')}</span>
             </h1>
-            <p className="fv-ldg-hero-lede">
-              Real-time stadium dynamics, high-stakes predictive gaming, and elite status — all in the Pro League arena.
-            </p>
+            <p className="fv-ldg-hero-lede">{t('home.heroLede')}</p>
             <div className="fv-ldg-hero-cta-row">
               <Link to="/streaming" className="fv-ldg-btn fv-ldg-btn--secondary">
-                Enter Live Hub
+                {t('home.ctaLive')}
                 <span className="material-symbols-outlined fv-ldg-btn-icon" aria-hidden>
                   bolt
                 </span>
               </Link>
               <Link to="/earn-share?view=earn" className="fv-ldg-btn fv-ldg-btn--ghost">
-                View Standings
+                {t('home.ctaStandings')}
               </Link>
             </div>
           </div>
 
           <div className="fv-ldg-hero-deco fv-ldg-hero-deco--left" aria-hidden>
-            <span className="fv-ldg-hero-deco-label">LATENCY: 12ms</span>
-            <span className="fv-ldg-hero-deco-value">OPTIMAL</span>
+            <span className="fv-ldg-hero-deco-label">{t('home.latency')}</span>
+            <span className="fv-ldg-hero-deco-value">{t('common.optimal')}</span>
           </div>
           <div className="fv-ldg-hero-deco fv-ldg-hero-deco--right" aria-hidden>
-            <span className="fv-ldg-hero-deco-label fv-ldg-hero-deco-label--tertiary">GLOBAL USERS</span>
+            <span className="fv-ldg-hero-deco-label fv-ldg-hero-deco-label--tertiary">{t('home.globalUsers')}</span>
             <span className="fv-ldg-hero-deco-value fv-ldg-text-tertiary">422,901</span>
           </div>
         </section>
 
-        <div className="fv-ldg-ticker" role="region" aria-label="Arena feed">
+        <div className="fv-ldg-ticker" role="region" aria-label={t('a11y.arenaFeed')}>
           <div className="fv-ldg-ticker-track">
             <TickerLoop />
             <TickerLoop />
@@ -169,9 +171,9 @@ const HomePage: React.FC = () => {
         <section className="fv-ldg-core" aria-labelledby="core-ops-heading">
           <div className="fv-ldg-core-head">
             <h2 id="core-ops-heading" className="fv-ldg-core-title">
-              Core Operations
+              {t('home.coreTitle')}
             </h2>
-            <span className="fv-ldg-core-sub">SELECT DESTINATION SECTOR</span>
+            <span className="fv-ldg-core-sub">{t('home.coreSub')}</span>
           </div>
           <div className="fv-ldg-core-grid">
             <div className="fv-ldg-card fv-ldg-card--accent">
@@ -179,16 +181,14 @@ const HomePage: React.FC = () => {
               <div className="fv-ldg-card-grad" />
               <div className="fv-ldg-card-live">
                 <span className="fv-ldg-card-live-dot" aria-hidden />
-                <span className="fv-ldg-card-live-text">Live Stream</span>
+                <span className="fv-ldg-card-live-text">{t('home.liveStream')}</span>
               </div>
               <div className="fv-ldg-card-body">
-                <span className="fv-ldg-card-op">Operation 01</span>
-                <h3 className="fv-ldg-card-title">Watch</h3>
-                <p className="fv-ldg-card-desc">
-                  Immersive broadcast with interactive 3D overlays and multi-cam perspectives.
-                </p>
+                <span className="fv-ldg-card-op">{t('home.op01')}</span>
+                <h3 className="fv-ldg-card-title">{t('nav.watch')}</h3>
+                <p className="fv-ldg-card-desc">{t('home.watchDesc')}</p>
                 <Link to="/streaming" className="fv-ldg-card-link">
-                  Access Channel <span className="material-symbols-outlined">arrow_right_alt</span>
+                  {t('home.accessChannel')} <span className="material-symbols-outlined">arrow_right_alt</span>
                 </Link>
               </div>
             </div>
@@ -197,13 +197,11 @@ const HomePage: React.FC = () => {
               <img className="fv-ldg-card-bg" src={imgPlay} alt="" />
               <div className="fv-ldg-card-grad" />
               <div className="fv-ldg-card-body">
-                <span className="fv-ldg-card-op">Operation 02</span>
-                <h3 className="fv-ldg-card-title">Play</h3>
-                <p className="fv-ldg-card-desc">
-                  Join real-time lobbies and compete in prediction-based challenges for glory.
-                </p>
+                <span className="fv-ldg-card-op">{t('home.op02')}</span>
+                <h3 className="fv-ldg-card-title">{t('nav.play')}</h3>
+                <p className="fv-ldg-card-desc">{t('home.playDesc')}</p>
                 <Link to="/gameplay" className="fv-ldg-card-link">
-                  Enter Lobby <span className="material-symbols-outlined">arrow_right_alt</span>
+                  {t('home.enterLobby')} <span className="material-symbols-outlined">arrow_right_alt</span>
                 </Link>
               </div>
             </div>
@@ -212,13 +210,11 @@ const HomePage: React.FC = () => {
               <img className="fv-ldg-card-bg" src={imgEarn} alt="" />
               <div className="fv-ldg-card-grad" />
               <div className="fv-ldg-card-body">
-                <span className="fv-ldg-card-op">Operation 03</span>
-                <h3 className="fv-ldg-card-title">Earn</h3>
-                <p className="fv-ldg-card-desc">
-                  Convert your arena performance into Elite XP and exclusive digital rewards.
-                </p>
+                <span className="fv-ldg-card-op">{t('home.op03')}</span>
+                <h3 className="fv-ldg-card-title">{t('nav.earn')}</h3>
+                <p className="fv-ldg-card-desc">{t('home.earnDesc')}</p>
                 <Link to="/earn-share?view=earn" className="fv-ldg-card-link">
-                  View Rewards <span className="material-symbols-outlined">arrow_right_alt</span>
+                  {t('home.viewRewards')} <span className="material-symbols-outlined">arrow_right_alt</span>
                 </Link>
               </div>
             </div>
@@ -227,13 +223,11 @@ const HomePage: React.FC = () => {
               <img className="fv-ldg-card-bg" src={imgShare} alt="" />
               <div className="fv-ldg-card-grad" />
               <div className="fv-ldg-card-body">
-                <span className="fv-ldg-card-op">Operation 04</span>
-                <h3 className="fv-ldg-card-title">Share</h3>
-                <p className="fv-ldg-card-desc">
-                  Build your squad, stream your highlights, and lead the community conversation.
-                </p>
+                <span className="fv-ldg-card-op">{t('home.op04')}</span>
+                <h3 className="fv-ldg-card-title">{t('nav.share')}</h3>
+                <p className="fv-ldg-card-desc">{t('home.shareDesc')}</p>
                 <Link to="/earn-share?view=share" className="fv-ldg-card-link">
-                  Social Hub <span className="material-symbols-outlined">arrow_right_alt</span>
+                  {t('home.socialHub')} <span className="material-symbols-outlined">arrow_right_alt</span>
                 </Link>
               </div>
             </div>
@@ -243,9 +237,9 @@ const HomePage: React.FC = () => {
         <section className="fv-ldg-partners" aria-labelledby="partners-heading">
           <div className="fv-ldg-partners-inner">
             <div className="fv-ldg-partners-copy">
-              <span className="fv-ldg-partners-eyebrow">Authorized Networks</span>
+              <span className="fv-ldg-partners-eyebrow">{t('home.partnersEyebrow')}</span>
               <h2 id="partners-heading" className="fv-ldg-partners-title">
-                Premium Partners
+                {t('home.partnersTitle')}
               </h2>
               <div className="fv-ldg-partners-rule" aria-hidden />
             </div>
@@ -273,26 +267,26 @@ const HomePage: React.FC = () => {
                 <span className="material-symbols-outlined">monitoring</span>
               </div>
               <h3 id="analytics-heading" className="fv-ldg-analytics-title">
-                System Analytics
+                {t('home.analyticsTitle')}
               </h3>
               <div className="fv-ldg-analytics-stats">
                 <div className="fv-ldg-stat fv-ldg-stat--primary">
-                  <span className="fv-ldg-stat-label">Arena Load</span>
+                  <span className="fv-ldg-stat-label">{t('home.arenaLoad')}</span>
                   <div className="fv-ldg-stat-value">84%</div>
                   <div className="fv-ldg-bar">
                     <div className="fv-ldg-bar-fill fv-ldg-bar-fill--primary" style={{ width: '84%' }} />
                   </div>
                 </div>
                 <div className="fv-ldg-stat fv-ldg-stat--secondary">
-                  <span className="fv-ldg-stat-label">Active Pools</span>
+                  <span className="fv-ldg-stat-label">{t('home.activePools')}</span>
                   <div className="fv-ldg-stat-value">1.2K</div>
                   <div className="fv-ldg-bar">
                     <div className="fv-ldg-bar-fill fv-ldg-bar-fill--secondary" style={{ width: '65%' }} />
                   </div>
                 </div>
                 <div className="fv-ldg-stat fv-ldg-stat--tertiary">
-                  <span className="fv-ldg-stat-label">Global Ranking</span>
-                  <div className="fv-ldg-stat-value">Top 5</div>
+                  <span className="fv-ldg-stat-label">{t('home.globalRanking')}</span>
+                  <div className="fv-ldg-stat-value">{t('home.top5')}</div>
                   <div className="fv-ldg-stars" aria-hidden>
                     {[0, 1, 2, 3, 4].map((i) => (
                       <span key={i} className="material-symbols-outlined fv-ldg-star fv-ldg-icon-fill">
@@ -304,10 +298,10 @@ const HomePage: React.FC = () => {
               </div>
               <div className="fv-ldg-analytics-foot">
                 <div className="fv-ldg-analytics-tags">
-                  <span className="fv-ldg-tag fv-ldg-tag--primary">REAL-TIME SYNC: ACTIVE</span>
-                  <span className="fv-ldg-tag fv-ldg-tag--tertiary">ENCRYPTION: LEVEL 9</span>
+                  <span className="fv-ldg-tag fv-ldg-tag--primary">{t('home.syncActive')}</span>
+                  <span className="fv-ldg-tag fv-ldg-tag--tertiary">{t('home.encryption')}</span>
                 </div>
-                <span className="fv-ldg-analytics-refresh">REFRESH IN: 5s</span>
+                <span className="fv-ldg-analytics-refresh">{t('home.refreshIn')}</span>
               </div>
             </div>
 
@@ -319,20 +313,17 @@ const HomePage: React.FC = () => {
                     military_tech
                   </span>
                   <div className="fv-ldg-elite-status">
-                    <span className="fv-ldg-elite-status-label">Status</span>
-                    <span className="fv-ldg-elite-status-value">ELITE TIER</span>
+                    <span className="fv-ldg-elite-status-label">{t('home.status')}</span>
+                    <span className="fv-ldg-elite-status-value">{t('home.eliteTier')}</span>
                   </div>
                 </div>
                 <h3 className="fv-ldg-elite-title">
-                  Claim Your <span className="fv-ldg-text-tertiary">Gold Badge</span>
+                  {t('home.claimGold')} <span className="fv-ldg-text-tertiary">{t('home.goldBadge')}</span>
                 </h3>
-                <p className="fv-ldg-elite-desc">
-                  Unlock premium tournament entries, ad-free viewing, and exclusive digital assets by upgrading to
-                  Elite.
-                </p>
+                <p className="fv-ldg-elite-desc">{t('home.eliteDesc')}</p>
               </div>
               <Link to="/subscription" className="fv-ldg-elite-btn">
-                Upgrade Now
+                {t('home.upgradeNow')}
               </Link>
             </div>
           </div>
@@ -340,28 +331,28 @@ const HomePage: React.FC = () => {
 
         <footer className="fv-ldg-footer">
           <div className="fv-ldg-footer-brand">
-            <span className="fv-ldg-footer-name">Fanverse Interactive</span>
-            <span className="fv-ldg-footer-copy">Â© 2024 FANVERSE INTERACTIVE. ALL RIGHTS RESERVED.</span>
+            <span className="fv-ldg-footer-name">{t('brand.interactive')}</span>
+            <span className="fv-ldg-footer-copy">{t('home.footerCopy')}</span>
           </div>
           <div className="fv-ldg-footer-links">
-            <button type="button">Partners</button>
-            <button type="button">Legal</button>
-            <button type="button">Privacy</button>
-            <button type="button">Support</button>
-            <button type="button">API</button>
+            <button type="button">{t('home.partners')}</button>
+            <button type="button">{t('home.legal')}</button>
+            <button type="button">{t('home.privacy')}</button>
+            <button type="button">{t('home.support')}</button>
+            <button type="button">{t('home.api')}</button>
           </div>
           <div className="fv-ldg-footer-icons">
-            <button type="button" className="fv-ldg-icon-btn" aria-label="Language">
+            <Link to="/settings" className="fv-ldg-icon-btn" aria-label={t('a11y.language')}>
               <span className="material-symbols-outlined">language</span>
-            </button>
-            <button type="button" className="fv-ldg-icon-btn" aria-label="Region">
+            </Link>
+            <button type="button" className="fv-ldg-icon-btn" aria-label={t('a11y.region')}>
               <span className="material-symbols-outlined">public</span>
             </button>
           </div>
         </footer>
       </main>
 
-      <button type="button" className="fv-ldg-fab" aria-label="Open chat">
+      <button type="button" className="fv-ldg-fab" aria-label={t('a11y.openChat')}>
         <span className="material-symbols-outlined fv-ldg-icon-fill">chat_bubble</span>
       </button>
     </div>

@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useI18n, usePageTitle } from '../i18n';
 import './TransactionHistoryPage.css';
 import { fetchPaymentHistory, PaymentTransactionRow } from '../api/subscriptions';
 
@@ -156,6 +157,8 @@ function txIconClass(tx: DerivedTx): string {
 }
 
 const TransactionHistoryPage: React.FC = () => {
+  const { t } = useI18n();
+  usePageTitle('history.pageTitle', 'FANVERSE - Transaction History');
   const [transactions, setTransactions] = useState<PaymentTransactionRow[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -163,10 +166,6 @@ const TransactionHistoryPage: React.FC = () => {
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
   const [visibleCount, setVisibleCount] = useState<number>(PAGE_SIZE);
-
-  useEffect(() => {
-    document.title = 'FANVERSE - Transaction History';
-  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -253,10 +252,8 @@ const TransactionHistoryPage: React.FC = () => {
       <main className="thp-main">
         <div className="thp-container">
           <header className="thp-hero">
-            <h1 className="thp-title">History</h1>
-            <p className="thp-lead">
-              Elite Ledger: Live feed of sovereign fan activities, rewards, and redemptions within the Fanverse sector.
-            </p>
+            <h1 className="thp-title">{t('history.title')}</h1>
+            <p className="thp-lead">{t('history.sub')}</p>
           </header>
 
           <div className="thp-grid">
@@ -358,7 +355,7 @@ const TransactionHistoryPage: React.FC = () => {
                 {loading && (
                   <div className="thp-empty">
                     <span className="material-symbols-outlined">progress_activity</span>
-                    <p>Loading your ledger...</p>
+                    <p>{t('history.loading')}</p>
                   </div>
                 )}
 
@@ -372,7 +369,7 @@ const TransactionHistoryPage: React.FC = () => {
                 {!loading && !error && filtered.length === 0 && (
                   <div className="thp-empty">
                     <span className="material-symbols-outlined">receipt_long</span>
-                    <p>No transactions match your filters yet.</p>
+                    <p>{t('history.empty')}</p>
                     <Link to="/subscription" className="thp-empty-cta">
                       Explore subscription plans
                     </Link>

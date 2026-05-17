@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import PremiumAccessWall from '../components/PremiumAccessWall';
 import { useEntitlements } from '../context/EntitlementsContext';
+import { useI18n, usePageTitle } from '../i18n';
 import './EarnSharePage.css';
 
 const imgDataPack =
@@ -41,15 +42,13 @@ const rewardCards = [
 ];
 
 const EarnSharePage: React.FC = () => {
+  const { t } = useI18n();
+  usePageTitle('earn.pageTitle', 'FANVERSE | Earn & Share');
   const location = useLocation();
   const { canWatchPlayEarn, loading: entLoading } = useEntitlements();
   const view = new URLSearchParams(location.search).get('view');
   const socialOnly = view === 'share';
   const blockEarn = !socialOnly && !entLoading && !canWatchPlayEarn;
-
-  useEffect(() => {
-    document.title = 'FANVERSE | Earn & Share';
-  }, []);
 
   useEffect(() => {
     const search = new URLSearchParams(location.search);
@@ -76,7 +75,7 @@ const EarnSharePage: React.FC = () => {
               <div className="es-wallet-inner">
                 <div className="es-wallet-top">
                   <div>
-                    <h2 className="es-label-caps es-muted-label">AVAILABLE BALANCE</h2>
+                    <h2 className="es-label-caps es-muted-label">{t('earn.balance')}</h2>
                     <div className="es-balance-row">
                       <span className="es-balance-num">45,820</span>
                       <span className="es-label-caps es-balance-unit">POOLAM</span>
@@ -143,7 +142,7 @@ const EarnSharePage: React.FC = () => {
           <div className="es-market-col">
             <div className="es-market-head">
               <div>
-                <h2 className="es-headline">REWARDS MARKETPLACE</h2>
+                <h2 className="es-headline">{t('earn.marketplace')}</h2>
                 <p className="es-subline">
                   Convert your Poolam into exclusive digital and physical gear.
                 </p>
@@ -215,7 +214,7 @@ const EarnSharePage: React.FC = () => {
 
         <section id="share-section" className="es-section es-share-wrap">
           <div className="es-share-hero">
-            <h2 className="es-share-headline">CRAFT YOUR MOMENT</h2>
+            <h2 className="es-share-headline">{t('earn.craftMoment')}</h2>
             <p className="es-share-sub">
               Use our AI clip generator to transform live action into social-ready masterpieces with
               holographic overlays.

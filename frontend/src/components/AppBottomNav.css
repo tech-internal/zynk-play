@@ -11,10 +11,10 @@
   box-sizing: border-box;
   width: 100%;
   padding: var(--space-3) var(--space-2) calc(var(--space-4) + env(safe-area-inset-bottom, 0));
-  background: rgba(12, 14, 18, 0.92);
+  background: var(--glass-overlay-heavy);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-top: 1px solid rgba(31, 41, 55, 0.3);
+  border-top: 1px solid rgba(142, 197, 240, 0.15);
 }
 
 @media (min-width: 768px) {

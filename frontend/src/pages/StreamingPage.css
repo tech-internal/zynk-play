@@ -11,7 +11,7 @@
   --error: var(--danger);
   --error-container: #93000a;
   --secondary: var(--accent-warning);
-  background: radial-gradient(circle at 50% -20%, var(--surface-2) 0%, var(--surface-0) 70%);
+  background: transparent;
   color: var(--text);
   min-height: 100vh;
   overflow-x: hidden;
@@ -258,59 +258,6 @@
 
 .watch-signal div div:last-child {
   color: var(--primary);
-}
-
-.watch-angles {
-  position: absolute;
-  left: 16px;
-  bottom: 64px;
-  display: flex;
-  gap: 12px;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.watch-player:hover .watch-angles {
-  opacity: 1;
-}
-
-.watch-angle-btn {
-  width: 96px;
-  border: 1px solid rgb(255 255 255 / 20%);
-  border-radius: 10px;
-  overflow: hidden;
-  background: transparent;
-  padding: 0;
-  position: relative;
-  cursor: pointer;
-}
-
-.watch-angle-btn.active {
-  border: 2px solid var(--primary);
-  box-shadow: 0 0 15px rgb(79 218 217 / 30%);
-}
-
-.watch-angle-btn img {
-  width: 100%;
-  aspect-ratio: 16/9;
-  object-fit: cover;
-  opacity: 0.7;
-}
-
-.watch-angle-btn span {
-  position: absolute;
-  left: 4px;
-  bottom: 4px;
-  background: rgb(0 0 0 / 60%);
-  padding: 1px 4px;
-  color: #fff;
-  font-size: 8px;
-  font-weight: 700;
-}
-
-.watch-angle-btn.active span {
-  background: var(--primary);
-  color: #003737;
 }
 
 .watch-controls {

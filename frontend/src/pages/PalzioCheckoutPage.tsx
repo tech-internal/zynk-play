@@ -9,6 +9,7 @@ import {
 } from "../api/palzio";
 import ApiLoaderOverlay from "../components/ApiLoaderOverlay";
 import { useEntitlements } from "../context/EntitlementsContext";
+import { useI18n, usePageTitle } from "../i18n";
 import "./PalzioCheckoutPage.css";
 
 const METHODS: { id: PalzioMethod; label: string; subtitle: string }[] = [
@@ -75,6 +76,8 @@ function isPlausibleWalletId(s: string): boolean {
 }
 
 const PalzioCheckoutPage: React.FC = () => {
+  const { t } = useI18n();
+  usePageTitle("checkout.title", "Secure checkout");
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const { refresh } = useEntitlements();
@@ -188,7 +191,11 @@ const PalzioCheckoutPage: React.FC = () => {
 
   return (
     <div className="pcheckout-page">
-      <ApiLoaderOverlay active={busy} label="Completing your payment..." />
+      <ApiLoaderOverlay
+        active={busy}
+        label="Processing payment"
+        subline="Securing your transaction and updating elite access…"
+      />
       <div className="pcheckout-shell">
         <header className="pcheckout-topbar">
           <div className="pcheckout-brand">
@@ -196,7 +203,7 @@ const PalzioCheckoutPage: React.FC = () => {
               ◆
             </span>
             <div>
-              <h1 className="pcheckout-title">Secure checkout</h1>
+              <h1 className="pcheckout-title">{t("checkout.title")}</h1>
               <p className="pcheckout-sub">Mock gateway · Palzio PSP</p>
             </div>
           </div>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { hubNavItems } from '../config/hubNav';
 import { useEntitlements } from '../context/EntitlementsContext';
+import { useI18n } from '../i18n';
 import './AppBottomNav.css';
 
 const iconFill = { fontVariationSettings: "'FILL' 1" } as const;
@@ -9,18 +10,19 @@ const iconFill = { fontVariationSettings: "'FILL' 1" } as const;
 const AppBottomNav: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { t } = useI18n();
   const { canWatchPlayEarn, loading, needsProfileCompletion, needsSubscription } = useEntitlements();
   const [gateOpen, setGateOpen] = useState(false);
   const [gateMessage, setGateMessage] = useState('');
 
   const premiumMessage = () => {
     if (needsProfileCompletion) {
-      return 'Please complete your profile (name and handle), then choose a plan and pay. After that you can watch, play, and earn.';
+      return t('gate.profile');
     }
     if (needsSubscription) {
-      return 'Please subscribe to watch, play, and earn. Choose a plan and complete payment to unlock these tabs.';
+      return t('gate.subscribe');
     }
-    return 'Please subscribe to watch, play, and earn.';
+    return t('gate.default');
   };
 
   const tryNavigate = (item: (typeof hubNavItems)[number]) => {
@@ -34,7 +36,7 @@ const AppBottomNav: React.FC = () => {
 
   return (
     <>
-      <nav className="app-bottom-nav" aria-label="Mobile primary">
+      <nav className="app-bottom-nav" aria-label={t('a11y.mobileNav')}>
         {hubNavItems.map((item) => {
           const isActive = item.match(location.pathname, location.search);
           const content = (
@@ -48,14 +50,14 @@ const AppBottomNav: React.FC = () => {
                   {item.icon}
                 </span>
               </div>
-              <span className="app-bottom-nav__label">{item.label}</span>
+              <span className="app-bottom-nav__label">{t(item.labelKey)}</span>
             </>
           );
 
           if (item.premium) {
             return (
               <button
-                key={item.label}
+                key={item.labelKey}
                 type="button"
                 className={`app-bottom-nav__link app-bottom-nav__link--btn${isActive ? ' app-bottom-nav__link--active' : ''}`}
                 onClick={() => tryNavigate(item)}
@@ -67,7 +69,7 @@ const AppBottomNav: React.FC = () => {
 
           return (
             <Link
-              key={item.label}
+              key={item.labelKey}
               to={item.to}
               className={`app-bottom-nav__link${isActive ? ' app-bottom-nav__link--active' : ''}`}
             >
@@ -79,9 +81,14 @@ const AppBottomNav: React.FC = () => {
 
       {gateOpen ? (
         <div className="app-bottom-gate-root" role="dialog" aria-modal="true" aria-labelledby="app-bottom-gate-title">
-          <button type="button" className="app-bottom-gate-backdrop" aria-label="Close" onClick={() => setGateOpen(false)} />
+          <button
+            type="button"
+            className="app-bottom-gate-backdrop"
+            aria-label={t('a11y.close')}
+            onClick={() => setGateOpen(false)}
+          />
           <div className="app-bottom-gate-panel">
-            <h2 id="app-bottom-gate-title">Fanverse Plus</h2>
+            <h2 id="app-bottom-gate-title">{t('gate.title')}</h2>
             <p className="app-bottom-gate-body">{gateMessage}</p>
             <div className="app-bottom-gate-actions">
               <button
@@ -92,10 +99,10 @@ const AppBottomNav: React.FC = () => {
                   navigate(needsProfileCompletion ? '/profile?onboarding=1' : '/subscription');
                 }}
               >
-                {needsProfileCompletion ? 'Complete profile' : 'View plans'}
+                {needsProfileCompletion ? t('common.completeProfile') : t('common.viewPlans')}
               </button>
               <button type="button" className="app-bottom-gate-secondary" onClick={() => setGateOpen(false)}>
-                Not now
+                {t('common.notNow')}
               </button>
             </div>
           </div>

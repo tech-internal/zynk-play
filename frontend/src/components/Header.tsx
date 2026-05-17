@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { hubNavItems } from '../config/hubNav';
+import { headerNavLabelKeys, hubNavItems } from '../config/hubNav';
 import { MOCK_UNREAD_NOTIFICATIONS } from '../pages/NotificationsPage';
 import { isAuthenticated } from '../utils/authSession';
 import { useI18n } from '../i18n';
@@ -9,9 +9,8 @@ import './Header.css';
 const AVATAR_URL =
   'https://lh3.googleusercontent.com/aida-public/AB6AXuB_Wbsw0hQWsYwD-_YNEHotpTrAJZu8tMLqc9eSkKUMKEeR7GjjeL-_N6G_Rj_fPod8HTOzTfJe774fzq_Zx2jYMKqvhY7DlS_UupjSQsesKoF0VgCPRJOoIYiweXb5rSwUrNHgfEEXXaXK1i-HvgyTW3TTYTqHlH7_QiR9-vTbcGKZuPAnGdRv1ItR6BxyzHGGyDrEF8tJ4lYtbv7m1YpIJYoWufKGbye0WsRQiCUFXChsqV0xRRjQe1BJOC8hiqik731RXwEmcQNX';
 
-/** Desktop header links */
 const headerNav = hubNavItems.filter((item) =>
-  ['Home', 'Play', 'Wallet', 'Earn', 'Share'].includes(item.label),
+  (headerNavLabelKeys as readonly string[]).includes(item.labelKey),
 );
 
 const Header: React.FC = () => {
@@ -22,22 +21,27 @@ const Header: React.FC = () => {
   return (
     <header className="fv-top-header">
       <div className="fv-top-header__left">
-        <Link to={authed ? '/dashboard' : '/'} className="fv-top-header__brand" aria-label="FANVERSE ELITE home">
+        <Link
+          to={authed ? '/dashboard' : '/'}
+          className="fv-top-header__brand"
+          aria-label={t('header.homeAria')}
+        >
           <h1 className="fv-top-header__logo">
-            FANVERSE<span className="fv-top-header__logo-accent">ELITE</span>
+            {t('brand.fanverse')}
+            <span className="fv-top-header__logo-accent">{t('brand.elite')}</span>
           </h1>
         </Link>
         {authed ? (
-          <nav className="fv-top-header__nav" aria-label="Primary">
+          <nav className="fv-top-header__nav" aria-label={t('a11y.primaryNav')}>
             {headerNav.map((link) => {
               const isActive = link.match(location.pathname, location.search);
               return (
                 <Link
-                  key={link.label}
+                  key={link.labelKey}
                   to={link.to}
                   className={`fv-top-header__nav-link${isActive ? ' fv-top-header__nav-link--active' : ''}`}
                 >
-                  {link.label}
+                  {t(link.labelKey)}
                 </Link>
               );
             })}
@@ -48,7 +52,7 @@ const Header: React.FC = () => {
         {authed ? (
           <>
             <div className="fv-top-header__rank">
-              <span className="fv-top-header__rank-label">ELITE RANK</span>
+              <span className="fv-top-header__rank-label">{t('header.eliteRank')}</span>
               <div className="fv-top-header__rank-row">
                 <span className="fv-top-header__rank-xp">
                   1,240
@@ -58,7 +62,11 @@ const Header: React.FC = () => {
             </div>
             <div className="fv-top-header__tools">
               <div className="fv-top-header__notify-wrap">
-                <Link to="/notifications" className="fv-top-header__icon-btn" aria-label="Notifications">
+                <Link
+                  to="/notifications"
+                  className="fv-top-header__icon-btn"
+                  aria-label={t('header.notifications')}
+                >
                   <span className="material-symbols-outlined">notifications</span>
                 </Link>
                 {MOCK_UNREAD_NOTIFICATIONS > 0 ? (
@@ -67,10 +75,10 @@ const Header: React.FC = () => {
                   </span>
                 ) : null}
               </div>
-              <Link to="/settings" className="fv-top-header__icon-btn" aria-label="Settings">
+              <Link to="/settings" className="fv-top-header__icon-btn" aria-label={t('header.settings')}>
                 <span className="material-symbols-outlined">settings</span>
               </Link>
-              <Link to="/profile" className="fv-top-header__avatar-wrap" aria-label="Profile">
+              <Link to="/profile" className="fv-top-header__avatar-wrap" aria-label={t('header.profile')}>
                 <img className="fv-top-header__avatar" src={AVATAR_URL} alt="" />
               </Link>
             </div>
@@ -79,19 +87,19 @@ const Header: React.FC = () => {
           <>
             <div className="fv-top-header__tools fv-top-header__tools--guest">
               <div className="fv-top-header__notify-wrap">
-                <Link to="/login" className="fv-top-header__icon-btn" aria-label="Notifications">
+                <Link to="/login" className="fv-top-header__icon-btn" aria-label={t('header.notifications')}>
                   <span className="material-symbols-outlined">notifications</span>
                 </Link>
               </div>
-              <Link to="/login" className="fv-top-header__icon-btn" aria-label="Settings">
+              <Link to="/login" className="fv-top-header__icon-btn" aria-label={t('header.settings')}>
                 <span className="material-symbols-outlined">settings</span>
               </Link>
-              <Link to="/login" className="fv-top-header__avatar-wrap" aria-label="Profile">
+              <Link to="/login" className="fv-top-header__avatar-wrap" aria-label={t('header.profile')}>
                 <img className="fv-top-header__avatar" src={AVATAR_URL} alt="" />
               </Link>
             </div>
             <Link to="/login" className="fv-top-header__login">
-              {t('header.login', 'Log in')}
+              {t('header.login')}
             </Link>
           </>
         )}

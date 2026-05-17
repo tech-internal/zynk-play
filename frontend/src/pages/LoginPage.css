@@ -16,13 +16,13 @@
   --fv-outline-variant: var(--stroke-subtle);
   --fv-error: var(--danger);
   --fv-ok: var(--success);
-  --fv-glass: rgba(7, 10, 15, 0.85);
+  --fv-glass: var(--glass-overlay);
   --fv-secondary-fixed-dim: var(--accent-primary-hover);
 
   position: relative;
   min-height: 100vh;
   overflow: hidden;
-  background: var(--fv-bg);
+  background: transparent;
   color: var(--fv-on-surface);
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 15px;
@@ -58,7 +58,7 @@
   position: fixed;
   inset: 0;
   z-index: 0;
-  background-image: linear-gradient(to bottom, rgba(17, 19, 24, 0.8), var(--fv-bg)),
+  background-image: linear-gradient(to bottom, rgba(28, 53, 84, 0.55), transparent),
     url('https://lh3.googleusercontent.com/aida-public/AK7f3pS7w0P_T7vE3L9fQ6tG9k_9XzJ0mZ_4o2n5b8-V8_v_cDUm5xQS');
   background-size: cover;
   background-position: center;

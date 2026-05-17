@@ -19,7 +19,7 @@
   min-height: calc(100vh - 56px);
   position: relative;
   overflow-x: hidden;
-  background: var(--sub-bg);
+  background: transparent;
   color: var(--sub-on-bg);
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 15px;
@@ -44,7 +44,7 @@
   min-height: inherit;
   padding-bottom: 8rem;
   background:
-    radial-gradient(circle at top, rgba(0, 29, 52, 0.6), var(--sub-bg)),
+    radial-gradient(circle at top, rgba(142, 197, 240, 0.22), transparent 65%),
     url('https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&q=80') center / cover fixed;
 }
 

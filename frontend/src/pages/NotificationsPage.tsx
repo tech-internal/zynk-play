@@ -7,6 +7,7 @@ import {
 } from '../api/sportsDb';
 import NewsDetailModal from '../components/NewsDetailModal';
 import NewsScrollSection from '../components/NewsScrollSection';
+import { useI18n, usePageTitle } from '../i18n';
 import './NotificationsPage.css';
 
 export const MOCK_UNREAD_NOTIFICATIONS = 3;
@@ -47,6 +48,8 @@ function formatNewsDate(iso: string): string {
 }
 
 const NotificationsPage: React.FC = () => {
+  const { t } = useI18n();
+  usePageTitle('notif.pageTitle', 'Notifications | Fanverse');
   const [tab, setTab] = useState<TabId>('notifications');
   const [newsFeed, setNewsFeed] = useState<SportsNewsFeed>({ soccer: [], cricket: [] });
   const [newsLoading, setNewsLoading] = useState(false);
@@ -54,10 +57,6 @@ const NotificationsPage: React.FC = () => {
   const [selectedNews, setSelectedNews] = useState<SportsNewsItem | null>(null);
 
   const hasNews = newsFeed.soccer.length > 0 || newsFeed.cricket.length > 0;
-
-  useEffect(() => {
-    document.title = 'Notifications | Fanverse';
-  }, []);
 
   const loadNews = useCallback(async () => {
     setNewsLoading(true);
@@ -82,8 +81,8 @@ const NotificationsPage: React.FC = () => {
   return (
     <main className="fv-notif-page">
       <header className="fv-notif-head">
-        <h1 className="fv-notif-title">Notifications</h1>
-        <p className="fv-notif-sub">Your alerts and live sports news from TheSportsDB</p>
+        <h1 className="fv-notif-title">{t('notif.title')}</h1>
+        <p className="fv-notif-sub">{t('notif.sub')}</p>
       </header>
 
       <div className="fv-notif-tabs" role="tablist" aria-label="Notification sections">
@@ -94,7 +93,7 @@ const NotificationsPage: React.FC = () => {
           className={`fv-notif-tab${tab === 'notifications' ? ' fv-notif-tab--active' : ''}`}
           onClick={() => setTab('notifications')}
         >
-          Your notifications
+          {t('notif.tabNotifications')}
         </button>
         <button
           type="button"

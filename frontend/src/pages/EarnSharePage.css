@@ -41,7 +41,10 @@
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background: radial-gradient(circle at center, rgba(17, 19, 24, 0.8) 0%, rgba(5, 7, 10, 1) 100%);
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(142, 197, 240, 0.2) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 50% at 100% 100%, rgba(197, 208, 224, 0.1) 0%, transparent 50%),
+    transparent;
 }
 
 .earn-share-main {

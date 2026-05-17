@@ -1,9 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import type { DashboardMatch } from '../api/sportsDb';
 import { hubNavItems } from '../config/hubNav';
 import { useEntitlements } from '../context/EntitlementsContext';
 import { useSportsMatches } from '../hooks/useSportsMatches';
+import { useI18n, usePageTitle } from '../i18n';
 import './DashboardPage.css';
 
 const IMG_WATCH =
@@ -18,9 +19,9 @@ const IMG_CONNECT =
 const portals = [
   {
     num: '01',
-    title: 'WATCH',
-    kicker: 'Live Matches',
-    sub: 'Highlights',
+    titleKey: 'dash.portal.watch',
+    kickerKey: 'dash.portal.liveMatches',
+    subKey: 'dash.portal.highlights',
     icon: 'play_arrow',
     iconFill: true,
     image: IMG_WATCH,
@@ -31,9 +32,9 @@ const portals = [
   },
   {
     num: '02',
-    title: 'PLAY',
-    kicker: 'Games',
-    sub: 'Compete',
+    titleKey: 'dash.portal.play',
+    kickerKey: 'dash.portal.games',
+    subKey: 'dash.portal.compete',
     icon: 'sports_esports',
     iconFill: false,
     image: IMG_PLAY,
@@ -44,9 +45,9 @@ const portals = [
   },
   {
     num: '03',
-    title: 'EARN',
-    kicker: 'Rewards',
-    sub: 'Redeem',
+    titleKey: 'dash.portal.win',
+    kickerKey: 'dash.portal.rewards',
+    subKey: 'dash.portal.redeem',
     icon: 'payments',
     iconFill: false,
     image: IMG_EARN,
@@ -57,9 +58,9 @@ const portals = [
   },
   {
     num: '04',
-    title: 'CONNECT',
-    kicker: 'Community',
-    sub: 'Team Up',
+    titleKey: 'dash.portal.share',
+    kickerKey: 'dash.portal.community',
+    subKey: 'dash.portal.teamUp',
     icon: 'groups',
     iconFill: false,
     image: IMG_CONNECT,
@@ -184,6 +185,7 @@ function MatchCarousel({ matches, activeIndex, onSelect, live }: MatchCarouselPr
 const DashboardPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { t } = useI18n();
   const { canWatchPlayEarn, loading, needsProfileCompletion, needsSubscription } = useEntitlements();
   const [upcomingIndex, setUpcomingIndex] = useState(0);
   const [liveIndex, setLiveIndex] = useState(0);
@@ -195,18 +197,16 @@ const DashboardPage: React.FC = () => {
     [upcoming],
   );
 
-  useEffect(() => {
-    document.title = 'FANVERSE — Elite Home Hub';
-  }, []);
+  usePageTitle('dash.pageTitle', 'FANVERSE — Elite Home Hub');
 
   const premiumMessage = () => {
     if (needsProfileCompletion) {
-      return 'Complete your profile, then choose a plan to unlock Watch, Play, and Earn.';
+      return t('gate.dash.profile');
     }
     if (needsSubscription) {
-      return 'Subscribe to unlock Watch, Play, and Earn.';
+      return t('gate.dash.subscribe');
     }
-    return 'Subscribe to unlock premium features.';
+    return t('gate.dash.default');
   };
 
   const tryNavigate = useCallback(
@@ -230,11 +230,11 @@ const DashboardPage: React.FC = () => {
       <div className="dash-hub__glow dash-hub__glow--bl" aria-hidden />
 
       <main className="dash-hub__main">
-        <section className="dash-hub__portals" aria-label="Fan Loop portals">
+        <section className="dash-hub__portals" aria-label={t('dash.portalsAria')}>
           <div className="dash-hub__portal-grid">
             {portals.map((portal) => (
               <button
-                key={portal.title}
+                key={portal.titleKey}
                 type="button"
                 className={`dash-hub__portal dash-hub__portal--${portal.accent}`}
                 onClick={() => tryNavigate(portal.to, portal.premium)}
@@ -249,12 +249,12 @@ const DashboardPage: React.FC = () => {
                 <div className="dash-hub__portal-content">
                   <div>
                     <span className="dash-hub__portal-num">{portal.num}</span>
-                    <h2 className="dash-hub__portal-title">{portal.title}</h2>
+                    <h2 className="dash-hub__portal-title">{t(portal.titleKey)}</h2>
                   </div>
                   <div className="dash-hub__portal-foot">
                     <div className="dash-hub__portal-meta">
-                      <p className="dash-hub__portal-kicker">{portal.kicker}</p>
-                      <p className="dash-hub__portal-sub">{portal.sub}</p>
+                      <p className="dash-hub__portal-kicker">{t(portal.kickerKey)}</p>
+                      <p className="dash-hub__portal-sub">{t(portal.subKey)}</p>
                     </div>
                     <div className="dash-hub__portal-icon-wrap">
                       <span
@@ -278,11 +278,11 @@ const DashboardPage: React.FC = () => {
                 sensors
               </span>
               <h2 id="dash-live-heading" className="dash-hub__matches-title">
-                Live Matches
+                {t('dash.liveMatches')}
               </h2>
             </div>
             <Link to="/notifications" className="dash-hub__view-all">
-              News
+              {t('common.news')}
               <span className="material-symbols-outlined" aria-hidden>
                 chevron_right
               </span>
@@ -290,13 +290,13 @@ const DashboardPage: React.FC = () => {
           </div>
 
           {sportsLoading && live.length === 0 ? (
-            <p className="dash-hub__matches-status">Syncing live scores…</p>
+            <p className="dash-hub__matches-status">{t('dash.syncing')}</p>
           ) : null}
 
           {activeLive ? (
             <MatchCarousel matches={live} activeIndex={liveIndex} onSelect={setLiveIndex} live />
           ) : (
-            <p className="dash-hub__matches-status">No live soccer matches right now. Check back soon.</p>
+            <p className="dash-hub__matches-status">{t('dash.noLive')}</p>
           )}
         </section>
 
@@ -307,11 +307,11 @@ const DashboardPage: React.FC = () => {
                 calendar_month
               </span>
               <h2 id="dash-upcoming-heading" className="dash-hub__matches-title">
-                Upcoming Matches
+                {t('dash.upcomingMatches')}
               </h2>
             </div>
             <Link to="/upcoming-matches" className="dash-hub__view-all">
-              View All
+              {t('common.viewAll')}
               <span className="material-symbols-outlined" aria-hidden>
                 chevron_right
               </span>
@@ -319,7 +319,7 @@ const DashboardPage: React.FC = () => {
           </div>
 
           {sportsLoading && upcoming.length === 0 ? (
-            <p className="dash-hub__matches-status">Loading fixtures…</p>
+            <p className="dash-hub__matches-status">{t('dash.loadingFixtures')}</p>
           ) : null}
 
           <MatchCarousel
@@ -329,11 +329,12 @@ const DashboardPage: React.FC = () => {
           />
         </section>
 
-<footer className="dash-hub__footer" aria-label="Hub navigation">
+<footer className="dash-hub__footer" aria-label={t('dash.hubNavAria')}>
           <div className="dash-hub__footer-inner">
             <div className="dash-hub__footer-brand">
               <h1 className="dash-hub__footer-logo">
-                FANVERSE<span className="dash-hub__footer-elite">ELITE</span>
+                {t('brand.fanverse')}
+                <span className="dash-hub__footer-elite">{t('brand.elite')}</span>
               </h1>
             </div>
             <nav className="dash-hub__footer-nav" aria-label="Secondary">
@@ -341,7 +342,7 @@ const DashboardPage: React.FC = () => {
                 const isActive = item.match(location.pathname, location.search);
                 return (
                   <Link
-                    key={item.label}
+                    key={item.labelKey}
                     to={item.to}
                     className={`dash-hub__footer-link${isActive ? ' dash-hub__footer-link--active' : ''}`}
                   >
@@ -355,7 +356,7 @@ const DashboardPage: React.FC = () => {
                         {item.icon}
                       </span>
                     </div>
-                    <span>{item.label}</span>
+                    <span>{t(item.labelKey)}</span>
                   </Link>
                 );
               })}
@@ -369,7 +370,7 @@ const DashboardPage: React.FC = () => {
               </button>
             </div>
           </div>
-          <p className="dash-hub__footer-copy">FanVerse Arena © 2024 System Integrity Verified</p>
+          <p className="dash-hub__footer-copy">{t('dash.footerCopy')}</p>
         </footer>
       </main>
 
@@ -378,11 +379,11 @@ const DashboardPage: React.FC = () => {
           <button
             type="button"
             className="dash-hub__gate-backdrop"
-            aria-label="Close"
+            aria-label={t('a11y.close')}
             onClick={() => setGateOpen(false)}
           />
           <div className="dash-hub__gate-panel">
-            <h2 id="dash-gate-title">Fanverse Plus</h2>
+            <h2 id="dash-gate-title">{t('gate.title')}</h2>
             <p>{premiumMessage()}</p>
             <div className="dash-hub__gate-actions">
               <button
@@ -393,10 +394,10 @@ const DashboardPage: React.FC = () => {
                   navigate(needsProfileCompletion ? '/profile?onboarding=1' : '/subscription');
                 }}
               >
-                {needsProfileCompletion ? 'Complete profile' : 'View plans'}
+                {needsProfileCompletion ? t('common.completeProfile') : t('common.viewPlans')}
               </button>
               <button type="button" className="dash-hub__gate-secondary" onClick={() => setGateOpen(false)}>
-                Not now
+                {t('common.notNow')}
               </button>
             </div>
           </div>

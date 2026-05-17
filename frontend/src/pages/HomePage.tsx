@@ -131,11 +131,10 @@ const HomePage: React.FC = () => {
             </div>
 
             <h1 className="fv-ldg-hero-title">
-              The Arena <span className="fv-ldg-text-accent fv-ldg-glow-orange">is Yours</span>
+              The Arena <span className="fv-ldg-hero-accent">is Yours</span>
             </h1>
             <p className="fv-ldg-hero-lede">
-              Enter the Fanverse Pro League. Experience real-time stadium dynamics, compete in high-stakes predictive
-              gaming, and claim your status among the elite.
+              Real-time stadium dynamics, high-stakes predictive gaming, and elite status — all in the Pro League arena.
             </p>
             <div className="fv-ldg-hero-cta-row">
               <Link to="/streaming" className="fv-ldg-btn fv-ldg-btn--secondary">

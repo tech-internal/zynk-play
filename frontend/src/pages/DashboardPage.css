@@ -132,15 +132,28 @@
   height: 180px;
   overflow: hidden;
   padding: 0;
-  border: 2px solid var(--hub-primary);
-  border-radius: 4px;
-  box-shadow:
-    inset 0 0 15px rgba(255, 106, 26, 0.2),
-    0 0 15px rgba(255, 106, 26, 0.3);
+  border-radius: var(--radius-md);
   background: var(--hub-surface);
   cursor: pointer;
   text-align: left;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.dash-hub__portal--primary {
+  border: 1px solid rgba(255, 106, 26, 0.55);
+  box-shadow:
+    inset 0 0 1px 1px rgba(255, 255, 255, 0.06),
+    0 4px 16px rgba(0, 0, 0, 0.4);
+  background:
+    radial-gradient(ellipse at 50% 100%, rgba(255, 106, 26, 0.08) 0%, transparent 70%),
+    var(--hub-surface);
+}
+
+.dash-hub__portal--secondary {
+  border: 1px solid rgba(61, 214, 255, 0.55);
+  box-shadow:
+    inset 0 0 1px 1px rgba(255, 255, 255, 0.06),
+    0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
 @media (min-width: 768px) {
@@ -149,11 +162,18 @@
   }
 }
 
-.dash-hub__portal:hover {
+.dash-hub__portal--primary:hover {
   transform: translateY(-2px);
-  box-shadow:
-    inset 0 0 20px rgba(255, 106, 26, 0.25),
-    0 0 24px rgba(255, 106, 26, 0.45);
+  border-width: 2px;
+  border-color: var(--hub-primary);
+  box-shadow: 0 0 18px var(--accent-glow), inset 0 0 1px 1px rgba(255, 255, 255, 0.08);
+}
+
+.dash-hub__portal--secondary:hover {
+  transform: translateY(-2px);
+  border-width: 2px;
+  border-color: var(--hub-secondary);
+  box-shadow: 0 0 18px rgba(61, 214, 255, 0.45), inset 0 0 1px 1px rgba(255, 255, 255, 0.08);
 }
 
 .dash-hub__portal-img {
@@ -162,7 +182,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.6;
+  opacity: 0.72;
   transition: transform 1s ease;
 }
 
@@ -229,10 +249,18 @@
 .dash-hub__portal-num {
   display: block;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+}
+
+.dash-hub__portal--primary .dash-hub__portal-num {
   color: var(--hub-primary);
-  letter-spacing: -0.04em;
+}
+
+.dash-hub__portal--secondary .dash-hub__portal-num {
+  color: var(--hub-secondary);
 }
 
 @media (min-width: 768px) {
@@ -243,12 +271,12 @@
 
 .dash-hub__portal-title {
   margin: 2px 0 0;
-  font-size: 20px;
-  font-weight: 800;
-  font-style: italic;
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: -0.02em;
-  color: #fff;
+  letter-spacing: 1px;
+  color: #f2f4f7;
   transition: transform 0.3s ease;
 }
 
@@ -284,7 +312,14 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.15em;
+}
+
+.dash-hub__portal--primary .dash-hub__portal-kicker {
   color: var(--hub-primary);
+}
+
+.dash-hub__portal--secondary .dash-hub__portal-kicker {
+  color: var(--hub-secondary);
 }
 
 @media (min-width: 768px) {
@@ -313,11 +348,20 @@
   align-items: center;
   justify-content: center;
   padding: 6px;
-  border: 1px solid var(--hub-primary);
   border-radius: 8px;
+  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.dash-hub__portal--primary .dash-hub__portal-icon-wrap {
+  border: 1px solid var(--hub-primary);
   background: rgba(255, 106, 26, 0.2);
   color: var(--hub-primary);
-  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.dash-hub__portal--secondary .dash-hub__portal-icon-wrap {
+  border: 1px solid var(--hub-secondary);
+  background: rgba(61, 214, 255, 0.15);
+  color: var(--hub-secondary);
 }
 
 @media (min-width: 768px) {
@@ -336,10 +380,16 @@
   }
 }
 
-.dash-hub__portal:hover .dash-hub__portal-icon-wrap {
+.dash-hub__portal--primary:hover .dash-hub__portal-icon-wrap {
   background: var(--hub-primary);
   color: var(--hub-on-primary);
   filter: drop-shadow(0 0 12px rgba(255, 106, 26, 0.6));
+}
+
+.dash-hub__portal--secondary:hover .dash-hub__portal-icon-wrap {
+  background: var(--hub-secondary);
+  color: var(--surface-0);
+  filter: drop-shadow(0 0 12px rgba(61, 214, 255, 0.5));
 }
 
 /* Upcoming & live matches */

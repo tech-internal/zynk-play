@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { hubNavItems } from '../config/hubNav';
+import { MOCK_UNREAD_NOTIFICATIONS } from '../pages/NotificationsPage';
 import { isAuthenticated } from '../utils/authSession';
 import { useI18n } from '../i18n';
 import './Header.css';
@@ -57,22 +58,42 @@ const Header: React.FC = () => {
             </div>
             <div className="fv-top-header__tools">
               <div className="fv-top-header__notify-wrap">
-                <Link to="/notifications" className="fv-top-header__notify-btn" aria-label="Notifications">
+                <Link to="/notifications" className="fv-top-header__icon-btn" aria-label="Notifications">
                   <span className="material-symbols-outlined">notifications</span>
                 </Link>
-                <span className="fv-top-header__notify-badge" aria-hidden>
-                  3
-                </span>
+                {MOCK_UNREAD_NOTIFICATIONS > 0 ? (
+                  <span className="fv-top-header__notify-badge" aria-hidden>
+                    {MOCK_UNREAD_NOTIFICATIONS}
+                  </span>
+                ) : null}
               </div>
-              <Link to="/profile" className="fv-top-header__avatar-wrap" aria-label="Account">
+              <Link to="/settings" className="fv-top-header__icon-btn" aria-label="Settings">
+                <span className="material-symbols-outlined">settings</span>
+              </Link>
+              <Link to="/profile" className="fv-top-header__avatar-wrap" aria-label="Profile">
                 <img className="fv-top-header__avatar" src={AVATAR_URL} alt="" />
               </Link>
             </div>
           </>
         ) : (
-          <Link to="/login" className="fv-top-header__login">
-            {t('header.login', 'Log in')}
-          </Link>
+          <>
+            <div className="fv-top-header__tools fv-top-header__tools--guest">
+              <div className="fv-top-header__notify-wrap">
+                <Link to="/login" className="fv-top-header__icon-btn" aria-label="Notifications">
+                  <span className="material-symbols-outlined">notifications</span>
+                </Link>
+              </div>
+              <Link to="/login" className="fv-top-header__icon-btn" aria-label="Settings">
+                <span className="material-symbols-outlined">settings</span>
+              </Link>
+              <Link to="/login" className="fv-top-header__avatar-wrap" aria-label="Profile">
+                <img className="fv-top-header__avatar" src={AVATAR_URL} alt="" />
+              </Link>
+            </div>
+            <Link to="/login" className="fv-top-header__login">
+              {t('header.login', 'Log in')}
+            </Link>
+          </>
         )}
       </div>
     </header>

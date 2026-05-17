@@ -27,6 +27,7 @@ const portals = [
     to: '/streaming',
     premium: true,
     scanDelay: '0s',
+    accent: 'primary',
   },
   {
     num: '02',
@@ -39,6 +40,7 @@ const portals = [
     to: '/gameplay',
     premium: true,
     scanDelay: '2s',
+    accent: 'primary',
   },
   {
     num: '03',
@@ -51,6 +53,7 @@ const portals = [
     to: '/earn-share?view=earn',
     premium: true,
     scanDelay: '4s',
+    accent: 'secondary',
   },
   {
     num: '04',
@@ -63,6 +66,7 @@ const portals = [
     to: '/earn-share?view=share',
     premium: false,
     scanDelay: '6s',
+    accent: 'secondary',
   },
 ] as const;
 
@@ -232,7 +236,7 @@ const DashboardPage: React.FC = () => {
               <button
                 key={portal.title}
                 type="button"
-                className="dash-hub__portal"
+                className={`dash-hub__portal dash-hub__portal--${portal.accent}`}
                 onClick={() => tryNavigate(portal.to, portal.premium)}
               >
                 <img className="dash-hub__portal-img" src={portal.image} alt="" />

@@ -51,6 +51,14 @@ html.fv-ldg-page .App {
   color: var(--accent-primary);
 }
 
+.fv-ldg-hero-accent {
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-primary-hover) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 10px var(--accent-glow));
+}
+
 .fv-ldg-glow-gold {
   filter: drop-shadow(0 0 12px #e9c400);
 }
@@ -546,17 +554,22 @@ html.fv-ldg-page .App {
 }
 
 .fv-ldg-mtile--accent {
-  border-color: rgba(255, 106, 26, 0.5);
+  border: 1px solid rgba(255, 106, 26, 0.55);
+  background:
+    radial-gradient(ellipse at 50% 100%, rgba(255, 106, 26, 0.08) 0%, transparent 70%),
+    var(--surface-1);
 }
 
 .fv-ldg-mtile--accent:hover,
 .fv-ldg-mtile--accent:focus-visible {
+  border-width: 2px;
   border-color: var(--accent-primary);
-  box-shadow: 0 0 22px var(--accent-glow), inset 0 0 1px 1px rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 18px var(--accent-glow), inset 0 0 1px 1px rgba(255, 255, 255, 0.08);
 }
 
 .fv-ldg-mtile--cyan {
-  border-color: rgba(61, 214, 255, 0.4);
+  border: 1px solid rgba(61, 214, 255, 0.55);
+  background: var(--surface-1);
 }
 
 .fv-ldg-mtile--cyan:hover,
@@ -571,7 +584,7 @@ html.fv-ldg-page .App {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.62;
+  opacity: 0.72;
 }
 
 .fv-ldg-mtile:focus-visible {
@@ -714,13 +727,14 @@ html.fv-ldg-page .App {
 }
 
 .fv-ldg-btn--secondary {
-  background: var(--accent-primary);
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-primary-hover) 100%);
   color: #ffffff;
   border: 1px solid rgba(255, 106, 26, 0.6);
+  box-shadow: var(--shadow-cta);
 }
 
 .fv-ldg-btn--secondary:hover {
-  background: var(--accent-primary-hover);
+  background: linear-gradient(135deg, var(--accent-primary-hover) 0%, #ff9f5c 100%);
   box-shadow: var(--shadow-cta-hover);
 }
 
@@ -935,7 +949,10 @@ html.fv-ldg-page .App {
 }
 
 .fv-ldg-card--accent {
-  border-color: rgba(255, 106, 26, 0.4);
+  border: 1px solid rgba(255, 106, 26, 0.55);
+  background:
+    radial-gradient(ellipse at 50% 100%, rgba(255, 106, 26, 0.08) 0%, transparent 70%),
+    var(--surface-1);
 }
 
 .fv-ldg-card--accent:hover {
@@ -962,6 +979,7 @@ html.fv-ldg-page .App {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  opacity: 0.72;
   transition: transform 0.7s ease;
 }
 
@@ -1580,17 +1598,18 @@ html.fv-ldg-page .App {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--secondary);
-  color: var(--on-secondary-fixed);
-  border: none;
-  border-radius: 0;
+  background: var(--surface-1);
+  color: var(--accent-primary);
+  border: 1px solid rgba(255, 106, 26, 0.55);
+  border-radius: var(--radius-pill);
   cursor: pointer;
-  box-shadow: 0 0 15px #ffb68d;
-  transition: transform 0.2s;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .fv-ldg-fab:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
+  box-shadow: 0 0 18px rgba(255, 106, 26, 0.35);
 }
 
 .fv-ldg-fab:active {

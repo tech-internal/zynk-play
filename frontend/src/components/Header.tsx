@@ -1,86 +1,76 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { hubNavItems } from '../config/hubNav';
 import { isAuthenticated } from '../utils/authSession';
 import { useI18n } from '../i18n';
 import './Header.css';
 
-const navLinks: Array<{ label: string; to: string; match: (pathname: string, search: string) => boolean }> = [
-  { label: 'Home', to: '/dashboard', match: (p) => p === '/dashboard' },
-  { label: 'Watch', to: '/streaming', match: (p) => p === '/streaming' },
-  { label: 'Play', to: '/gameplay', match: (p) => p === '/gameplay' },
-  {
-    label: 'Earn',
-    to: '/earn-share?view=earn',
-    match: (p, s) => {
-      if (p !== '/earn-share') return false;
-      const v = new URLSearchParams(s).get('view');
-      return v !== 'share';
-    },
-  },
-  {
-    label: 'Share',
-    to: '/earn-share?view=share',
-    match: (p, s) => p === '/earn-share' && new URLSearchParams(s).get('view') === 'share',
-  },
-];
+const AVATAR_URL =
+  'https://lh3.googleusercontent.com/aida-public/AB6AXuB_Wbsw0hQWsYwD-_YNEHotpTrAJZu8tMLqc9eSkKUMKEeR7GjjeL-_N6G_Rj_fPod8HTOzTfJe774fzq_Zx2jYMKqvhY7DlS_UupjSQsesKoF0VgCPRJOoIYiweXb5rSwUrNHgfEEXXaXK1i-HvgyTW3TTYTqHlH7_QiR9-vTbcGKZuPAnGdRv1ItR6BxyzHGGyDrEF8tJ4lYtbv7m1YpIJYoWufKGbye0WsRQiCUFXChsqV0xRRjQe1BJOC8hiqik731RXwEmcQNX';
+
+/** Desktop header links */
+const headerNav = hubNavItems.filter((item) =>
+  ['Home', 'Play', 'Wallet', 'Earn', 'Share'].includes(item.label),
+);
 
 const Header: React.FC = () => {
   const location = useLocation();
   const { t } = useI18n();
-
   const authed = isAuthenticated();
 
   return (
     <header className="fv-top-header">
-      <Link to="/dashboard" className="fv-top-header__brand">
-        <div className="font-headline-lg text-primary tracking-wider uppercase">FANVERSE</div>
-      </Link>
-      {authed ? (
-        <nav className="fv-top-header__nav hidden md:flex gap-8 items-center" aria-label="Primary">
-          {navLinks.map((link) => {
-            const isActive = link.match(location.pathname, location.search);
-            return (
-              <Link
-                key={link.label}
-                to={link.to}
-                className={
-                  isActive
-                    ? 'text-primary font-bold border-b-2 border-primary hover:glow-sm transition-all duration-300'
-                    : 'text-on-surface-variant font-medium hover:text-primary hover:glow-sm transition-all duration-300'
-                }
-              >
-                {link.label}
-              </Link>
-            );
-          })}
-        </nav>
-      ) : (
-        <div className="fv-top-header__nav-spacer" aria-hidden />
-      )}
+      <div className="fv-top-header__left">
+        <Link to={authed ? '/dashboard' : '/'} className="fv-top-header__brand" aria-label="FANVERSE ELITE home">
+          <h1 className="fv-top-header__logo">
+            FANVERSE<span className="fv-top-header__logo-accent">ELITE</span>
+          </h1>
+        </Link>
+        {authed ? (
+          <nav className="fv-top-header__nav" aria-label="Primary">
+            {headerNav.map((link) => {
+              const isActive = link.match(location.pathname, location.search);
+              return (
+                <Link
+                  key={link.label}
+                  to={link.to}
+                  className={`fv-top-header__nav-link${isActive ? ' fv-top-header__nav-link--active' : ''}`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
+          </nav>
+        ) : null}
+      </div>
       <div className="fv-top-header__actions">
         {authed ? (
           <>
-            <div className="fv-top-header__xp-chip">
-              <span
-                className="material-symbols-outlined fv-top-header__xp-icon"
-                style={{ fontVariationSettings: "'FILL' 1" }}
-                aria-hidden
-              >
-                stars
-              </span>
-              <span className="font-xp-counter">XP 1,240</span>
+            <div className="fv-top-header__rank">
+              <span className="fv-top-header__rank-label">ELITE RANK</span>
+              <div className="fv-top-header__rank-row">
+                <span className="fv-top-header__rank-xp">
+                  1,240
+                  <span className="fv-top-header__rank-xp-unit">XP</span>
+                </span>
+              </div>
             </div>
-            <div className="fv-top-header__icon-row">
-              <button type="button" className="fv-top-header__icon-btn" aria-label="Notifications">
-                <span className="material-symbols-outlined">notifications</span>
-              </button>
-              <Link to="/profile" className="fv-top-header__icon-btn" aria-label="Account">
-                <span className="material-symbols-outlined">account_circle</span>
+            <div className="fv-top-header__tools">
+              <div className="fv-top-header__notify-wrap">
+                <Link to="/notifications" className="fv-top-header__notify-btn" aria-label="Notifications">
+                  <span className="material-symbols-outlined">notifications</span>
+                </Link>
+                <span className="fv-top-header__notify-badge" aria-hidden>
+                  3
+                </span>
+              </div>
+              <Link to="/profile" className="fv-top-header__avatar-wrap" aria-label="Account">
+                <img className="fv-top-header__avatar" src={AVATAR_URL} alt="" />
               </Link>
             </div>
           </>
         ) : (
-          <Link to="/login" className="navbar-login">
+          <Link to="/login" className="fv-top-header__login">
             {t('header.login', 'Log in')}
           </Link>
         )}

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { hubNavItems } from '../config/hubNav';
 import { useEntitlements } from '../context/EntitlementsContext';
 import './AppBottomNav.css';
 
@@ -12,13 +13,6 @@ const AppBottomNav: React.FC = () => {
   const [gateOpen, setGateOpen] = useState(false);
   const [gateMessage, setGateMessage] = useState('');
 
-  const shareView = new URLSearchParams(location.search).get('view') === 'share';
-  const earnActive = location.pathname === '/earn-share' && !shareView;
-  const socialActive = location.pathname === '/earn-share' && shareView;
-
-  const primaryLinkClass = ({ isActive }: { isActive: boolean }) =>
-    `app-bottom-link${isActive ? ' app-bottom-link--active' : ''}`;
-
   const premiumMessage = () => {
     if (needsProfileCompletion) {
       return 'Please complete your profile (name and handle), then choose a plan and pay. After that you can watch, play, and earn.';
@@ -29,89 +23,58 @@ const AppBottomNav: React.FC = () => {
     return 'Please subscribe to watch, play, and earn.';
   };
 
-  const tryPremiumNav = (path: string, state?: { view?: string }) => {
-    if (loading) {
+  const tryNavigate = (item: (typeof hubNavItems)[number]) => {
+    if (item.premium && !loading && !canWatchPlayEarn) {
+      setGateMessage(premiumMessage());
+      setGateOpen(true);
       return;
     }
-    if (canWatchPlayEarn) {
-      if (state?.view) {
-        navigate({ pathname: path, search: `?view=${state.view}` });
-      } else {
-        navigate(path);
-      }
-      return;
-    }
-    setGateMessage(premiumMessage());
-    setGateOpen(true);
+    navigate(item.to);
   };
 
   return (
     <>
       <nav className="app-bottom-nav" aria-label="Mobile primary">
-        <NavLink to="/dashboard" end className={primaryLinkClass}>
-          {({ isActive }) => (
+        {hubNavItems.map((item) => {
+          const isActive = item.match(location.pathname, location.search);
+          const content = (
             <>
-              {isActive ? <span className="app-bottom-link__pip" aria-hidden /> : null}
-              <span className="material-symbols-outlined" style={isActive ? iconFill : undefined}>
-                grid_view
-              </span>
-              <span className="app-bottom-label">Home</span>
+              <div className={`app-bottom-nav__icon${isActive ? ' app-bottom-nav__icon--active' : ''}`}>
+                <span
+                  className="material-symbols-outlined"
+                  style={isActive ? iconFill : undefined}
+                  aria-hidden
+                >
+                  {item.icon}
+                </span>
+              </div>
+              <span className="app-bottom-nav__label">{item.label}</span>
             </>
-          )}
-        </NavLink>
-        <button
-          type="button"
-          className={`app-bottom-link app-bottom-link--btn${location.pathname === '/streaming' ? ' app-bottom-link--active' : ''}`}
-          onClick={() => tryPremiumNav('/streaming')}
-        >
-          {location.pathname === '/streaming' ? <span className="app-bottom-link__pip" aria-hidden /> : null}
-          <span
-            className="material-symbols-outlined"
-            style={location.pathname === '/streaming' ? iconFill : undefined}
-          >
-            sensors
-          </span>
-          <span className="app-bottom-label">Watch</span>
-        </button>
-        <button
-          type="button"
-          className={`app-bottom-link app-bottom-link--btn${location.pathname === '/gameplay' ? ' app-bottom-link--active' : ''}`}
-          onClick={() => tryPremiumNav('/gameplay')}
-        >
-          {location.pathname === '/gameplay' ? <span className="app-bottom-link__pip" aria-hidden /> : null}
-          <span
-            className="material-symbols-outlined"
-            style={location.pathname === '/gameplay' ? iconFill : undefined}
-          >
-            sports_esports
-          </span>
-          <span className="app-bottom-label">Play</span>
-        </button>
-        <button
-          type="button"
-          className={`app-bottom-link app-bottom-link--earn-slot app-bottom-link--btn${
-            earnActive ? ' app-bottom-link--active-earn' : ''
-          }`}
-          onClick={() => tryPremiumNav('/earn-share', { view: 'earn' })}
-        >
-          {earnActive ? <span className="app-bottom-link__pip app-bottom-link__pip--earn" aria-hidden /> : null}
-          <span className="material-symbols-outlined" style={earnActive ? iconFill : undefined}>
-            workspace_premium
-          </span>
-          <span className="app-bottom-label">Earn</span>
-        </button>
-        <NavLink
-          to={{ pathname: '/earn-share', search: '?view=share' }}
-          className={() => `app-bottom-link${socialActive ? ' app-bottom-link--active' : ''}`}
-        >
-          <>
-            {socialActive ? <span className="app-bottom-link__pip" aria-hidden /> : null}
-            <span className="material-symbols-outlined" style={socialActive ? iconFill : undefined}>
-              hub
-            </span>
-            <span className="app-bottom-label">Social</span>
-          </>
-        </NavLink>
+          );
+
+          if (item.premium) {
+            return (
+              <button
+                key={item.label}
+                type="button"
+                className={`app-bottom-nav__link app-bottom-nav__link--btn${isActive ? ' app-bottom-nav__link--active' : ''}`}
+                onClick={() => tryNavigate(item)}
+              >
+                {content}
+              </button>
+            );
+          }
+
+          return (
+            <Link
+              key={item.label}
+              to={item.to}
+              className={`app-bottom-nav__link${isActive ? ' app-bottom-nav__link--active' : ''}`}
+            >
+              {content}
+            </Link>
+          );
+        })}
       </nav>
 
       {gateOpen ? (

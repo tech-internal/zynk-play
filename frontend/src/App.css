@@ -1,56 +1,56 @@
+@import './styles/design-tokens.css';
+
 /* ============================================
-   GAME PALAZIO — global design system
+   GAME PALAZIO — global shell
    ============================================ */
 
-:root {
-  --bg-base: #030712;
-  --bg-raised: #0a1628;
-  --bg-card: rgba(15, 23, 42, 0.55);
-  --blue-deep: #1e3a8a;
-  --blue-sky: #38bdf8;
-  --gold: #fbbf24;
-  --gold-soft: rgba(251, 191, 36, 0.14);
-  --orange: #fb923c;
-  --pink: #f472b6;
-  --purple: #a78bfa;
-  --white: #f8fafc;
-  --muted: #94a3b8;
-  --border: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.12);
-  --grad-hero: linear-gradient(135deg, #1e3a8a 0%, #312e81 40%, #4c1d95 100%);
-  --grad-cta: linear-gradient(135deg, #fbbf24 0%, #fb923c 55%, #ec4899 100%);
-  --grad-logo: linear-gradient(135deg, #fde047, #fb923c, #f472b6, #a78bfa);
-  --grad2: linear-gradient(135deg, #fbbf24, #fb923c);
-  --shadow-lg: 0 25px 60px rgba(0, 0, 0, 0.45);
-  --radius-lg: 20px;
-  --radius-xl: 24px;
-}
-
 .App {
-  background: var(--bg-base);
-  background-image: radial-gradient(ellipse 120% 80% at 50% -30%, rgba(30, 58, 138, 0.35), transparent 50%),
-    radial-gradient(ellipse 60% 40% at 100% 50%, rgba(88, 28, 135, 0.12), transparent);
-  color: var(--white);
+  background: var(--surface-0);
+  color: var(--text-mid);
   min-height: 100vh;
   font-family: 'Inter', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 24px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
 
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-shell__main {
+  flex: 1;
+  min-width: 0;
+  padding-bottom: calc(var(--shell-bottom-nav-height) + env(safe-area-inset-bottom, 0));
+}
+
+@media (min-width: 768px) {
+  .app-shell__main {
+    padding-bottom: 0;
+  }
+}
+
+/* Legacy landing top bar — replaced by global Header */
+.fv-ldg-topbar {
+  display: none !important;
+}
+
 /* Legacy helpers still used in older markup */
 .text-gold {
-  background: var(--grad-logo);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--accent-warning);
 }
 
 .logo-section {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  margin-bottom: 20px;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
 }
 
 .logo-svg {
@@ -60,26 +60,29 @@
 }
 
 .logo-section h1 {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 2.5rem;
-  font-weight: 700;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 32px;
+  font-weight: 800;
+  font-style: italic;
   margin: 0;
   letter-spacing: -0.5px;
+  color: var(--text-high);
 }
 
 .tagline {
-  font-size: 1.1rem;
-  color: rgba(255, 255, 255, 0.75);
-  margin: 0 0 30px 0;
-  font-family: 'Rajdhani', sans-serif;
-  letter-spacing: 0.05em;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--text-low);
+  margin: 0 0 var(--space-7) 0;
+  letter-spacing: 0.6px;
   text-transform: uppercase;
+  font-weight: 500;
 }
 
 .App-header {
-  padding: 60px 20px;
+  padding: var(--space-9) var(--screen-padding-mobile);
   text-align: center;
-  background: linear-gradient(135deg, rgba(30, 58, 138, 0.2), rgba(190, 24, 93, 0.08));
+  background: var(--surface-1);
   position: relative;
   overflow: hidden;
 }
@@ -87,28 +90,35 @@
 .nav-menu a,
 .nav-menu Link {
   display: inline-block;
-  padding: 10px 20px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  color: rgba(255, 255, 255, 0.88);
+  padding: 10px var(--space-5);
+  background: var(--surface-1);
+  border: 1px solid var(--stroke-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-mid);
   text-decoration: none;
   font-weight: 500;
-  font-size: 0.9rem;
+  font-size: 15px;
   transition: all 0.25s ease;
-  font-family: 'Rajdhani', sans-serif;
+  font-family: 'Inter', system-ui, sans-serif;
 }
 
 .status,
 .api-info,
 .features {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  padding: 28px;
-  margin: 24px auto;
-  border-radius: var(--radius-lg);
+  background: var(--surface-1);
+  border: 1px solid var(--stroke-subtle);
+  padding: var(--space-7);
+  margin: var(--space-6) auto;
+  border-radius: var(--radius-md);
   max-width: 700px;
-  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-card);
+}
+
+@media (min-width: 768px) {
+  .App-header {
+    padding-left: var(--screen-padding-desktop);
+    padding-right: var(--screen-padding-desktop);
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {

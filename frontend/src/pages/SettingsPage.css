@@ -1,0 +1,74 @@
+.fv-settings-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-7) var(--screen-padding-mobile) var(--space-10);
+  color: var(--text-mid);
+}
+
+@media (min-width: 768px) {
+  .fv-settings-page {
+    padding-left: var(--screen-padding-desktop);
+    padding-right: var(--screen-padding-desktop);
+  }
+}
+
+.fv-settings-head {
+  margin-bottom: var(--space-7);
+}
+
+.fv-settings-title {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-style: italic;
+  font-size: 24px;
+  line-height: 30px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0;
+  margin: 0 0 var(--space-2);
+  color: var(--text-high);
+}
+
+.fv-settings-sub {
+  margin: 0;
+  color: var(--text-low);
+  font-size: 15px;
+  line-height: 24px;
+}
+
+.fv-settings-section {
+  margin-bottom: var(--space-6);
+}
+
+.fv-settings-section-title {
+  font-size: 12px;
+  line-height: 18px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--accent-secondary);
+  margin: 0 0 var(--space-3);
+  font-weight: 500;
+}
+
+.fv-settings-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px var(--space-4);
+  background: var(--surface-1);
+  border: 1px solid var(--stroke-subtle);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-2);
+  font-size: 15px;
+  line-height: 24px;
+}
+
+.fv-settings-row-label {
+  color: var(--text-mid);
+}
+
+.fv-settings-row-value {
+  color: var(--text-low);
+  font-size: 12px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}

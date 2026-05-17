@@ -2,26 +2,29 @@
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
 
 .thp-page {
-  --thp-bg: #111318;
-  --thp-on-bg: #e2e2e8;
-  --thp-primary: #9bcbff;
+  --thp-bg: var(--surface-0);
+  --thp-on-bg: var(--text-mid);
+  --thp-primary: var(--accent-secondary);
   --thp-on-primary: #003355;
-  --thp-secondary: #ffb68d;
+  --thp-secondary: var(--accent-primary-hover);
   --thp-on-secondary: #532200;
-  --thp-tertiary: #e9c400;
+  --thp-tertiary: var(--accent-warning);
   --thp-on-tertiary: #3a3000;
-  --thp-surface-container: #1e2024;
-  --thp-surface-lowest: #0c0e12;
-  --thp-surface-variant: #333539;
-  --thp-outline-variant: #414750;
-  --thp-on-surface-variant: #c0c7d1;
-  --thp-surface-container-highest: #333539;
-  --thp-glass-border: rgba(155, 203, 255, 0.15);
-  --thp-glass-bg: rgba(30, 32, 36, 0.6);
+  --thp-surface-container: var(--surface-1);
+  --thp-surface-lowest: var(--surface-container-lowest);
+  --thp-surface-variant: var(--surface-2);
+  --thp-outline-variant: var(--stroke-subtle);
+  --thp-on-surface-variant: var(--text-low);
+  --thp-surface-container-highest: var(--surface-container-highest);
+  --thp-glass-border: rgba(61, 214, 255, 0.15);
+  --thp-glass-bg: rgba(16, 23, 31, 0.6);
   min-height: 100vh;
   color: var(--thp-on-bg);
   font-family: 'Inter', system-ui, sans-serif;
-  font-size: 16px;
+  font-size: 15px;
+  line-height: 24px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
   line-height: 1.6;
   background-color: var(--thp-bg);
   background-image:

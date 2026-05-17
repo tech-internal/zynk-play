@@ -1,30 +1,31 @@
-/* FANVERSE Earn & Share — stadium / M3 dark tokens from design mockup */
 .earn-share-page {
-  --es-bg: #111318;
-  --es-on-bg: #e2e2e8;
-  --es-primary: #9bcbff;
-  --es-secondary: #ffb68d;
-  --es-secondary-container: #e66e14;
+  --es-bg: var(--surface-0);
+  --es-on-bg: var(--text-mid);
+  --es-primary: var(--accent-secondary);
+  --es-secondary: var(--accent-primary-hover);
+  --es-secondary-container: var(--accent-primary);
   --es-on-secondary-container: #491d00;
-  --es-tertiary: #e9c400;
+  --es-tertiary: var(--accent-warning);
   --es-on-tertiary: #3a3000;
-  --es-surface: #111318;
-  --es-surface-container: #1e2024;
-  --es-surface-high: #282a2e;
-  --es-surface-highest: #333539;
-  --es-surface-lowest: #0c0e12;
-  --es-outline: #414750;
-  --es-muted: #c0c7d1;
-  --es-font-display: 'Anybody', system-ui, sans-serif;
-  --es-font-label: 'Space Grotesk', 'Inter', sans-serif;
+  --es-surface: var(--surface-1);
+  --es-surface-container: var(--surface-1);
+  --es-surface-high: var(--surface-2);
+  --es-surface-highest: var(--surface-container-highest);
+  --es-surface-lowest: var(--surface-container-lowest);
+  --es-outline: var(--stroke-subtle);
+  --es-muted: var(--text-low);
+  --es-font-display: 'Inter', system-ui, sans-serif;
+  --es-font-label: 'Inter', system-ui, sans-serif;
   --es-font-body: 'Inter', system-ui, sans-serif;
 
   position: relative;
   min-height: 100vh;
   color: var(--es-on-bg);
   font-family: var(--es-font-body);
-  font-size: 16px;
-  line-height: 1.6;
+  font-size: 15px;
+  line-height: 24px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
   overflow-x: hidden;
   padding-bottom: 96px;
 }

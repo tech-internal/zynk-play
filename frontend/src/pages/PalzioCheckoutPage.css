@@ -1,11 +1,14 @@
 .pcheckout-page {
   min-height: calc(100vh - 72px);
-  padding: 1.5rem 1rem 2.5rem;
+  padding: var(--space-6) var(--screen-padding-mobile) var(--space-8);
   background:
-    radial-gradient(circle at 12% 8%, rgba(56, 189, 248, 0.2), transparent 35%),
-    radial-gradient(circle at 88% 4%, rgba(251, 191, 36, 0.16), transparent 30%),
-    linear-gradient(180deg, #020617, #030712 42%, #0b1120);
-  color: #e2e8f0;
+    radial-gradient(circle at 12% 8%, rgba(61, 214, 255, 0.12), transparent 35%),
+    radial-gradient(circle at 88% 4%, rgba(255, 106, 26, 0.1), transparent 30%),
+    var(--surface-0);
+  color: var(--text-mid);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 24px;
 }
 
 .pcheckout-shell {
@@ -51,12 +54,12 @@
 }
 
 .pcheckout-panel {
-  background: linear-gradient(150deg, rgba(15, 23, 42, 0.85), rgba(2, 6, 23, 0.9));
-  border: 1px solid rgba(148, 163, 184, 0.28);
-  border-radius: 14px;
-  padding: 1.25rem 1.35rem;
-  margin-bottom: 0.85rem;
-  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.3);
+  background: var(--surface-1);
+  border: 1px solid var(--stroke-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-5) var(--space-6);
+  margin-bottom: var(--space-4);
+  box-shadow: var(--shadow-card);
 }
 
 .pcheckout-order {
@@ -212,18 +215,23 @@
 .pcheckout-pay {
   appearance: none;
   border: none;
-  border-radius: 8px;
-  padding: 0.8rem 1rem;
-  font-size: 1rem;
-  font-weight: 600;
+  border-radius: var(--radius-pill);
+  padding: 0.8rem var(--space-4);
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
   cursor: pointer;
-  background: linear-gradient(90deg, #fbbf24, #fb923c 55%, #f472b6);
-  color: #0f172a;
-  transition: background 0.15s;
+  background: var(--accent-primary);
+  color: var(--text-high);
+  box-shadow: var(--shadow-cta);
+  transition: background 0.15s, box-shadow 0.15s;
 }
 
 .pcheckout-pay:hover:not(:disabled) {
-  filter: brightness(1.05);
+  background: var(--accent-primary-hover);
+  box-shadow: var(--shadow-cta-hover);
 }
 
 .pcheckout-pay:disabled {

@@ -1,0 +1,252 @@
+.upm-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--space-6) var(--screen-padding-mobile) var(--space-10);
+  color: var(--text-mid);
+}
+
+@media (min-width: 768px) {
+  .upm-page {
+    padding-left: var(--screen-padding-desktop);
+    padding-right: var(--screen-padding-desktop);
+  }
+}
+
+.upm-head {
+  margin-bottom: var(--space-6);
+}
+
+.upm-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: var(--space-4);
+  color: var(--accent-secondary);
+  font-weight: 700;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.upm-back:hover {
+  color: var(--accent-primary);
+}
+
+.upm-title {
+  margin: 0 0 var(--space-2);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-style: italic;
+  font-size: 26px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--text-high);
+}
+
+.upm-sub {
+  margin: 0 0 var(--space-4);
+  font-size: 15px;
+  color: var(--text-low);
+}
+
+.upm-refresh {
+  border: 1px solid var(--stroke-subtle);
+  background: var(--surface-2);
+  color: var(--accent-secondary);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.upm-refresh:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.upm-status {
+  margin: 0 0 var(--space-5);
+  padding: var(--space-4);
+  text-align: center;
+  border-radius: var(--radius-md);
+  background: var(--surface-1);
+  border: 1px solid var(--stroke-subtle);
+  font-size: 14px;
+}
+
+.upm-status--error {
+  color: var(--danger);
+  border-color: rgba(239, 68, 68, 0.35);
+}
+
+.upm-sections {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-7);
+}
+
+.upm-section__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 var(--space-4);
+  font-size: 18px;
+  font-weight: 800;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-high);
+}
+
+.upm-section__title .material-symbols-outlined {
+  color: var(--accent-primary);
+}
+
+.upm-section__count {
+  margin-left: auto;
+  padding: 2px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-2);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 700;
+  color: var(--text-low);
+}
+
+.upm-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--tile-grid-gap);
+}
+
+.upm-row {
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--surface-1);
+  border: 1px solid var(--stroke-subtle);
+  box-shadow: var(--shadow-card);
+}
+
+.upm-row__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--stroke-subtle);
+}
+
+.upm-row__league {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent-secondary);
+}
+
+.upm-row__when {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-primary);
+}
+
+.upm-row__teams {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.upm-row__team {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+}
+
+.upm-row__team--away {
+  order: 0;
+}
+
+.upm-row__vs {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-low);
+}
+
+.upm-row__name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-high);
+  line-height: 1.3;
+}
+
+.upm-row__detail {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-low);
+}
+
+.upm-badge {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-2);
+  border: 1px solid var(--stroke-subtle);
+}
+
+.upm-badge--primary {
+  border-color: rgba(61, 214, 255, 0.35);
+}
+
+.upm-badge--secondary {
+  border-color: rgba(255, 106, 26, 0.35);
+}
+
+.upm-badge--img {
+  padding: 6px;
+}
+
+.upm-badge--img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.upm-badge .material-symbols-outlined {
+  font-size: 24px;
+  color: var(--accent-primary);
+}
+
+.upm-empty {
+  margin: 0;
+  padding: var(--space-6);
+  text-align: center;
+  color: var(--text-low);
+  font-size: 14px;
+  border: 1px dashed var(--stroke-subtle);
+  border-radius: var(--radius-md);
+}
+
+@media (min-width: 768px) {
+  .upm-sections {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-6);
+    align-items: start;
+  }
+}

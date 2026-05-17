@@ -1,7 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
-
-/* index.html already loads Anybody + Space Grotesk */
 
 .material-symbols-outlined {
   font-family: 'Material Symbols Outlined', sans-serif;
@@ -13,23 +10,23 @@
 }
 
 :root .fv-profile-root {
-  --fv-bg: #0c0e12;
-  --fv-surface: #111318;
-  --fv-primary: #0064a2;
-  --fv-secondary: #f57921;
-  --fv-tertiary: #ffd700;
-  --fv-primary-dim: #9bcbff;
-  --fv-on-bg: #e2e2e8;
-  --fv-on-surface: #e2e2e8;
-  --fv-on-variant: #c0c7d1;
-  --fv-outline: #8b919b;
-  --fv-outline-variant: #414750;
-  --fv-surface-container: #1e2024;
-  --fv-surface-high: #282a2e;
-  --fv-surface-lowest: #0c0e12;
-  --fv-error: #ffb4ab;
-  --fv-glow-orange: 0 0 20px rgba(245, 121, 33, 0.4);
-  --fv-glow-gold: 0 0 25px rgba(255, 215, 0, 0.3);
+  --fv-bg: var(--surface-0);
+  --fv-surface: var(--surface-1);
+  --fv-primary: var(--accent-secondary);
+  --fv-secondary: var(--accent-primary);
+  --fv-tertiary: var(--accent-warning);
+  --fv-primary-dim: rgba(61, 214, 255, 0.7);
+  --fv-on-bg: var(--text-mid);
+  --fv-on-surface: var(--text-mid);
+  --fv-on-variant: var(--text-low);
+  --fv-outline: var(--stroke-subtle);
+  --fv-outline-variant: var(--stroke-subtle);
+  --fv-surface-container: var(--surface-1);
+  --fv-surface-high: var(--surface-2);
+  --fv-surface-lowest: var(--surface-container-lowest);
+  --fv-error: var(--danger);
+  --fv-glow-orange: var(--shadow-cta);
+  --fv-glow-gold: 0 0 25px rgba(245, 197, 24, 0.3);
 }
 
 .fv-profile-root {

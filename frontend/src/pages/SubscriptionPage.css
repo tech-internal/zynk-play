@@ -1,30 +1,31 @@
-/* Fanverse Plus — HUD subscription (scoped) */
 .subpage {
-  --sub-bg: #111318;
-  --sub-on-bg: #e2e2e8;
-  --sub-surface: #111318;
-  --sub-primary: #9bcbff;
+  --sub-bg: var(--surface-0);
+  --sub-on-bg: var(--text-mid);
+  --sub-surface: var(--surface-1);
+  --sub-primary: var(--accent-secondary);
   --sub-on-primary: #003355;
-  --sub-outline-variant: #414750;
-  --sub-on-surface-variant: #c0c7d1;
+  --sub-outline-variant: var(--stroke-subtle);
+  --sub-on-surface-variant: var(--text-low);
   --sub-deep-blue: #001d34;
-  --sub-action-orange: #e66e14;
-  --sub-elite-gold: #e9c400;
+  --sub-action-orange: var(--accent-primary);
+  --sub-elite-gold: var(--accent-warning);
   --sub-tertiary-container: #c9a900;
   --sub-on-tertiary-fixed: #221b00;
-  --sub-surface-container-high: #282a2e;
+  --sub-surface-container-high: var(--surface-2);
   --sub-container-max: 1440px;
-  --sub-gutter-m: 16px;
-  --sub-gutter-d: 40px;
+  --sub-gutter-m: var(--screen-padding-mobile);
+  --sub-gutter-d: var(--screen-padding-desktop);
 
   min-height: calc(100vh - 56px);
   position: relative;
   overflow-x: hidden;
   background: var(--sub-bg);
   color: var(--sub-on-bg);
-  font-family: Inter, system-ui, sans-serif;
-  font-size: 16px;
-  line-height: 1.6;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 24px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
   padding-bottom: 120px;
 }
 

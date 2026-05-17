@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+﻿import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './HomePage.css';
 
@@ -13,9 +13,6 @@ const imgEarn =
   'https://lh3.googleusercontent.com/aida-public/AB6AXuDhXRdmuU2qIO1Trb9ZhDrz2EcnzwWN2K8UguTT-Sk0WrR-HKnNuPbd6K2K3hwiO3B18A08uKUe0G4F3m5JKnVgvVCbvnJq1MBvz4EYxvR0ELaPIiBCQSrjR7W9wiDqdBSEL9u5G-Qhw-0vTHX8CnWTgon3j2DtFrSiFMDVM4M0Y1ur3Azq4BHn1WMA25Pgn9gtGf7NY1KEALmMQ3hKjGW7jz3AW475r5XTqq8bkrJsvUqfSzWJQ07Pfed2iZDlPXrbmx_PNeQP5aGK';
 const imgShare =
   'https://lh3.googleusercontent.com/aida-public/AB6AXuCyFk0SnZOVJVJWtZ6y1FvyrRhrm0mKZQcvtx94y6zyfz0wqQ1VYA0T9mSZPzKaF-vL7NlifjzxXs7NqMKD9cPRfdoQfJOaW8hZ8Hpw1Xd83vryguvfMnl5X7VClSQbCqFAGrXI76NibbkBJCIu3oMX7t7fdl5W1Z7oTxAPwwy3kToVwne3_CJxYYsOfHls3IANhzElyzaaXsmkpR9OBMP7wM5nlV9gv3W57tRWuXQaMgu-DjI2b8RQ2mL2jSd_cMrabNWJC11jodHD';
-
-const avatarImg =
-  'https://lh3.googleusercontent.com/aida-public/AB6AXuAJb-06_vbf41JnmlRkdppDI6AMmZacJPoQ4--y5GwTo1NOcMHhZoj1PKvUOYeE1PFTNzKLSVsTTLoYEiM7YQX8YqEJsmCbw18F-c3hjcgMNhK41IlxKbqJOKfLe6vV_cW-vwWZeUIIYDejJKILKV8hmFopMMhKn3rR1GDInSCT5whaVQGxQd6P5KF_pL8BC8dZUSLppBu-fUE4g7wAuDIQJoe9NX0PwDTQiOq87wVCL5FsIUQqWrk-4Dpzspf5qbDwAvM4cyBPAF0A';
 
 function TickerLoop(): React.ReactElement {
   return (
@@ -51,40 +48,6 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="fv-ldg">
-      <header className="fv-ldg-topbar">
-        <div className="fv-ldg-topbar-left">
-          <Link to="/" className="fv-ldg-logo">
-            Fanverse
-          </Link>
-          <nav className="fv-ldg-topnav" aria-label="Primary">
-            <Link to="/streaming" className="fv-ldg-topnav-link fv-ldg-topnav-link--live">
-              Live
-            </Link>
-            <span className="fv-ldg-topnav-link">Rankings</span>
-            <span className="fv-ldg-topnav-link">Market</span>
-          </nav>
-        </div>
-        <div className="fv-ldg-topbar-right">
-          <div className="fv-ldg-xp-chip">
-            <span className="material-symbols-outlined fv-ldg-icon-tertiary" aria-hidden>
-              military_tech
-            </span>
-            <span className="fv-ldg-xp-chip-text">Elite XP: 2,450</span>
-          </div>
-          <div className="fv-ldg-topbar-icons">
-            <button type="button" className="fv-ldg-icon-btn" aria-label="Notifications">
-              <span className="material-symbols-outlined">notifications</span>
-            </button>
-            <button type="button" className="fv-ldg-icon-btn" aria-label="Settings">
-              <span className="material-symbols-outlined">settings</span>
-            </button>
-            <Link to="/login" className="fv-ldg-avatar-wrap" aria-label="Account">
-              <img className="fv-ldg-avatar" src={avatarImg} alt="" />
-            </Link>
-          </div>
-        </div>
-      </header>
-
       <aside className="fv-ldg-sidenav" aria-label="Command">
         <div className="fv-ldg-sidenav-head">
           <span className="fv-ldg-sidenav-label">COMMAND</span>
@@ -128,35 +91,35 @@ const HomePage: React.FC = () => {
 
           <div className="fv-ldg-hero-inner">
             <div className="fv-ldg-hero-mobile-grid">
-              <Link to="/streaming" className="fv-ldg-mtile">
+              <Link to="/streaming" className="fv-ldg-mtile fv-ldg-mtile--accent">
                 <img className="fv-ldg-mtile-img" src={imgWatch} alt="" />
                 <div className="fv-ldg-mtile-grad" />
                 <div className="fv-ldg-mtile-meta">
-                  <span className="fv-ldg-mtile-num fv-ldg-mtile-num--primary">01</span>
+                  <span className="fv-ldg-mtile-num fv-ldg-mtile-num--accent">01</span>
                   <span className="fv-ldg-mtile-title">Watch</span>
                 </div>
               </Link>
-              <Link to="/gameplay" className="fv-ldg-mtile fv-ldg-mtile--secondary">
+              <Link to="/gameplay" className="fv-ldg-mtile fv-ldg-mtile--accent">
                 <img className="fv-ldg-mtile-img" src={imgPlay} alt="" />
                 <div className="fv-ldg-mtile-grad" />
                 <div className="fv-ldg-mtile-meta">
-                  <span className="fv-ldg-mtile-num fv-ldg-mtile-num--secondary">02</span>
+                  <span className="fv-ldg-mtile-num fv-ldg-mtile-num--accent">02</span>
                   <span className="fv-ldg-mtile-title">Play</span>
                 </div>
               </Link>
-              <Link to="/earn-share?view=earn" className="fv-ldg-mtile fv-ldg-mtile--tertiary">
+              <Link to="/earn-share?view=earn" className="fv-ldg-mtile fv-ldg-mtile--cyan">
                 <img className="fv-ldg-mtile-img" src={imgEarn} alt="" />
                 <div className="fv-ldg-mtile-grad" />
                 <div className="fv-ldg-mtile-meta">
-                  <span className="fv-ldg-mtile-num fv-ldg-mtile-num--tertiary">03</span>
+                  <span className="fv-ldg-mtile-num fv-ldg-mtile-num--cyan">03</span>
                   <span className="fv-ldg-mtile-title">Earn</span>
                 </div>
               </Link>
-              <Link to="/earn-share?view=share" className="fv-ldg-mtile fv-ldg-mtile--outline">
+              <Link to="/earn-share?view=share" className="fv-ldg-mtile fv-ldg-mtile--cyan">
                 <img className="fv-ldg-mtile-img" src={imgShare} alt="" />
                 <div className="fv-ldg-mtile-grad" />
                 <div className="fv-ldg-mtile-meta">
-                  <span className="fv-ldg-mtile-num fv-ldg-mtile-num--muted">04</span>
+                  <span className="fv-ldg-mtile-num fv-ldg-mtile-num--cyan">04</span>
                   <span className="fv-ldg-mtile-title">Share</span>
                 </div>
               </Link>
@@ -168,20 +131,20 @@ const HomePage: React.FC = () => {
             </div>
 
             <h1 className="fv-ldg-hero-title">
-              The Arena <span className="fv-ldg-text-primary fv-ldg-glow-orange">is Yours</span>
+              The Arena <span className="fv-ldg-text-accent fv-ldg-glow-orange">is Yours</span>
             </h1>
             <p className="fv-ldg-hero-lede">
               Enter the Fanverse Pro League. Experience real-time stadium dynamics, compete in high-stakes predictive
               gaming, and claim your status among the elite.
             </p>
             <div className="fv-ldg-hero-cta-row">
-              <Link to="/login" className="fv-ldg-btn fv-ldg-btn--secondary">
+              <Link to="/streaming" className="fv-ldg-btn fv-ldg-btn--secondary">
                 Enter Live Hub
                 <span className="material-symbols-outlined fv-ldg-btn-icon" aria-hidden>
                   bolt
                 </span>
               </Link>
-              <Link to="/login" className="fv-ldg-btn fv-ldg-btn--ghost">
+              <Link to="/earn-share?view=earn" className="fv-ldg-btn fv-ldg-btn--ghost">
                 View Standings
               </Link>
             </div>
@@ -212,7 +175,7 @@ const HomePage: React.FC = () => {
             <span className="fv-ldg-core-sub">SELECT DESTINATION SECTOR</span>
           </div>
           <div className="fv-ldg-core-grid">
-            <div className="fv-ldg-card">
+            <div className="fv-ldg-card fv-ldg-card--accent">
               <img className="fv-ldg-card-bg" src={imgWatch} alt="" />
               <div className="fv-ldg-card-grad" />
               <div className="fv-ldg-card-live">
@@ -231,7 +194,7 @@ const HomePage: React.FC = () => {
               </div>
             </div>
 
-            <div className="fv-ldg-card">
+            <div className="fv-ldg-card fv-ldg-card--accent">
               <img className="fv-ldg-card-bg" src={imgPlay} alt="" />
               <div className="fv-ldg-card-grad" />
               <div className="fv-ldg-card-body">
@@ -246,7 +209,7 @@ const HomePage: React.FC = () => {
               </div>
             </div>
 
-            <div className="fv-ldg-card">
+            <div className="fv-ldg-card fv-ldg-card--cyan">
               <img className="fv-ldg-card-bg" src={imgEarn} alt="" />
               <div className="fv-ldg-card-grad" />
               <div className="fv-ldg-card-body">
@@ -261,7 +224,7 @@ const HomePage: React.FC = () => {
               </div>
             </div>
 
-            <div className="fv-ldg-card">
+            <div className="fv-ldg-card fv-ldg-card--cyan">
               <img className="fv-ldg-card-bg" src={imgShare} alt="" />
               <div className="fv-ldg-card-grad" />
               <div className="fv-ldg-card-body">
@@ -379,7 +342,7 @@ const HomePage: React.FC = () => {
         <footer className="fv-ldg-footer">
           <div className="fv-ldg-footer-brand">
             <span className="fv-ldg-footer-name">Fanverse Interactive</span>
-            <span className="fv-ldg-footer-copy">© 2024 FANVERSE INTERACTIVE. ALL RIGHTS RESERVED.</span>
+            <span className="fv-ldg-footer-copy">Â© 2024 FANVERSE INTERACTIVE. ALL RIGHTS RESERVED.</span>
           </div>
           <div className="fv-ldg-footer-links">
             <button type="button">Partners</button>

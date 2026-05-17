@@ -12,6 +12,9 @@ import SubscriptionPage from './pages/SubscriptionPage';
 import PalzioCheckoutPage from './pages/PalzioCheckoutPage';
 import TransactionHistoryPage from './pages/TransactionHistoryPage';
 import EarnSharePage from './pages/EarnSharePage';
+import NotificationsPage from './pages/NotificationsPage';
+import SettingsPage from './pages/SettingsPage';
+import UpcomingMatchesPage from './pages/UpcomingMatchesPage';
 import { isAuthenticated } from './utils/authSession';
 import { I18nProvider } from './i18n';
 import { EntitlementsProvider } from './context/EntitlementsContext';
@@ -19,9 +22,13 @@ import { EntitlementsProvider } from './context/EntitlementsContext';
 function ShellLayout() {
   return (
     <EntitlementsProvider>
-      <Header />
-      <Outlet />
-      <AppBottomNav />
+      <div className="app-shell">
+        <Header />
+        <main className="app-shell__main">
+          <Outlet />
+        </main>
+        <AppBottomNav />
+      </div>
     </EntitlementsProvider>
   );
 }
@@ -44,7 +51,12 @@ function HomeRoute() {
   if (isAuthenticated()) {
     return <Navigate to="/dashboard" replace />;
   }
-  return <HomePage />;
+  return (
+    <>
+      <Header />
+      <HomePage />
+    </>
+  );
 }
 
 function App() {
@@ -58,8 +70,11 @@ function App() {
             <Route element={<AuthGate />}>
               <Route element={<ShellLayout />}>
                 <Route path="/dashboard" element={<DashboardPage />} />
+                <Route path="/upcoming-matches" element={<UpcomingMatchesPage />} />
                 <Route path="/home" element={<Navigate to="/dashboard" replace />} />
                 <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/notifications" element={<NotificationsPage />} />
+                <Route path="/settings" element={<SettingsPage />} />
                 <Route path="/subscription" element={<SubscriptionPage />} />
                 <Route path="/history" element={<TransactionHistoryPage />} />
                 <Route path="/pay/palzio" element={<PalzioCheckoutPage />} />

@@ -1,21 +1,25 @@
-@import url('https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@400;500;700;900&family=Material+Symbols+Outlined:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400;700&display=swap');
 
 .watch-page {
-  --primary: #4fdad9;
-  --bg: #0e1414;
-  --surface: #1a2121;
-  --surface-high: #303636;
-  --text: #dde4e3;
-  --muted: #bbc9c9;
-  --outline: #3c4949;
-  --error: #ffb4ab;
+  --primary: var(--accent-secondary);
+  --bg: var(--surface-0);
+  --surface: var(--surface-1);
+  --surface-high: var(--surface-2);
+  --text: var(--text-mid);
+  --muted: var(--text-low);
+  --outline: var(--stroke-subtle);
+  --error: var(--danger);
   --error-container: #93000a;
-  --secondary: #e9c400;
-  background: radial-gradient(circle at 50% -20%, #1a2121 0%, #0e1414 70%);
+  --secondary: var(--accent-warning);
+  background: radial-gradient(circle at 50% -20%, var(--surface-2) 0%, var(--surface-0) 70%);
   color: var(--text);
   min-height: 100vh;
   overflow-x: hidden;
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 24px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
 }
 
 .material-symbols-outlined {

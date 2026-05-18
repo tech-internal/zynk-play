@@ -248,7 +248,7 @@ const DashboardPage: React.FC = () => {
                 />
                 <div className="dash-hub__portal-content">
                   <div>
-                    <span className="dash-hub__portal-num">{portal.num}</span>
+                    <span className="dash-hub__portal-num"></span>
                     <h2 className="dash-hub__portal-title">{t(portal.titleKey)}</h2>
                   </div>
                   <div className="dash-hub__portal-foot">

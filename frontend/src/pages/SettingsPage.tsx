@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import type { Language } from '../i18n';
+import ScreenHeader from '../components/ScreenHeader';
 import { useI18n, usePageTitle } from '../i18n';
 import './SettingsPage.css';
 
@@ -16,10 +17,8 @@ const SettingsPage: React.FC = () => {
 
   return (
     <main className="fv-settings-page">
-      <header className="fv-settings-head">
-        <h1 className="fv-settings-title">{t('settings.title')}</h1>
-        <p className="fv-settings-sub">{t('settings.sub')}</p>
-      </header>
+      <ScreenHeader title={t('settings.title')} />
+      <p className="fv-settings-sub">{t('settings.sub')}</p>
       <section className="fv-settings-section" aria-labelledby="settings-general">
         <h2 id="settings-general" className="fv-settings-section-title">
           {t('settings.general')}

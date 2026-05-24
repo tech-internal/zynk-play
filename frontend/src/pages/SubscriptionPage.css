@@ -43,9 +43,7 @@
   z-index: 1;
   min-height: inherit;
   padding-bottom: 8rem;
-  background:
-    radial-gradient(circle at top, rgba(142, 197, 240, 0.22), transparent 65%),
-    url('https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&q=80') center / cover fixed;
+  background: transparent;
 }
 
 /* Hero */

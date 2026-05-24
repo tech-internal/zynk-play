@@ -11,8 +11,7 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(142, 197, 240, 0.2), transparent 55%),
-    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(197, 208, 224, 0.12), transparent 50%),
+    var(--page-background),
     var(--glass-overlay-heavy);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -22,9 +21,9 @@
   position: absolute;
   inset: -50%;
   background-image:
-    linear-gradient(rgba(142, 197, 240, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(197, 208, 224, 0.06) 1px, transparent 1px);
-  background-size: 48px 48px;
+    linear-gradient(var(--page-grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--page-grid-line) 1px, transparent 1px);
+  background-size: var(--page-grid-size) var(--page-grid-size);
   transform: perspective(500px) rotateX(62deg) translateY(18%);
   transform-origin: center top;
   opacity: 0.55;

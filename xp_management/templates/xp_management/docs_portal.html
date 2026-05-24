@@ -1,0 +1,248 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>XP Management — Integration Portal</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="{% static 'xp_management/docs.css' %}">
+</head>
+<body>
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-brand" style="margin-bottom:1rem;">
+        <span class="docs-brand-mark">XP</span>
+        <div>
+          <strong>Integration</strong>
+          <div style="font-size:0.75rem;color:var(--muted);">Partner portal</div>
+        </div>
+      </div>
+      <nav>
+        <button type="button" class="docs-nav-btn active" data-panel="overview">Overview</button>
+        <button type="button" class="docs-nav-btn" data-panel="architecture">Architecture</button>
+        <button type="button" class="docs-nav-btn" data-panel="auth">API authentication</button>
+        <button type="button" class="docs-nav-btn" data-panel="rules">Rules catalog</button>
+        <button type="button" class="docs-nav-btn" data-panel="tiers">Tiers &amp; expiry</button>
+        <button type="button" class="docs-nav-btn" data-panel="playground">API playground</button>
+        <button type="button" class="docs-nav-btn" data-panel="curls">cURL reference</button>
+        <button type="button" class="docs-nav-btn" data-panel="errors">Error codes</button>
+      </nav>
+      <h2>Session</h2>
+      <form method="post" action="{% url 'xp_management:docs_logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="docs-btn docs-btn--ghost" style="width:100%;">Sign out</button>
+      </form>
+    </aside>
+
+    <main class="docs-main" id="docs-app" data-api-base="{{ api_base }}">
+      <header class="docs-header">
+        <div>
+          <h1>XP Management System</h1>
+          <p>Interactive integration guide · API base: <code id="api-base-display">{{ api_base }}</code></p>
+        </div>
+      </header>
+
+      <!-- Overview -->
+      <section class="docs-panel active" id="panel-overview">
+        <div class="docs-card">
+          <h3>What this system does</h3>
+          <p>The XP Management module is a centralized reward engine for the Zynk Play platform. Every XP credit or debit flows through a single pipeline: <strong>validate event → apply rule → write ledger → update wallet</strong>. Direct database updates to balances are not supported.</p>
+          <div class="docs-flow">
+            <span>User action</span> → <span>POST trigger-event</span> → <span>Rule engine</span> → <span>Ledger + wallet</span> → <span>Response</span>
+          </div>
+        </div>
+        <div class="docs-grid2">
+          <div class="docs-card">
+            <h3>Engagement pillars</h3>
+            <ul>
+              <li><span class="docs-tag docs-tag--watch">watch</span> Streams, VOD, highlights</li>
+              <li><span class="docs-tag docs-tag--pay">pay</span> Purchases &amp; subscriptions</li>
+              <li><span class="docs-tag docs-tag--win">win</span> Matches, tournaments, challenges</li>
+              <li><span class="docs-tag docs-tag--share">share</span> Social sharing</li>
+              <li><span class="docs-tag docs-tag--platform">platform</span> Login, profile, referrals</li>
+            </ul>
+          </div>
+          <div class="docs-card">
+            <h3>Quick start for integrators</h3>
+            <ol>
+              <li>Obtain platform JWT for a user (see <em>API authentication</em>).</li>
+              <li>Call <code>POST /api/v1/xp/trigger-event</code> with a registered <code>event_code</code> and unique <code>idempotency_key</code>.</li>
+              <li>Read balance via <code>GET /api/v1/xp/balance?user_id=...</code>.</li>
+            </ol>
+            <p style="color:var(--muted);font-size:0.85rem;">Full PDF-style documentation: <code>docs/XP_MANAGEMENT_INTEGRATION.md</code> in the repository.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Architecture -->
+      <section class="docs-panel" id="panel-architecture">
+        <div class="docs-card">
+          <h3>Data model</h3>
+          <table class="docs-table">
+            <thead><tr><th>Table</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr><td><code>xp_events</code></td><td>Registry of valid event codes (must exist before XP can be awarded)</td></tr>
+              <tr><td><code>xp_rules</code></td><td>Per-event rules: base XP, caps, cooldown, formula, expiry</td></tr>
+              <tr><td><code>user_xp_wallet</code></td><td>One wallet per user: available, earned, redeemed, expired, tier</td></tr>
+              <tr><td><code>xp_transactions</code></td><td>Immutable ledger (credits, debits, expiry, reversals)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="docs-card">
+          <h3>Rule resolution order</h3>
+          <ol>
+            <li>Resolve active rule for <code>event_code</code> (respect <code>valid_from</code> / <code>valid_until</code>).</li>
+            <li>Check idempotency key (duplicate returns original result with HTTP 200).</li>
+            <li>Check lifetime cap, daily cap, cooldown.</li>
+            <li>Compute XP (formula + tier multiplier).</li>
+            <li>Atomic wallet update + confirmed transaction.</li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- Auth -->
+      <section class="docs-panel" id="panel-auth">
+        <div class="docs-card">
+          <h3>Platform JWT (required for all XP APIs)</h3>
+          <p>All <code>/api/v1/xp/*</code> endpoints require <code>Authorization: Bearer &lt;access_token&gt;</code>. Tokens are issued by the entertainment platform auth API after OTP verification.</p>
+          <p>For sandbox testing, use mock OTP: any phone number with code <strong>123456</strong>.</p>
+        </div>
+        <div class="docs-card">
+          <h3>Get a test token (playground)</h3>
+          <div class="docs-grid2">
+            <label class="docs-field"><span>Phone number</span><input type="text" id="auth-phone" value="+93700123456"></label>
+            <label class="docs-field"><span>OTP (mock)</span><input type="text" id="auth-otp" value="123456"></label>
+          </div>
+          <button type="button" class="docs-btn docs-btn--primary" id="btn-mock-login">Get JWT</button>
+          <div id="auth-result" style="margin-top:1rem;"></div>
+          <label class="docs-field" style="margin-top:1rem;">
+            <span>Access token (stored in browser for playground)</span>
+            <div class="docs-token-bar">
+              <input type="text" id="access-token" placeholder="Click Get JWT or paste token">
+              <button type="button" class="docs-btn docs-btn--sm" id="btn-clear-token">Clear</button>
+            </div>
+          </label>
+          <p id="auth-user-id" style="font-size:0.85rem;color:var(--muted);"></p>
+        </div>
+      </section>
+
+      <!-- Rules catalog -->
+      <section class="docs-panel" id="panel-rules">
+        <div class="docs-card">
+          <h3>Event &amp; rule catalog</h3>
+          <label class="docs-field">
+            <span>Filter category</span>
+            <select id="rules-filter">
+              <option value="">All</option>
+              <option value="watch">Watch</option>
+              <option value="pay">Pay</option>
+              <option value="win">Win</option>
+              <option value="share">Share</option>
+              <option value="platform">Platform</option>
+            </select>
+          </label>
+          <label class="docs-field"><span>Search event code</span><input type="text" id="rules-search" placeholder="e.g. WIN_MATCH"></label>
+          <div class="docs-table-wrap">
+            <table class="docs-table" id="rules-table">
+              <thead>
+                <tr>
+                  <th>Event</th><th>Category</th><th>Base XP</th><th>Daily cap</th><th>Cooldown</th><th>Lifetime</th><th>Expiry days</th><th></th>
+                </tr>
+              </thead>
+              <tbody id="rules-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tiers -->
+      <section class="docs-panel" id="panel-tiers">
+        <div class="docs-card">
+          <h3>Tier thresholds (lifetime <code>total_xp_earned</code>)</h3>
+          <div class="docs-table-wrap">
+            <table class="docs-table" id="tiers-table">
+              <thead><tr><th>Tier</th><th>XP range</th><th>Multiplier</th><th>Default expiry (days)</th></tr></thead>
+              <tbody id="tiers-tbody"></tbody>
+            </table>
+          </div>
+          <p style="color:var(--muted);font-size:0.85rem;margin-top:0.75rem;">Tier is based on cumulative earned XP and does not downgrade. Multiplier applies on new credits.</p>
+        </div>
+      </section>
+
+      <!-- Playground -->
+      <section class="docs-panel" id="panel-playground">
+        <div class="docs-card">
+          <h3>Trigger XP event</h3>
+          <div class="docs-grid2">
+            <label class="docs-field"><span>event_code</span><input type="text" id="pg-event" value="WIN_MATCH_CASUAL"></label>
+            <label class="docs-field"><span>user_id (UUID)</span><input type="text" id="pg-user-id" placeholder="From JWT login"></label>
+          </div>
+          <label class="docs-field"><span>idempotency_key (unique per attempt)</span><input type="text" id="pg-idem" value=""></label>
+          <label class="docs-field"><span>occurred_at (ISO8601)</span><input type="text" id="pg-occurred"></label>
+          <label class="docs-field"><span>source_metadata (JSON)</span><textarea id="pg-meta">{"match_id": "demo-match-1", "game_mode": "casual"}</textarea></label>
+          <label class="docs-field"><span>unit_count</span><input type="number" id="pg-units" value="1" min="1"></label>
+          <button type="button" class="docs-btn docs-btn--primary" id="btn-trigger">Send trigger-event</button>
+          <button type="button" class="docs-btn" id="btn-gen-idem">Generate idempotency key</button>
+        </div>
+        <div class="docs-grid2">
+          <div class="docs-card">
+            <h3>Get balance</h3>
+            <button type="button" class="docs-btn docs-btn--primary" id="btn-balance">GET balance</button>
+          </div>
+          <div class="docs-card">
+            <h3>Transactions</h3>
+            <button type="button" class="docs-btn docs-btn--primary" id="btn-txns">GET transactions</button>
+          </div>
+          <div class="docs-card">
+            <h3>Leaderboard</h3>
+            <label class="docs-field"><span>period</span>
+              <select id="pg-lb-period"><option value="all_time">all_time</option><option value="daily">daily</option><option value="weekly">weekly</option><option value="monthly">monthly</option></select>
+            </label>
+            <button type="button" class="docs-btn docs-btn--primary" id="btn-leaderboard">GET leaderboard</button>
+          </div>
+        </div>
+        <div class="docs-card">
+          <h3>Response</h3>
+          <pre class="docs-pre docs-response" id="pg-response">Run a request to see the JSON response.</pre>
+        </div>
+      </section>
+
+      <!-- cURLs -->
+      <section class="docs-panel" id="panel-curls">
+        <div class="docs-card">
+          <h3>cURL examples</h3>
+          <p>Replace <code>$BASE</code>, <code>$TOKEN</code>, and <code>$USER_ID</code>. Generate a token in the Auth tab or use your integration credentials.</p>
+          <div id="curl-blocks"></div>
+        </div>
+      </section>
+
+      <!-- Errors -->
+      <section class="docs-panel" id="panel-errors">
+        <div class="docs-card">
+          <h3>Standard envelope</h3>
+          <pre class="docs-pre">Success: { "success": true, "data": { ... }, "meta": { "requestId": "...", "timestamp": "..." } }
+Error:   { "success": false, "error": { "code": "...", "message": "...", "details": {} }, "meta": { ... } }</pre>
+        </div>
+        <div class="docs-card">
+          <h3>trigger-event error codes</h3>
+          <table class="docs-table">
+            <thead><tr><th>Code</th><th>HTTP</th><th>Meaning</th></tr></thead>
+            <tbody>
+              <tr><td>XP_EVENT_NOT_FOUND</td><td>404</td><td>Unknown or inactive event_code</td></tr>
+              <tr><td>XP_RULE_NOT_FOUND</td><td>404</td><td>No active rule for event</td></tr>
+              <tr><td>XP_DAILY_CAP_REACHED</td><td>429</td><td>User hit daily cap for this rule</td></tr>
+              <tr><td>XP_COOLDOWN_ACTIVE</td><td>429</td><td>Too soon since last earn; see details.seconds_remaining</td></tr>
+              <tr><td>XP_LIFETIME_CAP_REACHED</td><td>429</td><td>One-time event already claimed</td></tr>
+              <tr><td>XP_DUPLICATE_REQUEST</td><td>200</td><td>Idempotency key reused; original result in data</td></tr>
+              <tr><td>XP_FORBIDDEN</td><td>403</td><td>Cannot act on another user's wallet</td></tr>
+              <tr><td>XP_VALIDATION_ERROR</td><td>400</td><td>Invalid request body</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="{% static 'xp_management/docs.js' %}"></script>
+</body>
+</html>

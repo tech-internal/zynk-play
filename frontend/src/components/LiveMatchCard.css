@@ -1,0 +1,239 @@
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400;700&display=swap');
+
+.live-match-card {
+  position: relative;
+  overflow: hidden;
+  padding: 14px 12px 12px;
+  border: 1px solid rgba(120, 160, 220, 0.18);
+  border-radius: 12px;
+  background: rgba(15, 22, 38, 0.75);
+}
+
+.live-match-card--live {
+  border-color: rgba(255, 106, 26, 0.45);
+  box-shadow: 0 0 20px rgba(255, 106, 26, 0.12);
+}
+
+.live-match-card__live-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #ff6a1a;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.live-match-card__live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+  animation: live-match-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes live-match-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.85);
+  }
+}
+
+.live-match-card__watermark {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 48px;
+  color: #e6edf7;
+  opacity: 0.05;
+  pointer-events: none;
+}
+
+.live-match-card__grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.live-match-card__team {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-width: 0;
+}
+
+.live-match-card__team--home {
+  align-items: flex-start;
+  text-align: left;
+}
+
+.live-match-card__team--away {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.live-match-card__badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin-bottom: 6px;
+  border-radius: 50%;
+  background: rgba(28, 53, 84, 0.9);
+  flex-shrink: 0;
+}
+
+.live-match-card__badge--img {
+  padding: 4px;
+  overflow: hidden;
+}
+
+.live-match-card__badge--img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.live-match-card__badge--secondary {
+  border: 1px solid rgba(56, 189, 248, 0.5);
+}
+
+.live-match-card__badge--secondary .material-symbols-outlined {
+  font-size: 22px;
+  color: #38bdf8;
+}
+
+.live-match-card__badge--primary {
+  border: 1px solid rgba(255, 106, 26, 0.5);
+}
+
+.live-match-card__badge--primary .material-symbols-outlined {
+  font-size: 22px;
+  color: #ff6a1a;
+}
+
+.live-match-card__team-name {
+  margin: 0 0 2px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #e6edf7;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.live-match-card__team-meta {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.live-match-card__team-meta--secondary {
+  color: #38bdf8;
+}
+
+.live-match-card__team-meta--primary {
+  color: #ff6a1a;
+}
+
+.live-match-card__center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-width: 72px;
+}
+
+.live-match-card__tournament {
+  margin-bottom: 4px;
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: #93a3bf;
+  text-transform: uppercase;
+  max-width: 90px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.live-match-card__score-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+}
+
+.live-match-card__line {
+  flex: 1;
+  height: 1px;
+  background: rgba(120, 160, 220, 0.25);
+}
+
+.live-match-card__score {
+  font-family: 'Orbitron', 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 900;
+  color: #facc15;
+  text-shadow: 0 0 10px rgba(250, 204, 21, 0.35);
+  white-space: nowrap;
+}
+
+.live-match-card__period {
+  font-size: 9px;
+  font-weight: 800;
+  color: #ff6a1a;
+  letter-spacing: 0.1em;
+}
+
+.live-match-card__status {
+  margin-top: 4px;
+  font-size: 9px;
+  font-weight: 600;
+  color: #93a3bf;
+  letter-spacing: 0.06em;
+}
+
+.live-match-card__dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.live-match-card__dot {
+  width: 6px;
+  height: 6px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(120, 160, 220, 0.35);
+  cursor: pointer;
+}
+
+.live-match-card__dot--active {
+  background: #38bdf8;
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.5);
+}

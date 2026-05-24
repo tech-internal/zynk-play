@@ -12,38 +12,20 @@
   }
 }
 
-.upm-head {
+.upm-head-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
   margin-bottom: var(--space-6);
 }
 
-.upm-back {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: var(--space-4);
-  color: var(--accent-secondary);
-  font-weight: 700;
-  font-size: 14px;
-  text-decoration: none;
-}
-
-.upm-back:hover {
-  color: var(--accent-primary);
-}
-
-.upm-title {
-  margin: 0 0 var(--space-2);
-  font-family: 'Inter', system-ui, sans-serif;
-  font-style: italic;
-  font-size: 26px;
-  font-weight: 800;
-  text-transform: uppercase;
-  color: var(--text-high);
-}
-
 .upm-sub {
-  margin: 0 0 var(--space-4);
-  font-size: 15px;
+  margin: 0;
+  flex: 1;
+  min-width: 12rem;
+  font-size: 11px;
   color: var(--text-low);
 }
 

@@ -6,7 +6,9 @@ import {
   type SubscriptionPlan,
 } from '../api/subscriptions';
 import { storePalzioCheckoutToken } from '../api/palzio';
+import ScreenHeader from '../components/ScreenHeader';
 import { useEntitlements } from '../context/EntitlementsContext';
+import { useI18n } from '../i18n';
 import './SubscriptionPage.css';
 
 type BillingTab = { id: string; label: string; sub: string };
@@ -55,6 +57,7 @@ function entitlementFeatures(ent: string): string[] {
 }
 
 const SubscriptionPage: React.FC = () => {
+  const { t } = useI18n();
   const navigate = useNavigate();
   const { profile } = useEntitlements();
   const [plans, setPlans] = useState<SubscriptionPlan[]>([]);
@@ -148,6 +151,7 @@ const SubscriptionPage: React.FC = () => {
   return (
     <div className="subpage">
       <main className="subpage-main">
+        <ScreenHeader title={t('sub.screenTitle')} />
         <section className="subpage-hero">
           <div className="subpage-hero-badge">
             <span className="subpage-label-gold">ELITE ENCRYPTION ACTIVE</span>

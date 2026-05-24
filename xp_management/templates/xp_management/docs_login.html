@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>XP Integration — Sign in</title>
+  <meta name="robots" content="noindex, nofollow">
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'xp_management/docs.css' %}">
+</head>
+<body class="docs-login-page">
+  <main class="docs-login-card">
+    <div class="docs-brand">
+      <span class="docs-brand-mark">XP</span>
+      <div>
+        <h1>Integration portal</h1>
+        <p>Partner access only. Credentials are provided separately.</p>
+      </div>
+    </div>
+    {% if error %}
+    <div class="docs-alert docs-alert--error">{{ error }}</div>
+    {% endif %}
+    <form method="post" action="">
+      {% csrf_token %}
+      <label>
+        <span>Username</span>
+        <input type="text" name="username" autocomplete="username" required autofocus>
+      </label>
+      <label>
+        <span>Password</span>
+        <input type="password" name="password" autocomplete="current-password" required>
+      </label>
+      <button type="submit" class="docs-btn docs-btn--primary">Enter portal</button>
+    </form>
+    <p class="docs-foot">API base: <code>{{ site_url }}</code></p>
+  </main>
+</body>
+</html>

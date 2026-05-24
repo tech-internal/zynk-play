@@ -19,6 +19,7 @@ from rest_framework.test import APIRequestFactory
 
 from entertainment_platform import views as ep_views
 from entertainment_platform.palzio_tokens import palzio_signing_secret, verify_palzio_checkout_token
+from .openapi import schema_palzio_complete
 
 logger = logging.getLogger(__name__)
 
@@ -50,6 +51,7 @@ def _invoke_platform_webhook(body: dict, signature: str | None) -> Response:
     return ep_views.payment_webhook(django_request)
 
 
+@schema_palzio_complete
 @api_view(['POST'])
 @authentication_classes([])
 @permission_classes([AllowAny])

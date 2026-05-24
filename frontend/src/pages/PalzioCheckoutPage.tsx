@@ -8,6 +8,7 @@ import {
   type PalzioOutcome,
 } from "../api/palzio";
 import ApiLoaderOverlay from "../components/ApiLoaderOverlay";
+import ScreenHeader from "../components/ScreenHeader";
 import { useEntitlements } from "../context/EntitlementsContext";
 import { useI18n, usePageTitle } from "../i18n";
 import "./PalzioCheckoutPage.css";
@@ -197,17 +198,8 @@ const PalzioCheckoutPage: React.FC = () => {
         subline="Securing your transaction and updating elite access…"
       />
       <div className="pcheckout-shell">
-        <header className="pcheckout-topbar">
-          <div className="pcheckout-brand">
-            <span className="pcheckout-brand-mark" aria-hidden>
-              ◆
-            </span>
-            <div>
-              <h1 className="pcheckout-title">{t("checkout.title")}</h1>
-              <p className="pcheckout-sub">Mock gateway · Palzio PSP</p>
-            </div>
-          </div>
-        </header>
+        <ScreenHeader title={t('checkout.title')} />
+        <p className="pcheckout-sub">Mock gateway · Palzio PSP</p>
 
         {missing && (
           <div className="pcheckout-panel">

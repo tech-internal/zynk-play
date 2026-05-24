@@ -24,11 +24,11 @@
   --surface-2: #264868;
   --stroke-subtle: #3a5a7a;
 
-  --page-background:
-    radial-gradient(ellipse 115% 75% at 50% -12%, rgba(142, 197, 240, 0.3) 0%, transparent 54%),
-    radial-gradient(ellipse 75% 55% at 95% 22%, rgba(197, 208, 224, 0.16) 0%, transparent 50%),
-    radial-gradient(ellipse 70% 50% at 5% 88%, rgba(59, 130, 246, 0.22) 0%, transparent 52%),
-    linear-gradient(168deg, #2a4a6e 0%, #1e3a5c 30%, #1a3352 58%, #0f2744 100%);
+  /* Fanverse journey screens — .phone shell background */
+  --page-background: radial-gradient(circle at top, #0d1424 0%, #05070d 75%);
+  --page-background-fallback: #05070d;
+  --page-grid-line: rgba(56, 189, 248, 0.04);
+  --page-grid-size: 24px;
 
   --glass-overlay: rgba(18, 34, 56, 0.82);
   --glass-overlay-heavy: rgba(15, 31, 50, 0.92);

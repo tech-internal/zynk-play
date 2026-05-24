@@ -29,7 +29,7 @@
 }
 
 .fv-settings-sub {
-  margin: 0;
+  margin: 0 0 var(--space-6);
   color: var(--text-low);
   font-size: 15px;
   line-height: 24px;

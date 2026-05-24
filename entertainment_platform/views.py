@@ -38,6 +38,32 @@ from .subscriptions import (
 from .permissions import IsPlatformStaff
 from .utils import send_sms_otp, generate_signed_url, validate_payment_signature
 from .palzio_tokens import issue_palzio_checkout_token
+from .openapi import (
+    schema_access_stream,
+    schema_get_game,
+    schema_get_stream,
+    schema_home,
+    schema_launch_game,
+    schema_list_games,
+    schema_list_plans,
+    schema_list_streams,
+    schema_mock_send_otp,
+    schema_mock_verify_otp,
+    schema_payment_demo_confirm,
+    schema_payment_history,
+    schema_payment_webhook,
+    schema_purchase_subscription,
+    schema_refresh_token,
+    schema_send_otp,
+    schema_start_trial,
+    schema_subscription_me_detail,
+    schema_subscription_me_list,
+    schema_subscription_plans_manage_collection,
+    schema_subscription_plans_manage_detail,
+    schema_subscription_status,
+    schema_user_profile,
+    schema_verify_otp,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -46,6 +72,7 @@ logger = logging.getLogger(__name__)
 # HOME & DOCUMENTATION
 # ============================================================================
 
+@schema_home
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def home(request):
@@ -98,6 +125,9 @@ def home(request):
             "url": "http://localhost:8000/admin/"
         },
         "documentation": {
+            "openapi_schema": "/api/schema/",
+            "swagger_ui": "/api/docs/",
+            "redoc": "/api/redoc/",
             "architecture": "See docs/ARCHITECTURE.md",
             "development": "See docs/DEVELOPMENT.md",
             "readme": "See README.md"
@@ -109,6 +139,7 @@ def home(request):
 # AUTHENTICATION VIEWS
 # ============================================================================
 
+@schema_send_otp
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def send_otp(request):
@@ -164,6 +195,7 @@ def send_otp(request):
     }, status=status.HTTP_200_OK)
 
 
+@schema_verify_otp
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def verify_otp(request):
@@ -220,6 +252,7 @@ def verify_otp(request):
     }, status=status.HTTP_200_OK)
 
 
+@schema_mock_send_otp
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def mock_send_otp(request):
@@ -237,6 +270,7 @@ def mock_send_otp(request):
     )
 
 
+@schema_mock_verify_otp
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def mock_verify_otp(request):
@@ -284,6 +318,7 @@ def mock_verify_otp(request):
     )
 
 
+@schema_refresh_token
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def refresh_token(request):
@@ -314,6 +349,7 @@ def refresh_token(request):
 # USER VIEWS
 # ============================================================================
 
+@schema_user_profile
 @api_view(['GET', 'PUT', 'PATCH'])
 @permission_classes([IsAuthenticated])
 def user_profile(request):
@@ -349,6 +385,7 @@ def user_profile(request):
 # SUBSCRIPTION VIEWS
 # ============================================================================
 
+@schema_list_plans
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def list_plans(request):
@@ -379,6 +416,7 @@ def list_plans(request):
     return Response(serializer.data)
 
 
+@schema_purchase_subscription
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def purchase_subscription(request):
@@ -451,6 +489,7 @@ def purchase_subscription(request):
     }, status=status.HTTP_201_CREATED)
 
 
+@schema_subscription_status
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def subscription_status(request):
@@ -471,6 +510,7 @@ def subscription_status(request):
     return Response(data, status=status.HTTP_200_OK)
 
 
+@schema_subscription_me_list
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def subscription_me_list(request):
@@ -479,6 +519,7 @@ def subscription_me_list(request):
     return Response(UserSubscriptionSerializer(subs, many=True).data)
 
 
+@schema_subscription_me_detail
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
 def subscription_me_detail(request, subscription_id):
@@ -502,6 +543,7 @@ def subscription_me_detail(request, subscription_id):
     return Response(UserSubscriptionSerializer(sub).data)
 
 
+@schema_subscription_plans_manage_collection
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated, IsPlatformStaff])
 def subscription_plans_manage_collection(request):
@@ -524,6 +566,7 @@ def subscription_plans_manage_collection(request):
     return Response(SubscriptionPlanManageSerializer(plan).data, status=status.HTTP_201_CREATED)
 
 
+@schema_subscription_plans_manage_detail
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated, IsPlatformStaff])
 def subscription_plans_manage_detail(request, plan_id):
@@ -546,6 +589,7 @@ def subscription_plans_manage_detail(request, plan_id):
 # STREAMING VIEWS
 # ============================================================================
 
+@schema_list_streams
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def list_streams(request):
@@ -568,6 +612,7 @@ def list_streams(request):
     return Response(serializer.data)
 
 
+@schema_get_stream
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def get_stream(request, stream_id):
@@ -587,6 +632,7 @@ def get_stream(request, stream_id):
     return Response(serializer.data)
 
 
+@schema_access_stream
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def access_stream(request, stream_id):
@@ -661,6 +707,7 @@ def access_stream(request, stream_id):
 # TRIAL VIEWS
 # ============================================================================
 
+@schema_start_trial
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def start_trial(request):
@@ -713,6 +760,7 @@ def start_trial(request):
 # PAYMENT VIEWS
 # ============================================================================
 
+@schema_payment_webhook
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def payment_webhook(request):
@@ -819,6 +867,7 @@ def payment_webhook(request):
     return Response({'message': 'Webhook processed'}, status=status.HTTP_200_OK)
 
 
+@schema_payment_demo_confirm
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def payment_demo_confirm(request):
@@ -870,6 +919,7 @@ def payment_demo_confirm(request):
     )
 
 
+@schema_payment_history
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def payment_history(request):
@@ -890,6 +940,7 @@ def payment_history(request):
 # GAMES VIEWS
 # ============================================================================
 
+@schema_list_games
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def list_games(request):
@@ -910,6 +961,7 @@ def list_games(request):
     return Response(serializer.data)
 
 
+@schema_get_game
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_game(request, game_id):
@@ -937,6 +989,7 @@ def get_game(request, game_id):
     return Response(serializer.data)
 
 
+@schema_launch_game
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def launch_game(request, game_id):

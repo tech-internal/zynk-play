@@ -8,11 +8,27 @@ html,
 body,
 #root {
   min-height: 100%;
-  background: var(--page-background);
+  background-color: var(--page-background-fallback);
+  background-image: var(--page-background);
   background-attachment: fixed;
 }
 
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--page-grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--page-grid-line) 1px, transparent 1px);
+  background-size: var(--page-grid-size) var(--page-grid-size);
+  opacity: 0.5;
+}
+
 .App {
+  position: relative;
+  z-index: 1;
   background: transparent;
   color: var(--text-mid);
   min-height: 100vh;
@@ -26,6 +42,8 @@ body,
 }
 
 .app-shell {
+  position: relative;
+  z-index: 1;
   min-height: 100vh;
   display: flex;
   flex-direction: column;

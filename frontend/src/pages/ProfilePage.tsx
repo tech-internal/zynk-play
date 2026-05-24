@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { clearMockAuthSession } from '../utils/authSession';
 import { updateUserProfile } from '../api/user';
 import { useEntitlements } from '../context/EntitlementsContext';
+import ScreenHeader from '../components/ScreenHeader';
 import { useI18n, usePageTitle } from '../i18n';
 import './ProfilePage.css';
 
@@ -102,6 +103,7 @@ const ProfilePage: React.FC = () => {
   return (
     <div className="fv-profile-root">
       <main className="fv-profile-main">
+        <ScreenHeader title={t('profile.screenTitle')} />
         {paidOk && (
           <div className="fv-profile-banner fv-profile-banner--ok" role="status">
             <span>{t('profile.paymentOk')}</span>

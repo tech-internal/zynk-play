@@ -514,8 +514,16 @@ Generated using DRF's built-in documentation:
 
 ```
 http://localhost:8000/api/v1/
-http://localhost:8000/api/schema/
+http://localhost:8000/api/schema/     # OpenAPI 3 JSON/YAML
+http://localhost:8000/api/docs/       # Swagger UI (DEBUG only)
+http://localhost:8000/api/redoc/      # ReDoc (DEBUG only)
 ```
+
+### XP Management (partner integration)
+
+- **Markdown guide:** [docs/XP_MANAGEMENT_INTEGRATION.md](docs/XP_MANAGEMENT_INTEGRATION.md) — full spec, cURL examples, error codes
+- **Interactive portal (password protected):** `http://localhost:8000/xp/integration/` — set `XP_DOCS_PASSWORD` in `.env`; share URL + credentials with integrators only
+- **API prefix:** `/api/v1/xp/` — seed events: `python manage.py seed_xp_events`
 
 ### Example Request/Response
 

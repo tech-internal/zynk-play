@@ -31,11 +31,9 @@
 
 .fv-profile-root {
   min-height: calc(100vh - 56px);
-  background-color: transparent;
+  background: transparent;
   color: var(--fv-on-bg);
   font-family: 'Inter', system-ui, sans-serif;
-  background-image: radial-gradient(circle at 2px 2px, rgba(142, 197, 240, 0.12) 1px, transparent 0);
-  background-size: 32px 32px;
   overflow-x: hidden;
   padding-bottom: 96px;
 }

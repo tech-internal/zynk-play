@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     
     # Third-party apps
     'rest_framework',
+    'drf_spectacular',
     'rest_framework_simplejwt',
     'corsheaders',
     'django_filters',
@@ -34,6 +35,7 @@ INSTALLED_APPS = [
     # Local apps
     'entertainment_platform',
     'psp',
+    'xp_management',
 ]
 
 MIDDLEWARE = [
@@ -112,6 +114,7 @@ CACHES = {
 # ============================================================================
 
 REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'entertainment_platform.authentication.PlatformUserJWTAuthentication',
     ],
@@ -254,6 +257,11 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': False,
         },
+        'xp_management': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
     },
 }
 
@@ -278,6 +286,10 @@ CELERY_BEAT_SCHEDULE = {
     'clean-expired-otp': {
         'task': 'entertainment_platform.tasks.clean_expired_otp_requests',
         'schedule': timedelta(minutes=10),
+    },
+    'process-xp-expiry': {
+        'task': 'xp_management.tasks.process_xp_expiry',
+        'schedule': timedelta(minutes=15),
     },
 }
 
@@ -312,8 +324,17 @@ PLATFORM_PAYMENT_WEBHOOK_URL = os.getenv('PLATFORM_PAYMENT_WEBHOOK_URL', '')
 SMS_SERVICE_URL = os.getenv('SMS_SERVICE_URL', '')
 SMS_API_KEY = os.getenv('SMS_API_KEY', '')
 
-# Site URL (for callbacks)
-SITE_URL = os.getenv('SITE_URL', 'https://yourdomain.com')
+# Site URL (callbacks, webhooks). In DEBUG, ignore template placeholder hosts.
+_site_url = os.getenv('SITE_URL', '').strip().rstrip('/')
+if not _site_url or 'yourdomain.com' in _site_url.lower():
+    SITE_URL = 'http://localhost:8000' if DEBUG else 'https://yourdomain.com'
+else:
+    SITE_URL = _site_url
+
+# XP integration docs portal (password-protected partner site at /xp/integration/)
+XP_DOCS_ENABLED = config('XP_DOCS_ENABLED', default='True').lower() in ('true', '1', 'yes')
+XP_DOCS_USERNAME = config('XP_DOCS_USERNAME', default='xp-integration')
+XP_DOCS_PASSWORD = config('XP_DOCS_PASSWORD', default='')
 
 # Security Settings
 # Railway terminates TLS at the edge proxy; trust forwarded proto so Django
@@ -327,3 +348,7 @@ CSRF_COOKIE_SECURE = not DEBUG
 SECURE_HSTS_SECONDS = 31536000 if not DEBUG else 0
 SECURE_HSTS_INCLUDE_SUBDOMAINS = not DEBUG
 SECURE_HSTS_PRELOAD = not DEBUG
+
+# OpenAPI (drf-spectacular) — import after REST_FRAMEWORK so DEFAULT_SCHEMA_CLASS applies
+from config.openapi_settings import SPECTACULAR_SETTINGS  # noqa: E402
+import config.schema  # noqa: E402, F401 — register JWT auth extension for OpenAPI

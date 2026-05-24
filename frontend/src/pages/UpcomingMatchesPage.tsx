@@ -1,7 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import type { DashboardMatch } from '../api/sportsDb';
 import { useUpcomingMatches } from '../hooks/useUpcomingMatches';
+import ScreenHeader from '../components/ScreenHeader';
 import { useI18n, usePageTitle } from '../i18n';
 import './UpcomingMatchesPage.css';
 
@@ -86,19 +86,13 @@ const UpcomingMatchesPage: React.FC = () => {
 
   return (
     <main className="upm-page">
-      <header className="upm-head">
-        <Link to="/dashboard" className="upm-back">
-          <span className="material-symbols-outlined" aria-hidden>
-            arrow_back
-          </span>
-          {t('upcoming.back')}
-        </Link>
-        <h1 className="upm-title">{t('upcoming.title')}</h1>
+      <ScreenHeader title={t('upcoming.title')} />
+      <div className="upm-head-meta">
         <p className="upm-sub">{t('upcoming.sub')}</p>
         <button type="button" className="upm-refresh" onClick={refresh} disabled={loading}>
           {loading ? t('common.loading') : t('upcoming.refresh')}
         </button>
-      </header>
+      </div>
 
       {loading && feed.soccer.length === 0 && feed.cricket.length === 0 ? (
         <p className="upm-status" role="status">

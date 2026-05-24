@@ -3,6 +3,7 @@
 
 import re
 
+from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 from django.utils import timezone
 from .models import (
@@ -31,18 +32,23 @@ class UserSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['id', 'created_at', 'role', 'phone_number']
 
+    @extend_schema_field(serializers.BooleanField())
     def get_has_active_subscription(self, obj):
         return obj.has_active_subscription()
 
+    @extend_schema_field(serializers.BooleanField())
     def get_has_game_entitlement(self, obj):
         return obj.has_game_entitlement()
 
+    @extend_schema_field(serializers.BooleanField())
     def get_has_streaming_entitlement(self, obj):
         return obj.has_streaming_entitlement()
 
+    @extend_schema_field(serializers.BooleanField())
     def get_can_use_free_trial(self, obj):
         return obj.can_use_free_trial()
 
+    @extend_schema_field(serializers.BooleanField())
     def get_profile_complete(self, obj):
         u = (obj.username or '').strip()
         n = (obj.full_name or '').strip()
@@ -115,6 +121,7 @@ class SubscriptionPlanSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['id', 'created_at', 'purchase_block_reason']
 
+    @extend_schema_field(serializers.CharField(allow_null=True))
     def get_purchase_block_reason(self, obj):
         request = self.context.get('request')
         user = getattr(request, 'user', None) if request else None
@@ -157,9 +164,11 @@ class UserSubscriptionSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['id', 'created_at', 'updated_at']
 
+    @extend_schema_field(serializers.BooleanField())
     def get_is_active(self, obj):
         return obj.is_active()
 
+    @extend_schema_field(serializers.FloatField())
     def get_remaining_hours(self, obj):
         if obj.is_active():
             delta = obj.end_at - timezone.now()
@@ -202,9 +211,11 @@ class StreamSessionSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['id', 'created_at']
 
+    @extend_schema_field(serializers.BooleanField())
     def get_is_active(self, obj):
         return obj.is_active()
 
+    @extend_schema_field(serializers.IntegerField())
     def get_time_remaining_seconds(self, obj):
         if obj.is_active():
             delta = obj.expires_at - timezone.now()

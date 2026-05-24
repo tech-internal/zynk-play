@@ -1,5 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import HistoryXpLedger from '../components/HistoryXpLedger';
+import ScreenHeader from '../components/ScreenHeader';
 import { useI18n, usePageTitle } from '../i18n';
 import './TransactionHistoryPage.css';
 import { fetchPaymentHistory, PaymentTransactionRow } from '../api/subscriptions';
@@ -142,6 +144,8 @@ function deriveTransaction(row: PaymentTransactionRow): DerivedTx {
 
 const PAGE_SIZE = 8;
 
+type LedgerTab = 'money' | 'xp';
+
 function txRowToneClass(tx: DerivedTx): string {
   if (tx.isElite) return 'thp-tx-elite';
   if (tx.tone === 'positive') return 'thp-tx-earned';
@@ -166,8 +170,10 @@ const TransactionHistoryPage: React.FC = () => {
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
   const [visibleCount, setVisibleCount] = useState<number>(PAGE_SIZE);
+  const [ledgerTab, setLedgerTab] = useState<LedgerTab>('money');
 
   useEffect(() => {
+    if (ledgerTab !== 'money') return undefined;
     let cancelled = false;
     setLoading(true);
     setError(null);
@@ -186,7 +192,7 @@ const TransactionHistoryPage: React.FC = () => {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [ledgerTab]);
 
   const derived = useMemo(() => transactions.map(deriveTransaction), [transactions]);
 
@@ -251,11 +257,37 @@ const TransactionHistoryPage: React.FC = () => {
     <div className="thp-page">
       <main className="thp-main">
         <div className="thp-container">
-          <header className="thp-hero">
-            <h1 className="thp-title">{t('history.title')}</h1>
-            <p className="thp-lead">{t('history.sub')}</p>
-          </header>
+          <ScreenHeader title={t('history.title')} />
+          <p className="thp-lead">{t('history.sub')}</p>
 
+          <div className="thp-ledger-tabs" role="tablist" aria-label={t('history.title')}>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={ledgerTab === 'money'}
+              className={`thp-ledger-tab${ledgerTab === 'money' ? ' is-active' : ''}`}
+              onClick={() => setLedgerTab('money')}
+            >
+              {t('history.tabMoney')}
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={ledgerTab === 'xp'}
+              className={`thp-ledger-tab${ledgerTab === 'xp' ? ' is-active' : ''}`}
+              onClick={() => setLedgerTab('xp')}
+            >
+              {t('history.tabXp')}
+            </button>
+          </div>
+
+          {ledgerTab === 'xp' ? (
+            <div className="thp-grid thp-grid--xp">
+              <section className="thp-content thp-content--full">
+                <HistoryXpLedger />
+              </section>
+            </div>
+          ) : (
           <div className="thp-grid">
             <aside className="thp-sidebar">
               <div className="thp-panel">
@@ -418,6 +450,7 @@ const TransactionHistoryPage: React.FC = () => {
               )}
             </section>
           </div>
+          )}
         </div>
       </main>
     </div>

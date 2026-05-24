@@ -6,8 +6,10 @@ import React, {
   useMemo,
   useState,
 } from 'react';
+import { awardDailyLoginXp, getAuthUserId } from '../api/xp';
 import { fetchSubscriptionStatus, type SubscriptionStatusResponse } from '../api/subscriptions';
 import { fetchUserProfile, type UserProfile } from '../api/user';
+import { isAuthenticated } from '../utils/authSession';
 
 export type EntitlementsContextValue = {
   profile: UserProfile | null;
@@ -44,6 +46,13 @@ export function EntitlementsProvider({ children }: { children: React.ReactNode }
   useEffect(() => {
     void refresh();
   }, [refresh]);
+
+  useEffect(() => {
+    if (!isAuthenticated()) return;
+    const userId = getAuthUserId();
+    if (!userId) return;
+    void awardDailyLoginXp(userId);
+  }, []);
 
   const needsProfileCompletion = Boolean(profile && !profile.profile_complete);
   const needsSubscription = Boolean(profile && subStatus && !subStatus.has_active_subscription);

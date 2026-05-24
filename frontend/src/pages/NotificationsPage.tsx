@@ -7,6 +7,7 @@ import {
 } from '../api/sportsDb';
 import NewsDetailModal from '../components/NewsDetailModal';
 import NewsScrollSection from '../components/NewsScrollSection';
+import ScreenHeader from '../components/ScreenHeader';
 import { useI18n, usePageTitle } from '../i18n';
 import './NotificationsPage.css';
 
@@ -80,10 +81,8 @@ const NotificationsPage: React.FC = () => {
 
   return (
     <main className="fv-notif-page">
-      <header className="fv-notif-head">
-        <h1 className="fv-notif-title">{t('notif.title')}</h1>
-        <p className="fv-notif-sub">{t('notif.sub')}</p>
-      </header>
+      <ScreenHeader title={t('notif.title')} />
+      <p className="fv-notif-sub">{t('notif.sub')}</p>
 
       <div className="fv-notif-tabs" role="tablist" aria-label="Notification sections">
         <button

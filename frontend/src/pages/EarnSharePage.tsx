@@ -50,11 +50,12 @@ const EarnSharePage: React.FC = () => {
   const blockEarn = !socialOnly && !entLoading && !canWatchPlayEarn;
 
   const xpHub = useXpEarnHub();
+  const { refresh: refreshXpHub } = xpHub;
 
   useEffect(() => {
     if (socialOnly || blockEarn) return;
-    void xpHub.refresh();
-  }, [socialOnly, blockEarn, xpHub.refresh]);
+    void refreshXpHub();
+  }, [socialOnly, blockEarn, refreshXpHub]);
   const xpHeaderPill = xpHub.loading ? '…' : formatXpPill(xpHub.availableXp);
 
   useEffect(() => {

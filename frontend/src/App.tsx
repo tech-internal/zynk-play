@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Outlet, Navigate, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Outlet, Navigate } from 'react-router-dom';
 import './App.css';
 import Header from './components/Header';
 import AppBottomNav from './components/AppBottomNav';
@@ -18,20 +18,20 @@ import UpcomingMatchesPage from './pages/UpcomingMatchesPage';
 import { isAuthenticated } from './utils/authSession';
 import { I18nProvider } from './i18n';
 import { EntitlementsProvider } from './context/EntitlementsContext';
+import { WatchXpProvider } from './context/WatchXpContext';
 
 function ShellLayout() {
-  const { pathname } = useLocation();
-  const showGlobalHeader = pathname === '/dashboard';
-
   return (
     <EntitlementsProvider>
-      <div className="app-shell">
-        {showGlobalHeader ? <Header /> : null}
-        <main className="app-shell__main">
-          <Outlet />
-        </main>
-        <AppBottomNav />
-      </div>
+      <WatchXpProvider>
+        <div className="app-shell">
+          <Header />
+          <main className="app-shell__main">
+            <Outlet />
+          </main>
+          <AppBottomNav />
+        </div>
+      </WatchXpProvider>
     </EntitlementsProvider>
   );
 }

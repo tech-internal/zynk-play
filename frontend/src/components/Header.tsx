@@ -4,6 +4,7 @@ import { headerNavLabelKeys, hubNavItems } from '../config/hubNav';
 import { MOCK_UNREAD_NOTIFICATIONS } from '../pages/NotificationsPage';
 import { isAuthenticated } from '../utils/authSession';
 import { useI18n } from '../i18n';
+import { useWatchXp } from '../context/WatchXpContext';
 import './Header.css';
 
 const AVATAR_URL =
@@ -13,10 +14,17 @@ const headerNav = hubNavItems.filter((item) =>
   (headerNavLabelKeys as readonly string[]).includes(item.labelKey),
 );
 
+function formatCountdown(totalSeconds: number): string {
+  const mins = Math.floor(Math.max(0, totalSeconds) / 60);
+  const secs = Math.max(0, totalSeconds) % 60;
+  return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+}
+
 const Header: React.FC = () => {
   const location = useLocation();
   const { t } = useI18n();
   const authed = isAuthenticated();
+  const { availableXp, countdownSeconds, sessionStarted, loading } = useWatchXp();
 
   return (
     <header className="fv-top-header">
@@ -55,10 +63,13 @@ const Header: React.FC = () => {
               <span className="fv-top-header__rank-label">{t('header.eliteRank')}</span>
               <div className="fv-top-header__rank-row">
                 <span className="fv-top-header__rank-xp">
-                  1,240
+                  {loading ? '...' : availableXp.toLocaleString()}
                   <span className="fv-top-header__rank-xp-unit">XP</span>
                 </span>
               </div>
+              <span className="fv-top-header__watch-timer">
+                {sessionStarted ? `Watch +XP in ${formatCountdown(countdownSeconds)}` : 'Start watch to earn XP'}
+              </span>
             </div>
             <div className="fv-top-header__tools">
               <div className="fv-top-header__notify-wrap">

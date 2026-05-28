@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useI18n } from '../i18n';
+import { useWatchXp } from '../context/WatchXpContext';
 import './ScreenHeader.css';
 
 export type ScreenHeaderProps = {
@@ -21,6 +22,7 @@ const ScreenHeader: React.FC<ScreenHeaderProps> = ({
 }) => {
   const navigate = useNavigate();
   const { t } = useI18n();
+  const { availableXp, loading } = useWatchXp();
 
   const handleBack = () => {
     if (onBack) {
@@ -32,7 +34,7 @@ const ScreenHeader: React.FC<ScreenHeaderProps> = ({
 
   const rightContent =
     right ?? (
-      <div className="scr-xp-pill">{xpLabel ?? t('header.xpPill', '⚡ 4.2K')}</div>
+      <div className="scr-xp-pill">{xpLabel ?? `⚡ ${loading ? '...' : availableXp.toLocaleString()}`}</div>
     );
 
   return (

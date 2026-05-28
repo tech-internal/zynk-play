@@ -63,6 +63,8 @@ function writeCache(userId: string, data: Omit<WatchCachePayload, 'updatedAt'>):
 export function WatchXpProvider({ children }: { children: React.ReactNode }) {
   const userId = getAuthUserId();
   const awardingRef = useRef(false);
+  const sessionStartedRef = useRef(false);
+  const countdownRef = useRef(DEFAULT_INTERVAL_SECONDS);
   const [watchRule, setWatchRule] = useState<XpRule | null>(null);
   const [availableXp, setAvailableXp] = useState(0);
   const [todayWatchXp, setTodayWatchXp] = useState(0);
@@ -121,13 +123,13 @@ export function WatchXpProvider({ children }: { children: React.ReactNode }) {
         availableXp: balance.available_xp,
         todayWatchXp: resolvedToday,
         perAwardXp: resolvedPerAward,
-        countdownSeconds,
-        sessionStarted,
+        countdownSeconds: countdownRef.current,
+        sessionStarted: sessionStartedRef.current,
       });
     } finally {
       setLoading(false);
     }
-  }, [userId, countdownSeconds, sessionStarted]);
+  }, [userId]);
 
   const startSession = useCallback(() => {
     setSessionStarted(true);
@@ -137,6 +139,14 @@ export function WatchXpProvider({ children }: { children: React.ReactNode }) {
     hydrateFromCache();
     void refresh();
   }, [hydrateFromCache, refresh]);
+
+  useEffect(() => {
+    countdownRef.current = countdownSeconds;
+  }, [countdownSeconds]);
+
+  useEffect(() => {
+    sessionStartedRef.current = sessionStarted;
+  }, [sessionStarted]);
 
   useEffect(() => {
     if (!userId) return;

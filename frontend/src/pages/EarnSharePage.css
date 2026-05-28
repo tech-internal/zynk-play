@@ -1004,6 +1004,43 @@ a.earn-row:hover {
   gap: 48px;
 }
 
+.es-share-coming {
+  margin-top: 18px;
+  padding: 22px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(15, 22, 38, 0.65), rgba(12, 15, 24, 0.7));
+  text-align: center;
+}
+
+.es-share-coming__icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 10px;
+  border-radius: 999px;
+  border: 1px solid var(--accent-secondary-40);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-secondary);
+  background: var(--accent-secondary-08);
+}
+
+.es-share-coming__title {
+  margin: 0 0 8px;
+  font-family: 'Orbitron', 'Inter', sans-serif;
+  font-size: 18px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.es-share-coming__text {
+  margin: 0 0 8px;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
 .es-share-hero {
   text-align: center;
 }

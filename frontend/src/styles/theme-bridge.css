@@ -1,0 +1,33 @@
+/* Section screens — shared ink + line tokens */
+.play-page,
+.watch-page,
+.earn-mobile,
+.scr-header,
+.live-match-card {
+  --play-ink: var(--text-primary);
+  --play-ink-soft: var(--text-muted);
+  --play-muted: var(--text-muted);
+  --play-gold: var(--gold);
+  --play-green: var(--green);
+  --play-green-soft: var(--accent-secondary-18);
+  --play-line: var(--line);
+  --watch-ink: var(--text-primary);
+  --watch-ink-soft: var(--text-muted);
+  --watch-muted: var(--text-muted);
+  --watch-gold: var(--gold);
+  --watch-green: var(--green);
+  --watch-line: var(--line);
+  --watch-red: var(--red-hot);
+  --watch-red-soft: var(--accent-emphasis-35);
+  --earn-ink: var(--text-primary);
+  --earn-ink-soft: var(--text-muted);
+  --earn-gold: var(--gold);
+  --earn-green: var(--green);
+  --earn-green-soft: var(--accent-secondary-18);
+  --earn-red: var(--red-hot);
+  --earn-red-soft: var(--accent-emphasis-35);
+  --earn-line: var(--line);
+  --scr-ink: var(--text-primary);
+  --scr-ink-soft: var(--text-muted);
+  --scr-cyan: var(--accent-secondary);
+}

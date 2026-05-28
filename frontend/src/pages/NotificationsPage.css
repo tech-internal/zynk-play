@@ -55,8 +55,8 @@
 }
 
 .fv-notif-item--unread {
-  border-color: rgba(255, 106, 26, 0.35);
-  box-shadow: 0 0 20px rgba(255, 106, 26, 0.12);
+  border-color: var(--accent-primary-35);
+  box-shadow: 0 0 20px var(--accent-primary-12);
 }
 
 .fv-notif-item-icon {
@@ -227,8 +227,8 @@
 }
 
 .fv-notif-item--clickable:hover {
-  border-color: rgba(255, 106, 26, 0.4);
-  box-shadow: 0 0 16px rgba(255, 106, 26, 0.12);
+  border-color: var(--accent-primary-40);
+  box-shadow: 0 0 16px var(--accent-primary-12);
 }
 
 .fv-notif-item--clickable:active {

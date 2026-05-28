@@ -16,7 +16,7 @@
   --thp-outline-variant: var(--stroke-subtle);
   --thp-on-surface-variant: var(--text-low);
   --thp-surface-container-highest: var(--surface-container-highest);
-  --thp-glass-border: rgba(61, 214, 255, 0.15);
+  --thp-glass-border: var(--accent-secondary-15);
   --thp-glass-bg: var(--glass-overlay-light);
   min-height: 100vh;
   color: var(--thp-on-bg);
@@ -726,7 +726,7 @@
 .thp-ledger-tab.is-active {
   border-color: var(--thp-primary);
   color: var(--thp-primary);
-  background: rgba(56, 189, 248, 0.12);
+  background: var(--accent-secondary-12);
 }
 
 .thp-grid--xp {
@@ -777,7 +777,7 @@
 .thp-xp-chip.is-active {
   border-color: var(--thp-primary);
   color: var(--thp-primary);
-  background: rgba(56, 189, 248, 0.1);
+  background: var(--accent-secondary-10);
 }
 
 .thp-tx-xp .thp-tx-icon-xp {

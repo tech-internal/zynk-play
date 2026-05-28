@@ -15,7 +15,7 @@
   --fv-primary: var(--accent-secondary);
   --fv-secondary: var(--accent-primary);
   --fv-tertiary: var(--accent-warning);
-  --fv-primary-dim: rgba(61, 214, 255, 0.7);
+  --fv-primary-dim: var(--accent-secondary-55);
   --fv-on-bg: var(--text-mid);
   --fv-on-surface: var(--text-mid);
   --fv-on-variant: var(--text-low);

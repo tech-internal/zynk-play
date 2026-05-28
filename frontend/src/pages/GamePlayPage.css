@@ -3,19 +3,19 @@
 /* Fanverse Play Arena hub — from journey screens mock */
 
 .play-page {
-  --play-ink: #e6edf7;
-  --play-ink-soft: #93a3bf;
-  --play-muted: #5a6b88;
-  --play-cyan: #38bdf8;
-  --play-cyan-soft: rgba(56, 189, 248, 0.18);
-  --play-gold: #facc15;
-  --play-green: #22c55e;
-  --play-green-soft: rgba(34, 197, 94, 0.18);
-  --play-purple: #a78bfa;
-  --play-purple-soft: rgba(167, 139, 250, 0.18);
-  --play-orange: #f97316;
-  --play-orange-soft: rgba(249, 115, 22, 0.18);
-  --play-line: rgba(120, 160, 220, 0.18);
+  --play-ink: var(--text-primary);
+  --play-ink-soft: var(--text-muted);
+  --play-muted: var(--text-muted);
+  --play-cyan: var(--accent-secondary);
+  --play-cyan-soft: var(--accent-secondary-18);
+  --play-gold: var(--gold);
+  --play-green: var(--green);
+  --play-green-soft: var(--accent-secondary-18);
+  --play-purple: var(--red-hot);
+  --play-purple-soft: var(--accent-emphasis-35);
+  --play-orange: var(--gold-bright);
+  --play-orange-soft: var(--accent-primary-18);
+  --play-line: var(--line);
 
   color: var(--play-ink);
   min-height: 100%;
@@ -35,7 +35,7 @@
   border-radius: 14px;
   border: 1px solid var(--play-cyan-soft);
   background:
-    radial-gradient(circle at 70% 30%, rgba(56, 189, 248, 0.25), transparent 60%),
+    radial-gradient(circle at 70% 30%, var(--accent-secondary-18), transparent 60%),
     linear-gradient(180deg, rgba(17, 26, 46, 0.8), rgba(8, 12, 22, 0.9));
   padding: 14px;
   position: relative;
@@ -96,7 +96,7 @@
 .play-pill-xp {
   background: var(--play-cyan-soft);
   color: var(--play-cyan);
-  border: 1px solid rgba(56, 189, 248, 0.5);
+  border: 1px solid var(--accent-secondary-50);
   padding: 3px 8px;
   border-radius: 999px;
   font-size: 9px;
@@ -142,7 +142,7 @@
 
 .play-game-card.is-live:not(:disabled):hover,
 .play-game-card.game-cricket:hover {
-  border-color: rgba(56, 189, 248, 0.45);
+  border-color: var(--accent-secondary-45);
   transform: translateY(-1px);
 }
 
@@ -205,7 +205,7 @@
 
 .play-game-card.game-football {
   background:
-    radial-gradient(circle at top right, rgba(56, 189, 248, 0.2), transparent 60%),
+    radial-gradient(circle at top right, var(--accent-secondary-18), transparent 60%),
     linear-gradient(180deg, rgba(8, 20, 40, 0.9), rgba(8, 12, 22, 0.9));
 }
 
@@ -252,7 +252,7 @@
   text-transform: uppercase;
   color: var(--play-cyan);
   text-decoration: none;
-  border: 1px solid rgba(56, 189, 248, 0.35);
+  border: 1px solid var(--accent-secondary-35);
   padding: 4px 8px;
   border-radius: 999px;
 }
@@ -380,7 +380,7 @@
 
 .play-bar {
   height: 6px;
-  background: rgba(56, 189, 248, 0.12);
+  background: var(--accent-secondary-12);
   border-radius: 999px;
   overflow: hidden;
 }
@@ -389,7 +389,7 @@
   display: block;
   height: 100%;
   background: linear-gradient(90deg, var(--play-cyan), var(--play-gold));
-  box-shadow: 0 0 8px rgba(56, 189, 248, 0.5);
+  box-shadow: 0 0 8px var(--accent-secondary-50);
 }
 
 .play-progress-foot {

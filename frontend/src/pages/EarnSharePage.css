@@ -6,9 +6,9 @@
   --es-primary: var(--accent-secondary);
   --es-secondary: var(--accent-primary-hover);
   --es-secondary-container: var(--accent-primary);
-  --es-on-secondary-container: #491d00;
+  --es-on-secondary-container: var(--bg-black);
   --es-tertiary: var(--accent-warning);
-  --es-on-tertiary: #3a3000;
+  --es-on-tertiary: var(--bg-black);
   --es-surface: var(--surface-1);
   --es-surface-container: var(--surface-1);
   --es-surface-high: var(--surface-2);
@@ -58,19 +58,19 @@
 
 /* —— Earn hub (Fanverse journey screen 8) —— */
 .earn-mobile {
-  --earn-ink: #e6edf7;
-  --earn-ink-soft: #93a3bf;
-  --earn-cyan: #38bdf8;
-  --earn-cyan-soft: rgba(56, 189, 248, 0.18);
-  --earn-gold: #facc15;
-  --earn-green: #22c55e;
-  --earn-green-soft: rgba(34, 197, 94, 0.18);
-  --earn-red: #ef4444;
-  --earn-red-soft: rgba(239, 68, 68, 0.18);
-  --earn-purple: #a78bfa;
-  --earn-purple-soft: rgba(167, 139, 250, 0.18);
-  --earn-orange: #fb923c;
-  --earn-line: rgba(120, 160, 220, 0.18);
+  --earn-ink: var(--text-primary);
+  --earn-ink-soft: var(--text-muted);
+  --earn-cyan: var(--accent-secondary);
+  --earn-cyan-soft: var(--accent-secondary-18);
+  --earn-gold: var(--gold);
+  --earn-green: var(--green);
+  --earn-green-soft: var(--accent-secondary-18);
+  --earn-red: var(--red-hot);
+  --earn-red-soft: var(--accent-emphasis-35);
+  --earn-purple: var(--red);
+  --earn-purple-soft: var(--accent-emphasis-35);
+  --earn-orange: var(--gold-bright);
+  --earn-line: var(--line);
 
   position: relative;
   z-index: 1;
@@ -166,7 +166,7 @@ a.earn-row {
 }
 
 a.earn-row:hover {
-  border-color: rgba(56, 189, 248, 0.35);
+  border-color: var(--accent-secondary-35);
 }
 
 .earn-row {
@@ -250,7 +250,7 @@ a.earn-row:hover {
   font-weight: 800;
   color: var(--earn-cyan);
   background: var(--earn-cyan-soft);
-  border: 1px solid rgba(56, 189, 248, 0.4);
+  border: 1px solid var(--accent-secondary-40);
   padding: 4px 7px;
   border-radius: 6px;
   white-space: nowrap;
@@ -299,20 +299,20 @@ a.earn-row:hover {
   border-radius: 10px;
   border: 1px solid var(--earn-line, rgba(120, 160, 220, 0.18));
   background: rgba(15, 22, 38, 0.55);
-  color: var(--earn-ink-soft, #93a3bf);
+  color: var(--earn-ink-soft);
   cursor: pointer;
   transition: border-color 0.2s, background 0.2s, color 0.2s, transform 0.15s;
 }
 
 .earn-cat-tab:hover {
-  border-color: rgba(56, 189, 248, 0.35);
+  border-color: var(--accent-secondary-35);
 }
 
 .earn-cat-tab.is-active {
-  border-color: var(--earn-cyan, #38bdf8);
-  background: rgba(56, 189, 248, 0.12);
-  color: var(--earn-ink, #e6edf7);
-  box-shadow: 0 0 12px rgba(56, 189, 248, 0.2);
+  border-color: var(--earn-cyan, var(--accent-secondary));
+  background: var(--accent-secondary-12);
+  color: var(--earn-ink);
+  box-shadow: 0 0 12px var(--accent-secondary-18);
 }
 
 .earn-cat-tab-ic {
@@ -332,7 +332,7 @@ a.earn-row:hover {
 .earn-cat-tab-count {
   font-size: 8px;
   font-weight: 700;
-  color: var(--earn-cyan, #38bdf8);
+  color: var(--earn-cyan, var(--accent-secondary));
   letter-spacing: 0.06em;
 }
 
@@ -350,7 +350,7 @@ a.earn-row:hover {
 
 .earn-cat-progress {
   font-size: 9px;
-  color: var(--earn-gold, #facc15);
+  color: var(--earn-gold);
   letter-spacing: 0.08em;
 }
 
@@ -371,7 +371,7 @@ a.earn-row:hover {
   border-radius: 10px;
   border: 1px dashed var(--earn-line, rgba(120, 160, 220, 0.18));
   font-size: 11px;
-  color: var(--earn-ink-soft, #93a3bf);
+  color: var(--earn-ink-soft);
   text-align: center;
 }
 
@@ -384,9 +384,9 @@ a.earn-row:hover {
   margin-top: 8px;
   padding: 6px 12px;
   border-radius: 999px;
-  border: 1px solid var(--earn-cyan, #38bdf8);
+  border: 1px solid var(--earn-cyan, var(--accent-secondary));
   background: transparent;
-  color: var(--earn-cyan, #38bdf8);
+  color: var(--earn-cyan, var(--accent-secondary));
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.08em;

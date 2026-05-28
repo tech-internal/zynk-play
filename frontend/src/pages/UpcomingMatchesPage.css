@@ -192,11 +192,11 @@
 }
 
 .upm-badge--primary {
-  border-color: rgba(61, 214, 255, 0.35);
+  border-color: var(--accent-secondary-35);
 }
 
 .upm-badge--secondary {
-  border-color: rgba(255, 106, 26, 0.35);
+  border-color: var(--accent-primary-35);
 }
 
 .upm-badge--img {

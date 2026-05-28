@@ -154,7 +154,7 @@ html.fv-ldg-page .App {
 }
 
 .fv-ldg-topnav-link:focus-visible {
-  outline: 2px solid #ff6a1a;
+  outline: 2px solid var(--accent-primary);
   outline-offset: 4px;
   border-radius: 2px;
 }
@@ -226,12 +226,12 @@ html.fv-ldg-page .App {
 
 .fv-ldg-icon-btn:hover {
   color: var(--secondary);
-  background: rgba(255, 106, 26, 0.08);
-  box-shadow: 0 0 16px rgba(255, 106, 26, 0.3);
+  background: var(--accent-primary-08);
+  box-shadow: 0 0 16px var(--accent-primary-30);
 }
 
 .fv-ldg-icon-btn:focus-visible {
-  outline: 2px solid #ff6a1a;
+  outline: 2px solid var(--accent-primary);
   outline-offset: 2px;
 }
 
@@ -247,7 +247,7 @@ html.fv-ldg-page .App {
   height: 18px;
   padding: 0 5px;
   border-radius: 999px;
-  background: #ff6a1a;
+  background: var(--accent-primary);
   color: #331200;
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 11px;
@@ -275,12 +275,12 @@ html.fv-ldg-page .App {
 }
 
 .fv-ldg-avatar-btn:hover {
-  background: rgba(255, 106, 26, 0.08);
-  box-shadow: 0 0 16px rgba(255, 106, 26, 0.3);
+  background: var(--accent-primary-08);
+  box-shadow: 0 0 16px var(--accent-primary-30);
 }
 
 .fv-ldg-avatar-btn:focus-visible {
-  outline: 2px solid #ff6a1a;
+  outline: 2px solid var(--accent-primary);
   outline-offset: 2px;
 }
 
@@ -303,8 +303,8 @@ html.fv-ldg-page .App {
   padding: 6px;
   border-radius: 12px;
   background: var(--surface-container-high);
-  border: 1px solid rgba(255, 106, 26, 0.25);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45), 0 0 20px rgba(255, 106, 26, 0.15);
+  border: 1px solid var(--accent-primary-25);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45), 0 0 20px var(--accent-primary-15);
 }
 
 .fv-ldg-profile-dropdown-item {
@@ -327,10 +327,10 @@ html.fv-ldg-page .App {
 
 .fv-ldg-profile-dropdown-item:hover,
 .fv-ldg-profile-dropdown-item:focus-visible {
-  background: rgba(255, 106, 26, 0.12);
+  background: var(--accent-primary-12);
   color: var(--secondary);
   outline: none;
-  box-shadow: inset 0 0 12px rgba(255, 106, 26, 0.2);
+  box-shadow: inset 0 0 12px var(--accent-primary-20);
 }
 
 .fv-ldg-profile-dropdown-item--logout {
@@ -339,7 +339,7 @@ html.fv-ldg-page .App {
 
 .fv-ldg-profile-dropdown-item--logout:hover,
 .fv-ldg-profile-dropdown-item--logout:focus-visible {
-  color: #ff6a1a;
+  color: var(--accent-primary);
 }
 
 .fv-ldg-avatar {
@@ -475,7 +475,7 @@ html.fv-ldg-page .App {
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: radial-gradient(circle at center, rgba(142, 197, 240, 0.35) 0%, rgba(15, 39, 68, 0.92) 70%);
+  background: radial-gradient(circle at center, var(--accent-primary-25) 0%, rgba(5, 5, 5, 0.92) 70%);
 }
 
 .fv-ldg-hero-scanline {
@@ -549,15 +549,15 @@ html.fv-ldg-page .App {
   height: 128px;
   overflow: hidden;
   background: var(--surface-1);
-  border: 1px solid rgba(255, 106, 26, 0.35);
+  border: 1px solid var(--accent-primary-35);
   box-shadow: inset 0 0 1px 1px rgba(255, 255, 255, 0.06);
   transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
 }
 
 .fv-ldg-mtile--accent {
-  border: 1px solid rgba(255, 106, 26, 0.55);
+  border: 1px solid var(--accent-primary-55);
   background:
-    radial-gradient(ellipse at 50% 100%, rgba(255, 106, 26, 0.08) 0%, transparent 70%),
+    radial-gradient(ellipse at 50% 100%, var(--accent-primary-08) 0%, transparent 70%),
     var(--surface-1);
 }
 
@@ -569,14 +569,14 @@ html.fv-ldg-page .App {
 }
 
 .fv-ldg-mtile--cyan {
-  border: 1px solid rgba(61, 214, 255, 0.55);
+  border: 1px solid var(--accent-secondary-55);
   background: var(--surface-1);
 }
 
 .fv-ldg-mtile--cyan:hover,
 .fv-ldg-mtile--cyan:focus-visible {
   border-color: var(--accent-secondary);
-  box-shadow: 0 0 20px rgba(61, 214, 255, 0.45), inset 0 0 1px 1px rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 20px var(--accent-secondary-45), inset 0 0 1px 1px rgba(255, 255, 255, 0.08);
 }
 
 .fv-ldg-mtile-img {
@@ -639,9 +639,9 @@ html.fv-ldg-page .App {
   gap: 8px;
   padding: 6px 16px;
   margin-bottom: 32px;
-  background: rgba(255, 106, 26, 0.12);
-  border: 1px solid rgba(255, 106, 26, 0.45);
-  box-shadow: 0 0 16px rgba(255, 106, 26, 0.2);
+  background: var(--accent-primary-12);
+  border: 1px solid var(--accent-primary-45);
+  box-shadow: 0 0 16px var(--accent-primary-20);
 }
 
 .fv-ldg-badge-dot {
@@ -730,7 +730,7 @@ html.fv-ldg-page .App {
 .fv-ldg-btn--secondary {
   background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-primary-hover) 100%);
   color: #ffffff;
-  border: 1px solid rgba(255, 106, 26, 0.6);
+  border: 1px solid var(--accent-primary-55);
   box-shadow: var(--shadow-cta);
 }
 
@@ -756,13 +756,13 @@ html.fv-ldg-page .App {
 
 .fv-ldg-btn--ghost {
   background: var(--surface-1);
-  border: 1px solid rgba(61, 214, 255, 0.35);
+  border: 1px solid var(--accent-secondary-35);
   color: var(--accent-secondary);
 }
 
 .fv-ldg-btn--ghost:hover {
   background: var(--glass-overlay-heavy);
-  box-shadow: 0 0 20px rgba(61, 214, 255, 0.35);
+  box-shadow: 0 0 20px var(--accent-secondary-35);
   color: var(--accent-secondary);
   border-color: var(--accent-secondary);
 }
@@ -950,9 +950,9 @@ html.fv-ldg-page .App {
 }
 
 .fv-ldg-card--accent {
-  border: 1px solid rgba(255, 106, 26, 0.55);
+  border: 1px solid var(--accent-primary-55);
   background:
-    radial-gradient(ellipse at 50% 100%, rgba(255, 106, 26, 0.08) 0%, transparent 70%),
+    radial-gradient(ellipse at 50% 100%, var(--accent-primary-08) 0%, transparent 70%),
     var(--surface-1);
 }
 
@@ -962,12 +962,12 @@ html.fv-ldg-page .App {
 }
 
 .fv-ldg-card--cyan {
-  border-color: rgba(61, 214, 255, 0.35);
+  border-color: var(--accent-secondary-35);
 }
 
 .fv-ldg-card--cyan:hover {
   border-color: var(--accent-secondary);
-  box-shadow: 0 0 24px rgba(61, 214, 255, 0.4), inset 0 0 1px 1px rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 24px var(--accent-secondary-40), inset 0 0 1px 1px rgba(255, 255, 255, 0.08);
 }
 
 .fv-ldg-card:hover .fv-ldg-card-bg {
@@ -1601,7 +1601,7 @@ html.fv-ldg-page .App {
   justify-content: center;
   background: var(--surface-1);
   color: var(--accent-primary);
-  border: 1px solid rgba(255, 106, 26, 0.55);
+  border: 1px solid var(--accent-primary-55);
   border-radius: var(--radius-pill);
   cursor: pointer;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
@@ -1610,7 +1610,7 @@ html.fv-ldg-page .App {
 
 .fv-ldg-fab:hover {
   transform: scale(1.05);
-  box-shadow: 0 0 18px rgba(255, 106, 26, 0.35);
+  box-shadow: 0 0 18px var(--accent-primary-35);
 }
 
 .fv-ldg-fab:active {

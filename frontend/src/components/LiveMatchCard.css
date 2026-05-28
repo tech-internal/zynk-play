@@ -10,8 +10,8 @@
 }
 
 .live-match-card--live {
-  border-color: rgba(255, 106, 26, 0.45);
-  box-shadow: 0 0 20px rgba(255, 106, 26, 0.12);
+  border-color: var(--accent-primary-45);
+  box-shadow: 0 0 20px var(--accent-primary-12);
 }
 
 .live-match-card__live-badge {
@@ -24,7 +24,7 @@
   gap: 5px;
   padding: 3px 8px;
   border-radius: 999px;
-  background: #ff6a1a;
+  background: var(--accent-primary);
   color: #fff;
   font-size: 9px;
   font-weight: 800;
@@ -56,7 +56,7 @@
   top: 8px;
   right: 8px;
   font-size: 48px;
-  color: #e6edf7;
+  color: var(--text-primary);
   opacity: 0.05;
   pointer-events: none;
 }
@@ -113,21 +113,21 @@
 }
 
 .live-match-card__badge--secondary {
-  border: 1px solid rgba(56, 189, 248, 0.5);
+  border: 1px solid var(--accent-secondary-50);
 }
 
 .live-match-card__badge--secondary .material-symbols-outlined {
   font-size: 22px;
-  color: #38bdf8;
+  color: var(--accent-secondary);
 }
 
 .live-match-card__badge--primary {
-  border: 1px solid rgba(255, 106, 26, 0.5);
+  border: 1px solid var(--accent-primary-50);
 }
 
 .live-match-card__badge--primary .material-symbols-outlined {
   font-size: 22px;
-  color: #ff6a1a;
+  color: var(--accent-primary);
 }
 
 .live-match-card__team-name {
@@ -135,7 +135,7 @@
   font-size: 11px;
   font-weight: 800;
   text-transform: uppercase;
-  color: #e6edf7;
+  color: var(--text-primary);
   line-height: 1.2;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -151,11 +151,11 @@
 }
 
 .live-match-card__team-meta--secondary {
-  color: #38bdf8;
+  color: var(--accent-secondary);
 }
 
 .live-match-card__team-meta--primary {
-  color: #ff6a1a;
+  color: var(--accent-primary);
 }
 
 .live-match-card__center {
@@ -171,7 +171,7 @@
   font-size: 7px;
   font-weight: 700;
   letter-spacing: 0.2em;
-  color: #93a3bf;
+  color: var(--text-muted);
   text-transform: uppercase;
   max-width: 90px;
   overflow: hidden;
@@ -196,7 +196,7 @@
   font-family: 'Orbitron', 'Inter', sans-serif;
   font-size: 16px;
   font-weight: 900;
-  color: #facc15;
+  color: var(--gold);
   text-shadow: 0 0 10px rgba(250, 204, 21, 0.35);
   white-space: nowrap;
 }
@@ -204,7 +204,7 @@
 .live-match-card__period {
   font-size: 9px;
   font-weight: 800;
-  color: #ff6a1a;
+  color: var(--accent-primary);
   letter-spacing: 0.1em;
 }
 
@@ -212,7 +212,7 @@
   margin-top: 4px;
   font-size: 9px;
   font-weight: 600;
-  color: #93a3bf;
+  color: var(--text-muted);
   letter-spacing: 0.06em;
 }
 
@@ -234,6 +234,6 @@
 }
 
 .live-match-card__dot--active {
-  background: #38bdf8;
-  box-shadow: 0 0 8px rgba(56, 189, 248, 0.5);
+  background: var(--accent-secondary);
+  box-shadow: 0 0 8px var(--accent-secondary-50);
 }

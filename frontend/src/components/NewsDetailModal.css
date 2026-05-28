@@ -118,7 +118,7 @@
 
 .fv-news-modal__tag--upcoming {
   color: var(--accent-primary);
-  border: 1px solid rgba(255, 106, 26, 0.35);
+  border: 1px solid var(--accent-primary-35);
 }
 
 .fv-news-modal__tag--result {

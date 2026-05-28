@@ -14,7 +14,7 @@
   background: var(--glass-overlay-heavy);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-top: 1px solid rgba(142, 197, 240, 0.15);
+  border-top: 1px solid var(--line);
 }
 
 @media (min-width: 768px) {
@@ -46,7 +46,7 @@
 }
 
 .app-bottom-nav__link:hover {
-  color: var(--accent-secondary);
+  color: var(--gold);
 }
 
 .app-bottom-nav__link--active {
@@ -74,16 +74,20 @@
 }
 
 .app-bottom-nav__link:hover .app-bottom-nav__icon:not(.app-bottom-nav__icon--active) {
-  border-color: var(--accent-secondary);
-  color: var(--accent-secondary);
+  border-color: var(--gold);
+  color: var(--gold);
 }
 
 .app-bottom-nav__icon--active,
 .app-bottom-nav__link--active .app-bottom-nav__icon {
-  border-color: var(--accent-primary);
-  background: rgba(255, 106, 26, 0.1);
-  color: var(--accent-primary);
-  box-shadow: 0 0 12px rgba(255, 106, 26, 0.4);
+  border-color: var(--gold);
+  background: var(--accent-primary-10);
+  color: var(--gold);
+  box-shadow: 0 0 12px var(--accent-primary-40);
+}
+
+.app-bottom-nav__link--active {
+  color: var(--gold);
 }
 
 .app-bottom-nav__label {

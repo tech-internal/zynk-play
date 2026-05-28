@@ -3,14 +3,14 @@
   --sub-on-bg: var(--text-mid);
   --sub-surface: var(--surface-1);
   --sub-primary: var(--accent-secondary);
-  --sub-on-primary: #003355;
+  --sub-on-primary: var(--bg-black);
   --sub-outline-variant: var(--stroke-subtle);
   --sub-on-surface-variant: var(--text-low);
-  --sub-deep-blue: #001d34;
+  --sub-deep-blue: var(--bg-night);
   --sub-action-orange: var(--accent-primary);
   --sub-elite-gold: var(--accent-warning);
-  --sub-tertiary-container: #c9a900;
-  --sub-on-tertiary-fixed: #221b00;
+  --sub-tertiary-container: var(--gold);
+  --sub-on-tertiary-fixed: var(--bg-black);
   --sub-surface-container-high: var(--surface-2);
   --sub-container-max: 1440px;
   --sub-gutter-m: var(--screen-padding-mobile);

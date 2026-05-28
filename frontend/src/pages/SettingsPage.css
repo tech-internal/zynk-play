@@ -118,9 +118,9 @@
 
 .fv-settings-lang-btn--active {
   border-color: var(--accent-secondary);
-  background: rgba(61, 214, 255, 0.12);
+  background: var(--accent-secondary-12);
   color: var(--text-high);
-  box-shadow: 0 0 12px rgba(61, 214, 255, 0.2);
+  box-shadow: 0 0 12px var(--accent-secondary-18);
 }
 
 [dir='rtl'] .fv-settings-row {

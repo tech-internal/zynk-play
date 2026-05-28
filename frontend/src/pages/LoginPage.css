@@ -6,11 +6,11 @@
   --fv-on-surface: var(--text-mid);
   --fv-on-surface-variant: var(--text-low);
   --fv-primary: var(--accent-secondary);
-  --fv-primary-dim: rgba(61, 214, 255, 0.7);
+  --fv-primary-dim: var(--accent-secondary-55);
   --fv-secondary-container: var(--accent-primary);
-  --fv-on-secondary-container: #491d00;
+  --fv-on-secondary-container: var(--bg-black);
   --fv-tertiary: var(--accent-warning);
-  --fv-tertiary-container: #c9a900;
+  --fv-tertiary-container: var(--gold);
   --fv-surface: var(--surface-1);
   --fv-surface-lowest: var(--surface-container-lowest);
   --fv-surface-container-low: var(--surface-1);
@@ -386,14 +386,14 @@
    OTP screen — Fanverse journey mock (full mobile viewport)
    =========================================================== */
 .login-page--otp {
-  --fv-otp-line: rgba(120, 160, 220, 0.18);
-  --fv-otp-cyan: #38bdf8;
-  --fv-otp-cyan-soft: rgba(56, 189, 248, 0.18);
-  --fv-otp-orange: #f97316;
-  --fv-otp-gold: #facc15;
-  --fv-otp-ink: #e6edf7;
-  --fv-otp-ink-soft: #93a3bf;
-  --fv-otp-muted: #5a6b88;
+  --fv-otp-line: var(--line);
+  --fv-otp-cyan: var(--accent-secondary);
+  --fv-otp-cyan-soft: var(--accent-secondary-18);
+  --fv-otp-orange: var(--gold-bright);
+  --fv-otp-gold: var(--gold);
+  --fv-otp-ink: var(--text-primary);
+  --fv-otp-ink-soft: var(--text-muted);
+  --fv-otp-muted: var(--text-muted);
 
   min-height: 100vh;
   min-height: 100dvh;
@@ -505,7 +505,7 @@
   letter-spacing: 0.18em;
   color: var(--fv-otp-cyan);
   text-decoration: none;
-  text-shadow: 0 0 16px rgba(56, 189, 248, 0.55);
+  text-shadow: 0 0 16px var(--accent-secondary-55);
 }
 
 .fv-otp-brand-tag {
@@ -584,7 +584,7 @@
 .fv-otp-box.filled {
   border-color: var(--fv-otp-cyan);
   color: var(--fv-otp-cyan);
-  box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+  box-shadow: 0 0 12px var(--accent-secondary-40);
 }
 
 .fv-otp-box.active {
@@ -649,7 +649,7 @@
 }
 
 .fv-otp-msg--ok {
-  color: #22c55e;
+  color: var(--green);
 }
 
 .fv-btn-orange {
@@ -696,7 +696,7 @@
 }
 
 .fv-btn-ghost:hover:not(:disabled) {
-  border-color: rgba(56, 189, 248, 0.35);
+  border-color: var(--accent-secondary-35);
   color: var(--fv-otp-cyan);
 }
 

@@ -33,7 +33,7 @@
   align-items: center;
   justify-content: center;
   font-size: 0.65rem;
-  color: #38bdf8;
+  color: var(--accent-secondary);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
 }
 
@@ -113,12 +113,12 @@
 }
 
 .pcheckout-tab:hover {
-  background: rgba(56, 189, 248, 0.08);
+  background: var(--accent-secondary-08);
 }
 
 .pcheckout-tab.is-active {
   background: rgba(30, 41, 59, 0.7);
-  border-bottom-color: #38bdf8;
+  border-bottom-color: var(--accent-secondary);
 }
 
 .pcheckout-tab-label {
@@ -185,8 +185,8 @@
 
 .pcheckout-input:focus {
   outline: none;
-  border-color: #38bdf8;
-  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.18);
+  border-color: var(--accent-secondary);
+  box-shadow: 0 0 0 3px var(--accent-secondary-18);
 }
 
 .pcheckout-row2 {

@@ -1,89 +1,147 @@
 /* ============================================
-   ZYNK / Game Palazio — design tokens (spec 2.x)
+   Afghan Soccer FC 2026 — design tokens
+   Premium football HUD · stadium dark · gold-lit
    ============================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,500;0,700;0,800;1,700;1,800&family=JetBrains+Mono:wght@600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700;1,800&family=JetBrains+Mono:wght@600;700&display=swap');
 
 :root {
-  /* 2.1 Color */
-  --accent-primary: #ff6a1a;
-  --accent-primary-hover: #ff8a3d;
-  --accent-primary-pressed: #e0571a;
-  --accent-glow: rgba(255, 106, 26, 0.55);
-  --accent-secondary: #3dd6ff;
-  --accent-warning: #f5c518;
+  /* —— Core palette —— */
+  --bg-black: #050505;
+  --bg-night: #0b0b09;
+  --panel: #171811;
+  --panel-strong: #211d12;
+  --line: #eec76757;
+  --text-primary: #fff8e7;
+  --text-muted: #b9ad91;
+  --gold: #eec767;
+  --gold-bright: #ffe07a;
+  --red: #9f1732;
+  --red-hot: #f15065;
+  --green: #1f6f32;
 
-  /* Atmospheric blue / silver palette */
-  --color-silver: #c5d0e0;
-  --color-light-blue: #8ec5f0;
-  --color-deep-blue: #0f2744;
-  --color-navy: #1a3352;
-
-  --surface-0: #122238;
-  --surface-1: #1c3554;
-  --surface-2: #264868;
-  --stroke-subtle: #3a5a7a;
-
-  /* Fanverse journey screens — .phone shell background */
-  --page-background: radial-gradient(circle at top, #0d1424 0%, #05070d 75%);
-  --page-background-fallback: #05070d;
-  --page-grid-line: rgba(56, 189, 248, 0.04);
+  /* Background gradients */
+  --page-background: linear-gradient(135deg, #050505 0%, #12100b 48%, #070707 100%);
+  --page-background-fallback: var(--bg-black);
+  --page-overlay-gradient: linear-gradient(180deg, rgba(5, 5, 5, 0.2), rgba(5, 5, 5, 0.82));
+  --page-grid-line: rgba(238, 199, 103, 0.05);
   --page-grid-size: 24px;
 
-  --glass-overlay: rgba(18, 34, 56, 0.82);
-  --glass-overlay-heavy: rgba(15, 31, 50, 0.92);
-  --glass-overlay-light: rgba(28, 53, 84, 0.65);
-  --text-high: #ffffff;
-  --text-mid: #e2e7ee;
-  --text-low: #94a0ae;
-  --success: #22c55e;
-  --danger: #ef4444;
+  /* Semantic accents (mapped for existing components) */
+  --accent-primary: var(--gold);
+  --accent-primary-hover: var(--gold-bright);
+  --accent-primary-pressed: #d4ad4f;
+  --accent-glow: rgba(238, 199, 103, 0.55);
+  --accent-secondary: var(--green);
+  --accent-secondary-hover: #2a8a42;
+  --accent-warning: var(--gold-bright);
+  --accent-emphasis: var(--red-hot);
+  --accent-team: var(--red);
 
-  /* 2.3 Spacing (8-pt grid) */
-  --space-1: 4px;
-  --space-2: 8px;
+  /* Surfaces */
+  --surface-0: var(--bg-night);
+  --surface-1: var(--panel);
+  --surface-2: var(--panel-strong);
+  --stroke-subtle: var(--line);
+  --color-silver: var(--text-muted);
+  --color-light-blue: var(--gold);
+  --color-deep-blue: var(--bg-night);
+  --color-navy: var(--panel);
+
+  --glass-overlay: rgba(11, 11, 9, 0.82);
+  --glass-overlay-heavy: rgba(5, 5, 5, 0.92);
+  --glass-overlay-light: rgba(23, 24, 17, 0.65);
+
+  --text-high: var(--text-primary);
+  --text-mid: var(--text-primary);
+  --text-low: var(--text-muted);
+  --success: var(--green);
+  --danger: var(--red-hot);
+
+  /* Accent tints (glows, borders, fills) */
+  --accent-primary-08: rgba(238, 199, 103, 0.08);
+  --accent-primary-10: rgba(238, 199, 103, 0.1);
+  --accent-primary-12: rgba(238, 199, 103, 0.12);
+  --accent-primary-15: rgba(238, 199, 103, 0.15);
+  --accent-primary-18: rgba(238, 199, 103, 0.18);
+  --accent-primary-20: rgba(238, 199, 103, 0.2);
+  --accent-primary-25: rgba(238, 199, 103, 0.25);
+  --accent-primary-30: rgba(238, 199, 103, 0.3);
+  --accent-primary-35: rgba(238, 199, 103, 0.35);
+  --accent-primary-40: rgba(238, 199, 103, 0.4);
+  --accent-primary-45: rgba(238, 199, 103, 0.45);
+  --accent-primary-50: rgba(238, 199, 103, 0.5);
+  --accent-primary-55: rgba(238, 199, 103, 0.55);
+  --accent-primary-65: rgba(238, 199, 103, 0.65);
+
+  --accent-secondary-08: rgba(31, 111, 50, 0.08);
+  --accent-secondary-10: rgba(31, 111, 50, 0.1);
+  --accent-secondary-12: rgba(31, 111, 50, 0.12);
+  --accent-secondary-15: rgba(31, 111, 50, 0.15);
+  --accent-secondary-18: rgba(31, 111, 50, 0.18);
+  --accent-secondary-35: rgba(31, 111, 50, 0.35);
+  --accent-secondary-40: rgba(31, 111, 50, 0.4);
+  --accent-secondary-45: rgba(31, 111, 50, 0.45);
+  --accent-secondary-50: rgba(31, 111, 50, 0.5);
+  --accent-secondary-55: rgba(31, 111, 50, 0.55);
+
+  --accent-emphasis-35: rgba(241, 80, 101, 0.35);
+  --accent-emphasis-45: rgba(241, 80, 101, 0.45);
+
+  /* Spacing (spec scale) */
+  --space-1: 8px;
+  --space-2: 10px;
   --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 20px;
-  --space-6: 24px;
-  --space-7: 32px;
-  --space-8: 40px;
-  --space-9: 56px;
-  --space-10: 80px;
-  --screen-padding-mobile: 16px;
-  --screen-padding-desktop: 24px;
-  --tile-grid-gap: 12px;
-  --section-gap: 40px;
-  --form-field-gap: 20px;
+  --space-4: 14px;
+  --space-5: 16px;
+  --space-6: 18px;
+  --space-7: 22px;
+  --space-8: 24px;
+  --space-9: 28px;
+  --space-10: 30px;
+  --space-11: 32px;
+  --screen-padding-mobile: 18px;
+  --screen-padding-desktop: 30px;
+  --tile-grid-gap: 14px;
+  --section-gap: 28px;
+  --form-field-gap: 18px;
 
-  /* 2.4 Radii & elevation */
-  --radius-sm: 6px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
+  /* Radii */
+  --radius-sm: 14px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-shell: 28px;
+  --radius-shell-lg: 34px;
   --radius-pill: 999px;
-  --shadow-card: 0 4px 20px rgba(8, 20, 40, 0.45);
-  --shadow-cta: 0 0 24px rgba(255, 106, 26, 0.6);
-  --shadow-cta-hover: 0 0 32px rgba(255, 106, 26, 0.75);
-  --shell-header-height: 72px;
+  --radius-xl: var(--radius-lg);
+
+  /* Elevation */
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.45);
+  --shadow-cta: 0 0 24px var(--accent-primary-40);
+  --shadow-cta-hover: 0 0 32px var(--accent-primary-55);
+  --shadow-lg: var(--shadow-card);
+
+  /* Shell */
+  --shell-header-height: 88px;
+  --shell-header-btn-size: 48px;
   --shell-bottom-nav-height: 88px;
 
-  /* Legacy / Material-style aliases (pages still reference these) */
+  /* Legacy / Material-style aliases */
   --bg-base: var(--surface-0);
   --bg-raised: var(--surface-1);
   --bg-card: var(--surface-1);
   --white: var(--text-high);
   --muted: var(--text-low);
   --border: var(--stroke-subtle);
-  --border-strong: rgba(255, 255, 255, 0.12);
-  --gold: var(--accent-warning);
+  --border-strong: var(--line);
   --orange: var(--accent-primary);
   --surface: var(--surface-0);
-  --surface-dim: var(--surface-0);
-  --surface-container-lowest: #0f1f33;
+  --surface-dim: var(--bg-black);
+  --surface-container-lowest: var(--bg-black);
   --surface-container-low: var(--surface-1);
   --surface-container: var(--surface-1);
   --surface-container-high: var(--surface-2);
-  --surface-container-highest: #2d5580;
+  --surface-container-highest: var(--panel-strong);
   --surface-variant: var(--stroke-subtle);
   --on-background: var(--text-mid);
   --on-surface: var(--text-mid);
@@ -91,81 +149,99 @@
   --outline: var(--stroke-subtle);
   --outline-variant: var(--stroke-subtle);
   --error: var(--danger);
-  --primary: var(--accent-secondary);
+  --primary: var(--gold);
   --secondary: var(--accent-primary);
-  --tertiary: var(--accent-warning);
+  --tertiary: var(--gold-bright);
   --margin-mobile: var(--screen-padding-mobile);
   --margin-desktop: var(--screen-padding-desktop);
   --gutter: var(--tile-grid-gap);
-  --unit: var(--space-1);
-  --radius-xl: var(--radius-lg);
-  --shadow-lg: var(--shadow-card);
+  --unit: 8px;
 }
 
-/* 2.2 Typography ramp */
-.text-display {
-  font-family: 'Inter', system-ui, sans-serif;
-  font-style: italic;
-  font-size: 32px;
-  line-height: 38px;
-  font-weight: 800;
-  letter-spacing: -0.5px;
-  color: var(--text-high);
+@media (min-width: 768px) {
+  :root {
+    --shell-header-height: 96px;
+    --shell-header-btn-size: 54px;
+    --screen-padding-mobile: 24px;
+  }
 }
 
-.text-h2 {
+/* Typography ramp */
+.text-brand {
   font-family: 'Inter', system-ui, sans-serif;
-  font-style: italic;
-  font-size: 24px;
-  line-height: 30px;
-  font-weight: 700;
-  letter-spacing: 0;
-  color: var(--text-high);
-}
-
-.text-h3 {
-  font-family: 'Inter', system-ui, sans-serif;
-  font-size: 16px;
-  line-height: 22px;
-  font-weight: 700;
-  letter-spacing: 1px;
+  font-size: 17px;
+  line-height: 0.95;
+  font-weight: 950;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
+  color: var(--text-high);
+}
+
+.text-display,
+.text-hero {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: clamp(40px, 8vw, 76px);
+  line-height: 0.95;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--text-high);
+}
+
+.text-h2,
+.text-section-title {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: clamp(18px, 3vw, 28px);
+  line-height: 1.05;
+  font-weight: 850;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-high);
+}
+
+.text-h3,
+.text-card-heading {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: clamp(16px, 2.5vw, 22px);
+  line-height: 1.1;
+  font-weight: 850;
+  letter-spacing: 0.02em;
   color: var(--text-high);
 }
 
 .text-tile-numeral {
   font-family: 'JetBrains Mono', ui-monospace, monospace;
   font-size: 12px;
-  line-height: 16px;
-  font-weight: 600;
-  letter-spacing: 1.5px;
+  line-height: 1.2;
+  font-weight: 800;
+  letter-spacing: 0.12em;
 }
 
 .text-body {
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 15px;
-  line-height: 24px;
+  line-height: 1.5;
   font-weight: 500;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.01em;
   color: var(--text-mid);
 }
 
 .text-caption {
   font-family: 'Inter', system-ui, sans-serif;
-  font-size: 12px;
-  line-height: 18px;
-  font-weight: 500;
-  letter-spacing: 0.6px;
+  font-size: 11px;
+  line-height: 1.2;
+  font-weight: 800;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-low);
 }
 
 .text-button {
   font-family: 'Inter', system-ui, sans-serif;
-  font-size: 15px;
-  line-height: 20px;
-  font-weight: 700;
-  letter-spacing: 1.2px;
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 900;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 

@@ -356,6 +356,133 @@ def redeem_xp(
 
 
 @transaction.atomic
+def debit_xp(
+    *,
+    user_id,
+    amount: int,
+    idempotency_key: str,
+    source_metadata=None,
+    request_id: str = '',
+) -> dict:
+    """Generic XP debit for spend flows (e.g. lucky draw entry)."""
+    source_metadata = normalize_source_metadata(source_metadata)
+    existing = XPTransaction.objects.filter(idempotency_key=idempotency_key).first()
+    if existing and existing.status == 'confirmed':
+        wallet = get_or_create_wallet(existing.user)
+        return {
+            'transaction_id': str(existing.id),
+            'xp_deducted': abs(existing.xp_amount),
+            'new_balance': wallet.available_xp,
+        }
+
+    if amount <= 0:
+        raise XPInvalidRedemptionError('Debit amount must be positive')
+
+    user = User.objects.get(pk=user_id)
+    wallet = UserXPWallet.objects.select_for_update().get(user=user)
+    if wallet.available_xp < amount:
+        raise XPInsufficientBalanceError()
+
+    balance_before = wallet.available_xp
+    balance_after = balance_before - amount
+
+    txn = XPTransaction.objects.create(
+        idempotency_key=idempotency_key,
+        user=user,
+        transaction_type='debit',
+        xp_amount=-amount,
+        base_xp=amount,
+        balance_before=balance_before,
+        balance_after=balance_after,
+        status='confirmed',
+        source_metadata=source_metadata,
+    )
+
+    wallet.available_xp = balance_after
+    wallet.redeemed_xp += amount
+    wallet.version += 1
+    wallet.save(update_fields=['available_xp', 'redeemed_xp', 'version', 'updated_at'])
+
+    _audit(
+        user,
+        'XP_DEBIT',
+        'xp_transaction',
+        txn.id,
+        {'balance': balance_before},
+        {'balance': balance_after, 'xp_deducted': amount},
+        request_id=request_id,
+    )
+
+    return {
+        'transaction_id': str(txn.id),
+        'xp_deducted': amount,
+        'new_balance': balance_after,
+    }
+
+
+@transaction.atomic
+def credit_xp_manual(
+    *,
+    user_id,
+    amount: int,
+    idempotency_key: str,
+    source_metadata=None,
+    request_id: str = '',
+) -> dict:
+    """Manual XP credit (e.g. lucky draw cancellation refund)."""
+    source_metadata = normalize_source_metadata(source_metadata)
+    existing = XPTransaction.objects.filter(idempotency_key=idempotency_key).first()
+    if existing and existing.status == 'confirmed':
+        wallet = get_or_create_wallet(existing.user)
+        return {
+            'transaction_id': str(existing.id),
+            'xp_credited': existing.xp_amount,
+            'new_balance': wallet.available_xp,
+        }
+
+    if amount <= 0:
+        raise XPInvalidRedemptionError('Credit amount must be positive')
+
+    user = User.objects.get(pk=user_id)
+    wallet = UserXPWallet.objects.select_for_update().get(user=user)
+    balance_before = wallet.available_xp
+    balance_after = balance_before + amount
+
+    txn = XPTransaction.objects.create(
+        idempotency_key=idempotency_key,
+        user=user,
+        transaction_type='bonus',
+        xp_amount=amount,
+        base_xp=amount,
+        balance_before=balance_before,
+        balance_after=balance_after,
+        status='confirmed',
+        source_metadata=source_metadata,
+    )
+
+    wallet.available_xp = balance_after
+    wallet.redeemed_xp = max(0, wallet.redeemed_xp - amount)
+    wallet.version += 1
+    wallet.save(update_fields=['available_xp', 'redeemed_xp', 'version', 'updated_at'])
+
+    _audit(
+        user,
+        'XP_MANUAL_CREDIT',
+        'xp_transaction',
+        txn.id,
+        {'balance': balance_before},
+        {'balance': balance_after, 'xp_credited': amount},
+        request_id=request_id,
+    )
+
+    return {
+        'transaction_id': str(txn.id),
+        'xp_credited': amount,
+        'new_balance': balance_after,
+    }
+
+
+@transaction.atomic
 def reverse_transaction(
     *,
     transaction_id,

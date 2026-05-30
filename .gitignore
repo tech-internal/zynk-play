@@ -118,8 +118,9 @@ ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
 
-# Backend archives
-_archive/old_generated_files/
+# Local reel media (large; sync from Dropbox separately)
+/frontend/public/reels/
+
 
 # Testing
 .tox/

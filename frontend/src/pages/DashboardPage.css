@@ -23,7 +23,7 @@
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 15px;
   line-height: 24px;
-  font-weight: 500;
+  font-weight: var(--font-weight-body);
   letter-spacing: 0.2px;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
@@ -48,14 +48,39 @@
   filter: drop-shadow(0 0 8px var(--accent-secondary-40));
 }
 
-/* Background layers — global App.css page shell */
-.dash-hub__bg-radial,
+/* Background layers — gaming hub atmosphere */
+.dash-hub__bg-radial {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 90% 55% at 50% -5%, var(--accent-primary-22), transparent 58%),
+    radial-gradient(ellipse 45% 35% at 100% 35%, rgba(159, 23, 50, 0.14), transparent 55%),
+    radial-gradient(ellipse 40% 30% at 0% 75%, var(--accent-secondary-18), transparent 50%);
+}
+
 .dash-hub__bg-grid {
-  display: none;
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.22;
+  background-image:
+    linear-gradient(var(--page-grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--page-grid-line) 1px, transparent 1px);
+  background-size: var(--page-grid-size) var(--page-grid-size);
 }
 
 .dash-hub__glow {
-  display: none;
+  display: block;
+  position: fixed;
+  z-index: 0;
+  pointer-events: none;
+  filter: blur(80px);
+  border-radius: 50%;
 }
 
 .dash-hub__glow--tr {
@@ -109,21 +134,62 @@
 }
 
 .dash-hub__portal {
-  position: relative;
-  height: 180px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 210px;
   overflow: hidden;
   padding: 0;
-  border: 1px solid transparent;
+  border: none;
   border-radius: var(--radius-lg);
-  background: var(--hub-surface);
+  background: transparent;
   cursor: pointer;
   text-align: left;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
-  transition:
-    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 0.35s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  isolation: isolate;
+}
+
+.dash-hub__portal::before {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  z-index: 0;
+  background: conic-gradient(
+    from 0deg,
+    var(--gold-bright),
+    var(--gold),
+    transparent 30%,
+    var(--gold-bright) 55%,
+    transparent 75%,
+    var(--gold) 100%
+  );
+  animation: dash-portal-ring-spin 4s linear infinite;
+  pointer-events: none;
+}
+
+.dash-hub__portal::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  z-index: 0;
+  border-radius: calc(var(--radius-lg) - 2px);
+  background: linear-gradient(165deg, rgba(33, 29, 18, 0.98), rgba(11, 11, 9, 1));
+  pointer-events: none;
+}
+
+@keyframes dash-portal-ring-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.dash-hub__portal-media,
+.dash-hub__portal-caption {
+  position: relative;
+  z-index: 1;
 }
 
 .dash-hub__portal:focus-visible {
@@ -135,238 +201,110 @@
   outline-color: var(--hub-secondary);
 }
 
-.dash-hub__portal--primary {
-  border: 1px solid var(--accent-primary-55);
-  box-shadow:
-    inset 0 0 1px 1px rgba(255, 255, 255, 0.06),
-    0 4px 16px rgba(0, 0, 0, 0.4);
-  background:
-    radial-gradient(ellipse at 50% 100%, var(--accent-primary-08) 0%, transparent 70%),
-    var(--hub-surface);
-}
-
-.dash-hub__portal--secondary {
-  border: 1px solid var(--accent-secondary-55);
-  box-shadow:
-    inset 0 0 1px 1px rgba(255, 255, 255, 0.06),
-    0 4px 16px rgba(0, 0, 0, 0.4);
-}
-
 @media (min-width: 768px) {
   .dash-hub__portal {
-    height: 400px;
+    min-height: 380px;
   }
 }
 
 .dash-hub__portal--primary:is(:hover, :active, :focus-visible) {
-  transform: translateY(-4px) scale(1.01);
-  border-color: var(--hub-primary);
-  box-shadow:
-    0 12px 32px rgba(0, 0, 0, 0.45),
-    0 0 24px var(--accent-glow),
-    inset 0 0 1px 1px rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
 }
 
 .dash-hub__portal--secondary:is(:hover, :active, :focus-visible) {
-  transform: translateY(-4px) scale(1.01);
-  border-color: var(--hub-secondary);
-  box-shadow:
-    0 12px 32px rgba(0, 0, 0, 0.45),
-    0 0 24px var(--accent-secondary-50),
-    inset 0 0 1px 1px rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
 }
 
-@media (hover: hover) {
-  .dash-hub__portal--primary:active {
-    transform: translateY(-2px) scale(0.998);
-    transition-duration: 0.12s;
-  }
-
-  .dash-hub__portal--secondary:active {
-    transform: translateY(-2px) scale(0.998);
-    transition-duration: 0.12s;
-  }
+.dash-hub__portal-media {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  padding: 8px;
+  background:
+    radial-gradient(ellipse at 50% 0%, var(--accent-primary-20) 0%, transparent 52%),
+    radial-gradient(ellipse at 85% 100%, rgba(159, 23, 50, 0.12) 0%, transparent 42%),
+    linear-gradient(165deg, #14120e 0%, #1c1810 42%, #0a0907 100%);
 }
 
 .dash-hub__portal-img {
-  position: absolute;
-  inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  opacity: 0.72;
-  transition:
-    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.35s ease,
-    filter 0.35s ease;
-}
-
-.dash-hub__portal:is(:hover, :active, :focus-visible) .dash-hub__portal-img {
-  transform: scale(1.08);
-  opacity: 0.88;
-  filter: brightness(1.08) saturate(1.12);
-}
-
-.dash-hub__portal-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(15, 31, 50, 0.88) 0%,
-    rgba(15, 31, 50, 0.35) 50%,
-    transparent 100%
-  );
+  max-height: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
   pointer-events: none;
-  transition: opacity 0.35s ease, background 0.35s ease;
 }
 
-.dash-hub__portal--primary:is(:hover, :active, :focus-visible) .dash-hub__portal-overlay {
-  background: linear-gradient(
-    to top,
-    rgba(15, 31, 50, 0.78) 0%,
-    var(--accent-primary-12) 45%,
-    transparent 100%
-  );
-}
-
-.dash-hub__portal--secondary:is(:hover, :active, :focus-visible) .dash-hub__portal-overlay {
-  background: linear-gradient(
-    to top,
-    rgba(15, 31, 50, 0.78) 0%,
-    var(--accent-secondary-10) 45%,
-    transparent 100%
-  );
-}
-
-.dash-hub__scanline {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  height: 100px;
-  z-index: 5;
-  background: linear-gradient(
-    0deg,
-    transparent 0%,
-    var(--accent-primary-08) 50%,
-    transparent 100%
-  );
-  opacity: 0.1;
-  bottom: 100%;
-  animation: dash-hub-scanline 8s linear infinite;
-  pointer-events: none;
-  transition: opacity 0.35s ease;
-}
-
-.dash-hub__portal:is(:hover, :active, :focus-visible) .dash-hub__scanline {
-  opacity: 0.35;
-}
-
-.dash-hub__portal--secondary .dash-hub__scanline {
-  background: linear-gradient(
-    0deg,
-    transparent 0%,
-    var(--accent-secondary-08) 50%,
-    transparent 100%
-  );
-}
-
-@keyframes dash-hub-scanline {
-  0% {
-    bottom: 100%;
-  }
-  100% {
-    bottom: -100px;
-  }
-}
-
-.dash-hub__portal-content {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-  padding: 16px;
-  box-sizing: border-box;
+.dash-hub__portal-caption {
+  flex-shrink: 0;
+  padding: 10px 12px 12px;
+  background: linear-gradient(180deg, rgba(23, 22, 15, 0.98) 0%, rgba(8, 8, 6, 1) 100%);
 }
 
 @media (min-width: 768px) {
-  .dash-hub__portal-content {
-    padding: 32px;
+  .dash-hub__portal-media {
+    padding: 10px;
   }
+
+  .dash-hub__portal-caption {
+    padding: 14px 18px 18px;
+  }
+}
+
+.dash-hub__portal-caption-head {
+  margin-bottom: 8px;
 }
 
 .dash-hub__portal-num {
   display: block;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 10px;
+  line-height: 1;
   font-weight: 600;
   letter-spacing: 1.5px;
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), text-shadow 0.35s ease;
-}
-
-.dash-hub__portal:is(:hover, :active, :focus-visible) .dash-hub__portal-num {
-  transform: translateX(4px);
-}
-
-.dash-hub__portal--primary:is(:hover, :active, :focus-visible) .dash-hub__portal-num {
-  text-shadow: 0 0 12px var(--accent-glow);
-}
-
-.dash-hub__portal--secondary:is(:hover, :active, :focus-visible) .dash-hub__portal-num {
-  text-shadow: 0 0 12px var(--accent-secondary-55);
+  margin-bottom: 4px;
+  opacity: 0.85;
 }
 
 .dash-hub__portal--primary .dash-hub__portal-num {
-  color: var(--hub-primary);
+  color: var(--gold);
 }
 
 .dash-hub__portal--secondary .dash-hub__portal-num {
-  color: var(--hub-secondary);
+  color: #8fd4a0;
 }
 
 @media (min-width: 768px) {
   .dash-hub__portal-num {
-    font-size: 30px;
+    font-size: 12px;
   }
 }
 
 .dash-hub__portal-title {
-  margin: 2px 0 0;
-  font-size: 16px;
-  line-height: 22px;
-  font-weight: 700;
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.15;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  color: #f2f4f7;
-  transition:
-    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    color 0.35s ease,
-    text-shadow 0.35s ease;
+  letter-spacing: 0.08em;
 }
 
-.dash-hub__portal:is(:hover, :active, :focus-visible) .dash-hub__portal-title {
-  transform: translateX(6px);
+.dash-hub__portal--primary .dash-hub__portal-title {
+  color: var(--gold-bright);
 }
 
-.dash-hub__portal--primary:is(:hover, :active, :focus-visible) .dash-hub__portal-title {
-  color: #fff;
-  text-shadow: 0 0 20px var(--accent-primary-35);
-}
-
-.dash-hub__portal--secondary:is(:hover, :active, :focus-visible) .dash-hub__portal-title {
-  color: #fff;
-  text-shadow: 0 0 20px var(--accent-secondary-35);
+.dash-hub__portal--secondary .dash-hub__portal-title {
+  color: #b8f0c8;
 }
 
 @media (min-width: 768px) {
   .dash-hub__portal-title {
-    font-size: 36px;
-  }
-
-  .dash-hub__portal:is(:hover, :active, :focus-visible) .dash-hub__portal-title {
-    transform: translateX(10px);
+    font-size: 28px;
   }
 }
 
@@ -374,58 +312,47 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+  gap: 8px;
 }
 
 .dash-hub__portal-meta {
-  display: block;
+  min-width: 0;
 }
 
 .dash-hub__portal-kicker {
-  margin: 0 0 2px;
-  font-size: 8px;
-  font-weight: 700;
+  margin: 0 0 3px;
+  font-size: 9px;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.15em;
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease;
-}
-
-.dash-hub__portal:is(:hover, :active, :focus-visible) .dash-hub__portal-kicker {
-  transform: translateY(-2px);
-  opacity: 1;
+  letter-spacing: 0.14em;
 }
 
 .dash-hub__portal--primary .dash-hub__portal-kicker {
-  color: var(--hub-primary);
+  color: var(--gold);
 }
 
 .dash-hub__portal--secondary .dash-hub__portal-kicker {
-  color: var(--hub-secondary);
+  color: #7ecf98;
 }
 
 @media (min-width: 768px) {
   .dash-hub__portal-kicker {
-    font-size: 12px;
+    font-size: 11px;
   }
 }
 
 .dash-hub__portal-sub {
   margin: 0;
-  font-size: 8px;
-  font-weight: 700;
+  font-size: 9px;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: rgba(224, 226, 234, 0.6);
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), color 0.35s ease;
-}
-
-.dash-hub__portal:is(:hover, :active, :focus-visible) .dash-hub__portal-sub {
-  transform: translateY(-2px);
-  color: rgba(242, 244, 247, 0.92);
+  color: var(--text-muted);
 }
 
 @media (min-width: 768px) {
   .dash-hub__portal-sub {
-    font-size: 11px;
+    font-size: 10px;
   }
 }
 
@@ -433,109 +360,60 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
   padding: 6px;
   border-radius: 8px;
-  transition:
-    background 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    color 0.35s ease,
-    border-color 0.35s ease,
-    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.35s ease;
 }
 
 .dash-hub__portal--primary .dash-hub__portal-icon-wrap {
-  border: 1px solid var(--hub-primary);
-  background: var(--accent-primary-20);
-  color: var(--hub-primary);
+  border: 1px solid var(--accent-primary-40);
+  background: var(--accent-primary-12);
+  color: var(--gold-bright);
 }
 
 .dash-hub__portal--secondary .dash-hub__portal-icon-wrap {
-  border: 1px solid var(--hub-secondary);
-  background: var(--accent-secondary-15);
-  color: var(--hub-secondary);
+  border: 1px solid var(--accent-secondary-40);
+  background: var(--accent-secondary-12);
+  color: #8fd4a0;
 }
 
 @media (min-width: 768px) {
   .dash-hub__portal-icon-wrap {
-    padding: 12px;
+    padding: 10px;
   }
 }
 
 .dash-hub__portal-icon-wrap .material-symbols-outlined {
   font-size: 18px;
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @media (min-width: 768px) {
   .dash-hub__portal-icon-wrap .material-symbols-outlined {
-    font-size: 24px;
+    font-size: 22px;
   }
 }
 
-.dash-hub__portal--primary:is(:hover, :active, :focus-visible) .dash-hub__portal-icon-wrap {
-  background: var(--hub-primary);
-  color: var(--hub-on-primary);
-  transform: scale(1.12) rotate(-4deg);
-  box-shadow: 0 0 16px var(--accent-primary-65);
-}
-
-.dash-hub__portal--primary:is(:hover, :active, :focus-visible)
-  .dash-hub__portal-icon-wrap
-  .material-symbols-outlined {
-  transform: scale(1.05);
-}
-
-.dash-hub__portal--secondary:is(:hover, :active, :focus-visible) .dash-hub__portal-icon-wrap {
-  background: var(--hub-secondary);
-  color: var(--surface-0);
-  transform: scale(1.12) rotate(4deg);
-  box-shadow: 0 0 16px var(--accent-secondary-55);
-}
-
-.dash-hub__portal--secondary:is(:hover, :active, :focus-visible)
-  .dash-hub__portal-icon-wrap
-  .material-symbols-outlined {
-  transform: scale(1.05);
-}
-
-/* Mobile: stronger tap feedback on small tiles */
+/* Mobile tap feedback */
 @media (max-width: 767px) {
   .dash-hub__portal--primary:is(:hover, :active, :focus-visible),
   .dash-hub__portal--secondary:is(:hover, :active, :focus-visible) {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow:
-      0 8px 24px rgba(0, 0, 0, 0.5),
-      0 0 20px var(--accent-glow);
-  }
-
-  .dash-hub__portal--secondary:is(:hover, :active, :focus-visible) {
-    box-shadow:
-      0 8px 24px rgba(0, 0, 0, 0.5),
-      0 0 20px var(--accent-secondary-55);
-  }
-
-  .dash-hub__portal:is(:hover, :active, :focus-visible) .dash-hub__portal-img {
-    transform: scale(1.06);
+    transform: translateY(-2px);
   }
 
   .dash-hub__portal-foot {
     gap: 6px;
   }
-
-  .dash-hub__portal-kicker {
-    font-size: 7px;
-    letter-spacing: 0.12em;
-  }
-
-  .dash-hub__portal-sub {
-    font-size: 7px;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .dash-hub__portal::before {
+    animation: none;
+    inset: 0;
+    background: linear-gradient(135deg, var(--gold), var(--gold-bright), var(--gold));
+    opacity: 0.85;
+  }
+
   .dash-hub__portal,
-  .dash-hub__portal-img,
-  .dash-hub__portal-overlay,
   .dash-hub__portal-num,
   .dash-hub__portal-title,
   .dash-hub__portal-kicker,
@@ -543,27 +421,6 @@
   .dash-hub__portal-icon-wrap,
   .dash-hub__portal-icon-wrap .material-symbols-outlined {
     transition: none;
-  }
-
-  .dash-hub__portal:is(:hover, :active, :focus-visible) {
-    transform: none;
-  }
-
-  .dash-hub__portal:is(:hover, :active, :focus-visible) .dash-hub__portal-img {
-    transform: none;
-    filter: none;
-  }
-
-  .dash-hub__portal:is(:hover, :active, :focus-visible) .dash-hub__portal-title,
-  .dash-hub__portal:is(:hover, :active, :focus-visible) .dash-hub__portal-num,
-  .dash-hub__portal:is(:hover, :active, :focus-visible) .dash-hub__portal-kicker,
-  .dash-hub__portal:is(:hover, :active, :focus-visible) .dash-hub__portal-sub {
-    transform: none;
-  }
-
-  .dash-hub__portal--primary:is(:hover, :active, :focus-visible) .dash-hub__portal-icon-wrap,
-  .dash-hub__portal--secondary:is(:hover, :active, :focus-visible) .dash-hub__portal-icon-wrap {
-    transform: none;
   }
 }
 

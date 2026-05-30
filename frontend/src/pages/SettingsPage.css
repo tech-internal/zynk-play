@@ -46,7 +46,7 @@
   letter-spacing: 0.6px;
   color: var(--accent-secondary);
   margin: 0 0 var(--space-3);
-  font-weight: 500;
+  font-weight: var(--font-weight-body);
 }
 
 .fv-settings-row {

@@ -3,6 +3,7 @@
 
 from django.urls import path, include
 from . import views
+from . import reels
 
 app_name = 'entertainment_platform'
 
@@ -63,4 +64,9 @@ urlpatterns = [
     path('api/v1/games', views.list_games, name='list_games'),
     path('api/v1/games/<uuid:game_id>', views.get_game, name='get_game'),
     path('api/v1/games/<uuid:game_id>/launch', views.launch_game, name='launch_game'),
+
+    # =====================================================================
+    # REELS (Dropbox fallback stream)
+    # =====================================================================
+    path('api/v1/reels/stream', reels.stream_reel, name='stream_reel'),
 ]

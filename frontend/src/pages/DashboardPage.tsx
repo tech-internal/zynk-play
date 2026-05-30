@@ -5,16 +5,11 @@ import { hubNavItems } from '../config/hubNav';
 import { useEntitlements } from '../context/EntitlementsContext';
 import { useSportsMatches } from '../hooks/useSportsMatches';
 import { useI18n, usePageTitle } from '../i18n';
+import imgWatch from '../images/Watch.png';
+import imgPlay from '../images/Play.png';
+import imgWin from '../images/Win.png';
+import imgShare from '../images/Share.png';
 import './DashboardPage.css';
-
-const IMG_WATCH =
-  'https://lh3.googleusercontent.com/aida-public/AB6AXuCSKJoZAXMkfS7m6JUeaE907miV8fjhs6s2qIFkrpQkulkqd3aRRAUi49btrjEmwkO0yI_lb6wYXxUk_zkMgQSsJYbD2OmjKb7zEoOhPXXJB6J0vSZ1grNFHWZIgrrnqS6vyTYQEWqO4xejisflmeW8Ue8SqT8RTEg3dACzeAGN6ipvTSHkcCN6VjW4gtm9iLDAiq53o9xtPpBP33nyONx0rvWCCQWPW2dGd5BKrYjmHV-5xfQyJX6g98Qwl5u19p3XClZUIVKnIl1J';
-const IMG_PLAY =
-  'https://lh3.googleusercontent.com/aida-public/AB6AXuB4x970T-yxOUWmxAJq9qnO0jcry0NVrx3F3lUjKUgTKunT4Z6a6MA9jJ-eMlBPQkIbXe_55qUboTuooeWL_yQT89tEVYLXWNZTGq9VWwZpff4ysSIyj9MXk8iP03wT_C8_5aBkPlm9doMw4RFwyLJ-LNjODg-kAz_WBPaz9AofYwihybMQwfI52Ho1h9HqhJjh1aLofrdZNJZn50eR2YCe2kOCGkq19Tosbk0pTBfWTWghsUIRIDO4FQWD0C5DimQIrj2rUkAYiOVi';
-const IMG_EARN =
-  'https://lh3.googleusercontent.com/aida-public/AB6AXuBXcdMflbRE63rXrZCgIGXvq2YuccvPUJLaYOU9Whih-wzzQG_zhVPVSQJM-e0kIpkUTG_D_1-nwZDO4-wuW2oq0loN-beIWo1s0CxzRRzMrdBaZhUDUE0BgxEpP1cGfjaLpqMcBUItfTau2lBMlJCksKr-ANKQN909XTN9ocEHI5tuc3k5N73_jE4uy9um2iJdx-NP53thTm7-XBH_4-qpAlaeDbSMvxYN0AFV7WZT9oV4aRh58t4Rsm1lqId_jYGQ9E36HPMNqQ49';
-const IMG_CONNECT =
-  'https://lh3.googleusercontent.com/aida-public/AB6AXuC_Wbsw0hQWsYwD-_YNEHotpTrAJZu8tMLqc9eSkKUMKEeR7GjjeL-_N6G_Rj_fPod8HTOzTfJe774fzq_Zx2jYMKqvhY7DlS_UupjSQsesKoF0VgCPRJOoIYiweXb5rSwUrNHgfEEXXaXK1i-HvgyTW3TTYTqHlH7_QiR9-vTbcGKZuPAnGdRv1ItR6BxyzHGGyDrEF8tJ4lYtbv7m1YpIJYoWufKGbye0WsRQiCUFXChsqV0xRRjQe1BJOC8hiqik731RXwEmcQNX';
 
 const portals = [
   {
@@ -24,10 +19,9 @@ const portals = [
     subKey: 'dash.portal.highlights',
     icon: 'play_arrow',
     iconFill: true,
-    image: IMG_WATCH,
+    image: imgWatch,
     to: '/streaming',
     premium: true,
-    scanDelay: '0s',
     accent: 'primary',
   },
   {
@@ -37,10 +31,9 @@ const portals = [
     subKey: 'dash.portal.compete',
     icon: 'sports_esports',
     iconFill: false,
-    image: IMG_PLAY,
+    image: imgPlay,
     to: '/gameplay',
     premium: true,
-    scanDelay: '2s',
     accent: 'primary',
   },
   {
@@ -50,10 +43,9 @@ const portals = [
     subKey: 'dash.portal.redeem',
     icon: 'payments',
     iconFill: false,
-    image: IMG_EARN,
+    image: imgWin,
     to: '/earn-share?view=earn',
     premium: true,
-    scanDelay: '4s',
     accent: 'secondary',
   },
   {
@@ -63,10 +55,9 @@ const portals = [
     subKey: 'dash.portal.teamUp',
     icon: 'groups',
     iconFill: false,
-    image: IMG_CONNECT,
+    image: imgShare,
     to: '/earn-share?view=share',
     premium: false,
-    scanDelay: '6s',
     accent: 'secondary',
   },
 ] as const;
@@ -239,16 +230,12 @@ const DashboardPage: React.FC = () => {
                 className={`dash-hub__portal dash-hub__portal--${portal.accent}`}
                 onClick={() => tryNavigate(portal.to, portal.premium)}
               >
-                <img className="dash-hub__portal-img" src={portal.image} alt="" />
-                <div className="dash-hub__portal-overlay" aria-hidden />
-                <div
-                  className="dash-hub__scanline"
-                  style={{ animationDelay: portal.scanDelay }}
-                  aria-hidden
-                />
-                <div className="dash-hub__portal-content">
-                  <div>
-                    <span className="dash-hub__portal-num"></span>
+                <div className="dash-hub__portal-media">
+                  <img className="dash-hub__portal-img" src={portal.image} alt="" />
+                </div>
+                <div className="dash-hub__portal-caption">
+                  <div className="dash-hub__portal-caption-head">
+                    <span className="dash-hub__portal-num">{portal.num}</span>
                     <h2 className="dash-hub__portal-title">{t(portal.titleKey)}</h2>
                   </div>
                   <div className="dash-hub__portal-foot">

@@ -13,21 +13,27 @@ import { EARN_CATEGORY_ORDER, groupRulesByCategory, sumXpToday } from '../utils/
 
 const DEFAULT_DAILY_GOAL = 10;
 
-export function useXpEarnHub() {
+type UseXpEarnHubOptions = {
+  enabled?: boolean;
+};
+
+export function useXpEarnHub(options: UseXpEarnHubOptions = {}) {
+  const { enabled = true } = options;
   const userId = getAuthUserId();
   const [balance, setBalance] = useState<XpBalance | null>(null);
   const [rules, setRules] = useState<XpRule[]>([]);
   const [credits, setCredits] = useState<XpTransaction[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(enabled);
   const [error, setError] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (silent = false) => {
+    if (!enabled) return;
     if (!userId) {
       setLoading(false);
       setError('Sign in to view XP');
       return;
     }
-    setLoading(true);
+    if (!silent) setLoading(true);
     setError(null);
     try {
       const [bal, ruleItems, txnItems] = await Promise.all([
@@ -46,11 +52,15 @@ export function useXpEarnHub() {
     } finally {
       setLoading(false);
     }
-  }, [userId]);
+  }, [enabled, userId]);
 
   useEffect(() => {
+    if (!enabled) {
+      setLoading(false);
+      return;
+    }
     void load();
-  }, [load]);
+  }, [enabled, load]);
 
   const rulesByCategory = useMemo(() => groupRulesByCategory(rules), [rules]);
 
@@ -80,7 +90,7 @@ export function useXpEarnHub() {
     availableXp,
     loading,
     error,
-    refresh: load,
+    refresh: () => load(true),
   };
 }
 

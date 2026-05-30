@@ -5,7 +5,9 @@ import { useWatchXp } from '../context/WatchXpContext';
 import './ScreenHeader.css';
 
 export type ScreenHeaderProps = {
-  title: string;
+  title?: string;
+  /** Hide center title (back + right slot only) */
+  hideTitle?: boolean;
   /** Right slot; defaults to XP pill when omitted */
   right?: React.ReactNode;
   xpLabel?: string;
@@ -14,7 +16,8 @@ export type ScreenHeaderProps = {
 };
 
 const ScreenHeader: React.FC<ScreenHeaderProps> = ({
-  title,
+  title = '',
+  hideTitle = false,
   right,
   xpLabel,
   onBack,
@@ -38,7 +41,9 @@ const ScreenHeader: React.FC<ScreenHeaderProps> = ({
     );
 
   return (
-    <header className={`scr-header${className ? ` ${className}` : ''}`}>
+    <header
+      className={`scr-header${hideTitle ? ' scr-header--no-title' : ''}${className ? ` ${className}` : ''}`}
+    >
       <button
         type="button"
         className="scr-back"
@@ -47,7 +52,7 @@ const ScreenHeader: React.FC<ScreenHeaderProps> = ({
       >
         ‹
       </button>
-      <div className="scr-title">{title}</div>
+      {!hideTitle ? <div className="scr-title">{title}</div> : null}
       <div className="scr-header__right">{rightContent}</div>
     </header>
   );

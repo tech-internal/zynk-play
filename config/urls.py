@@ -19,6 +19,7 @@ urlpatterns = [
     path('', include('psp.urls')),
     path('', include('entertainment_platform.urls')),
     path('', include('xp_management.urls')),
+    path('', include('lucky_draw.urls')),
 ]
 
 if not settings.DEBUG:

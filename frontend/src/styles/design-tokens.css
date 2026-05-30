@@ -13,7 +13,7 @@
   --panel-strong: #211d12;
   --line: #eec76757;
   --text-primary: #fff8e7;
-  --text-muted: #b9ad91;
+  --text-muted: #d4c9a8;
   --gold: #eec767;
   --gold-bright: #ffe07a;
   --red: #9f1732;
@@ -156,6 +156,16 @@
   --margin-desktop: var(--screen-padding-desktop);
   --gutter: var(--tile-grid-gap);
   --unit: 8px;
+
+  /* Typography */
+  --font-weight-body: 600;
+  --font-weight-label: 700;
+  --font-weight-heading: 800;
+  --font-weight-display: 900;
+  --font-size-body: 16px;
+  --font-size-body-sm: 14px;
+  --font-size-caption: 12px;
+  --line-height-body: 1.55;
 }
 
 @media (min-width: 768px) {
@@ -219,21 +229,21 @@
 
 .text-body {
   font-family: 'Inter', system-ui, sans-serif;
-  font-size: 15px;
-  line-height: 1.5;
-  font-weight: 500;
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  font-weight: var(--font-weight-body);
   letter-spacing: 0.01em;
   color: var(--text-mid);
 }
 
 .text-caption {
   font-family: 'Inter', system-ui, sans-serif;
-  font-size: 11px;
-  line-height: 1.2;
-  font-weight: 800;
+  font-size: var(--font-size-caption);
+  line-height: 1.25;
+  font-weight: var(--font-weight-label);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-low);
+  color: var(--text-muted);
 }
 
 .text-button {

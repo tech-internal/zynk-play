@@ -1,5 +1,6 @@
 @import './styles/design-tokens.css';
 @import './styles/theme-bridge.css';
+@import './styles/typography.css';
 
 /* ============================================
    GAME PALAZIO — global shell
@@ -43,9 +44,9 @@ body::before {
   color: var(--text-mid);
   min-height: 100vh;
   font-family: 'Inter', system-ui, sans-serif;
-  font-size: 15px;
-  line-height: 24px;
-  font-weight: 500;
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  font-weight: var(--font-weight-body);
   letter-spacing: 0.2px;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
@@ -112,7 +113,7 @@ body::before {
   margin: 0 0 var(--space-7) 0;
   letter-spacing: 0.6px;
   text-transform: uppercase;
-  font-weight: 500;
+  font-weight: var(--font-weight-label);
 }
 
 .App-header {
@@ -132,8 +133,8 @@ body::before {
   border-radius: var(--radius-sm);
   color: var(--text-mid);
   text-decoration: none;
-  font-weight: 500;
-  font-size: 15px;
+  font-weight: var(--font-weight-label);
+  font-size: var(--font-size-body);
   transition: all 0.25s ease;
   font-family: 'Inter', system-ui, sans-serif;
 }

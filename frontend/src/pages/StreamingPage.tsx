@@ -1,11 +1,11 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import './StreamingPage.css';
 import ScreenHeader from '../components/ScreenHeader';
+import ReelsFeed from '../components/ReelsFeed';
 import { LIVE_STREAM_HLS_URL, getWindowHls } from '../config/afgCricket';
-import LiveMatchCard from '../components/LiveMatchCard';
+import { getAllReels } from '../config/reels';
 import PremiumAccessWall from '../components/PremiumAccessWall';
 import { useEntitlements } from '../context/EntitlementsContext';
-import { useSportsMatches } from '../hooks/useSportsMatches';
 import { useI18n } from '../i18n';
 import { useWatchXp } from '../context/WatchXpContext';
 
@@ -19,17 +19,14 @@ function formatCountdown(totalSeconds: number): string {
 const StreamingPage: React.FC = () => {
   const videoRef = React.useRef<HTMLVideoElement | null>(null);
   const videoWrapRef = React.useRef<HTMLDivElement | null>(null);
+  const pageRef = React.useRef<HTMLDivElement | null>(null);
   const { t } = useI18n();
   const { canWatchPlayEarn, loading: entLoading } = useEntitlements();
-  const { live, loading: sportsLoading } = useSportsMatches();
   const { todayWatchXp, perAwardXp, countdownSeconds, startSession } = useWatchXp();
-  const [liveIndex, setLiveIndex] = useState(0);
   const [muted, setMuted] = React.useState(true);
-
-  const activeLive = useMemo(() => {
-    if (live.length === 0) return null;
-    return live[Math.min(liveIndex, live.length - 1)];
-  }, [live, liveIndex]);
+  const [reelsMode, setReelsMode] = React.useState(false);
+  const reels = useMemo(() => getAllReels(), []);
+  const streamBlockRef = React.useRef<HTMLDivElement | null>(null);
 
   React.useEffect(() => {
     document.title = 'Game Plazio | IPL 2026 Live Stream';
@@ -78,6 +75,20 @@ const StreamingPage: React.FC = () => {
     };
   }, []);
 
+  React.useEffect(() => {
+    const block = streamBlockRef.current;
+    if (!block) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setReelsMode(!entry.isIntersecting && entry.boundingClientRect.top < 0);
+      },
+      { threshold: 0.12 },
+    );
+    observer.observe(block);
+    return () => observer.disconnect();
+  }, [canWatchPlayEarn]);
+
   const toggleMute = () => {
     const video = videoRef.current;
     if (!video) return;
@@ -100,14 +111,17 @@ const StreamingPage: React.FC = () => {
   };
 
   return (
-    <div className="watch-page">
+    <div
+      ref={pageRef}
+      className={`watch-page${reelsMode ? ' watch-page--reels-mode' : ''}`}
+    >
       <main className="watch-mobile">
         <ScreenHeader title={t('watch.liveMatch')} />
         {!entLoading && !canWatchPlayEarn ? (
           <PremiumAccessWall />
         ) : (
           <>
-
+          <div className="watch-stream-block" ref={streamBlockRef}>
           <div className="watch-video-area" ref={videoWrapRef}>
             <video
               ref={videoRef}
@@ -141,23 +155,6 @@ const StreamingPage: React.FC = () => {
             </div>
           </div>
 
-          {sportsLoading && live.length === 0 ? (
-            <p className="watch-match-status" role="status">
-              {t('dash.syncing')}
-            </p>
-          ) : null}
-
-          {activeLive ? (
-            <LiveMatchCard
-              match={activeLive}
-              activeIndex={liveIndex}
-              matchCount={live.length}
-              onSelect={live.length > 1 ? setLiveIndex : undefined}
-            />
-          ) : !sportsLoading ? (
-            <p className="watch-match-status">{t('dash.noLive')}</p>
-          ) : null}
-
           <div className="watch-xp-ticker">
             <span>⚡ {t('watch.earningXp')}</span>
             <span className="watch-xp-gain">
@@ -171,6 +168,14 @@ const StreamingPage: React.FC = () => {
               <span className="watch-progress-v">{todayWatchXp} XP</span>
             </div>
           </div>
+          </div>
+
+          {reels.length > 0 ? (
+            <>
+              <h2 className="watch-reels-heading">{t('watch.reels')}</h2>
+              <ReelsFeed reels={reels} scrollRootRef={pageRef} />
+            </>
+          ) : null}
           </>
         )}
       </main>

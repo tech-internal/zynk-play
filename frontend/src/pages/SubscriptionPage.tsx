@@ -25,35 +25,49 @@ const TAB_META: Record<string, { label: string; sub: string }> = {
   season: { label: 'Season', sub: '~90 days' },
 };
 
-function entitlementLabel(ent: string): string {
-  const map: Record<string, string> = {
-    game_only: 'Play games',
-    game_and_streaming: 'Play + Watch',
-    streaming_only: 'Watch streams',
-  };
-  return map[ent] ?? ent;
+function sportFeatures(sport: 'soccer' | 'cricket'): string[] {
+  if (sport === 'soccer') {
+    return [
+      'Live Afghan soccer & league coverage',
+      'Full Watch + Play arena access',
+      'Season highlights & replays',
+    ];
+  }
+  return [
+    'Live Afghan cricket & domestic fixtures',
+    'Multi-cam streams & match-day hub',
+    'Highlights & fan replays',
+  ];
 }
 
-function entitlementIcon(ent: string): string {
-  const map: Record<string, string> = {
-    game_only: 'sports_esports',
-    game_and_streaming: 'star',
-    streaming_only: 'sensors',
-  };
-  return map[ent] ?? 'verified';
-}
+const SPORT_OFFERS = [
+  {
+    sport: 'soccer' as const,
+    title: 'Afghan Soccer',
+    icon: 'sports_soccer',
+    pickEntitlements: ['game_and_streaming', 'game_only'] as string[],
+    featured: true,
+  },
+  {
+    sport: 'cricket' as const,
+    title: 'Afghan Cricket',
+    icon: 'sports_cricket',
+    pickEntitlements: ['streaming_only', 'game_and_streaming'] as string[],
+    featured: false,
+  },
+];
 
-function entitlementFeatures(ent: string): string[] {
-  if (ent === 'game_only') {
-    return ['Full game arena access', 'XP earning while playing', 'No live-stream entitlement'];
-  }
-  if (ent === 'streaming_only') {
-    return ['Live matches & replays', 'XP earning while watching', 'No game arena entitlement'];
-  }
-  if (ent === 'game_and_streaming') {
-    return ['Everything in Play + Watch', 'XP earning across the app', 'Best value for fans'];
-  }
-  return [];
+function resolveSportPlans(plans: SubscriptionPlan[], billingPeriod: string) {
+  const periodPlans = plans.filter((p) => p.billing_period === billingPeriod);
+  const usedIds = new Set<string>();
+
+  return SPORT_OFFERS.map((offer) => {
+    const plan = periodPlans.find(
+      (p) => offer.pickEntitlements.includes(p.entitlement_type) && !usedIds.has(p.id),
+    );
+    if (plan) usedIds.add(plan.id);
+    return { offer, plan: plan ?? null };
+  }).filter((row): row is { offer: (typeof SPORT_OFFERS)[number]; plan: SubscriptionPlan } => row.plan !== null);
 }
 
 const SubscriptionPage: React.FC = () => {
@@ -111,17 +125,10 @@ const SubscriptionPage: React.FC = () => {
     }
   }, [tabs, activeTab]);
 
-  const visiblePlans = useMemo(() => {
-    const subset = plans.filter((p) => p.billing_period === activeTab);
-    const order: Record<string, number> = {
-      game_only: 0,
-      game_and_streaming: 1,
-      streaming_only: 2,
-    };
-    return [...subset].sort(
-      (a, b) => (order[a.entitlement_type] ?? 99) - (order[b.entitlement_type] ?? 99),
-    );
-  }, [plans, activeTab]);
+  const visiblePlans = useMemo(
+    () => resolveSportPlans(plans, activeTab),
+    [plans, activeTab],
+  );
 
   const startCheckout = async (plan: SubscriptionPlan) => {
     if (plan.purchase_block_reason) return;
@@ -154,14 +161,13 @@ const SubscriptionPage: React.FC = () => {
         <ScreenHeader title={t('sub.screenTitle')} />
         <section className="subpage-hero">
           <div className="subpage-hero-badge">
-            <span className="subpage-label-gold">ELITE ENCRYPTION ACTIVE</span>
+            <span className="subpage-label-gold">AFGHAN SOCCER · CRICKET</span>
           </div>
           <h1 className="subpage-title">
             FANVERSE <span className="subpage-title-accent">PLUS</span>
           </h1>
           <p className="subpage-lead">
-            Pick how long you want access and what you want unlocked. Plans are served by your account server and
-            checkout flows through the secure Palzio gateway.
+            Choose your pass for Afghan soccer and cricket. Pick a billing period, then continue to secure checkout.
           </p>
           <div className="subpage-hero-links">
             <Link to="/dashboard" className="subpage-text-link">
@@ -228,13 +234,13 @@ const SubscriptionPage: React.FC = () => {
           )}
 
           <div className="subpage-plans-grid-v2" role="tabpanel">
-            {visiblePlans.map((plan) => {
+            {visiblePlans.map(({ offer, plan }) => {
               const blocked = Boolean(plan.purchase_block_reason);
               const priceNum = Number(plan.price_afn);
               const priceDisplay = Number.isFinite(priceNum) ? priceNum.toLocaleString() : plan.price_afn;
               const busy = buyingId === plan.id;
-              const featured = plan.entitlement_type === 'game_and_streaming';
-              const features = entitlementFeatures(plan.entitlement_type);
+              const featured = offer.featured;
+              const features = sportFeatures(offer.sport);
               return (
                 <article
                   key={plan.id}
@@ -244,11 +250,9 @@ const SubscriptionPage: React.FC = () => {
                 >
                   {featured && <div className="subpage-card-pill">Best value</div>}
                   <div className="subpage-card-icon" aria-hidden>
-                    <span className="material-symbols-outlined">
-                      {entitlementIcon(plan.entitlement_type)}
-                    </span>
+                    <span className="material-symbols-outlined">{offer.icon}</span>
                   </div>
-                  <h3 className="subpage-card-tier">{entitlementLabel(plan.entitlement_type)}</h3>
+                  <h3 className="subpage-card-tier">{offer.title}</h3>
                   <p className="subpage-card-name">{plan.name}</p>
 
                   <div className="subpage-card-price-row">

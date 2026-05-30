@@ -19,21 +19,6 @@ const METHODS: { id: PalzioMethod; label: string; subtitle: string }[] = [
   { id: "wallet", label: "Wallet", subtitle: "Paytm, Mobikwik, etc." },
 ];
 
-const OUTCOMES: { id: PalzioOutcome; label: string; hint: string }[] = [
-  { id: "success", label: "Success", hint: "Platform grants subscription" },
-  { id: "failed", label: "Failed", hint: "Generic decline" },
-  {
-    id: "insufficient_balance",
-    label: "Insufficient balance",
-    hint: "Mapped to failed",
-  },
-  {
-    id: "user_dropped",
-    label: "User dropped",
-    hint: "Abandoned — transaction cancelled",
-  },
-];
-
 function digitsOnly(s: string): string {
   return s.replace(/\D/g, "");
 }
@@ -97,7 +82,7 @@ const PalzioCheckoutPage: React.FC = () => {
   }, [transactionRef, params]);
 
   const [method, setMethod] = useState<PalzioMethod>("card");
-  const [outcome, setOutcome] = useState<PalzioOutcome>("success");
+  const outcome: PalzioOutcome = "success";
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [doneMessage, setDoneMessage] = useState<{
@@ -199,7 +184,7 @@ const PalzioCheckoutPage: React.FC = () => {
       />
       <div className="pcheckout-shell">
         <ScreenHeader title={t('checkout.title')} />
-        <p className="pcheckout-sub">Mock gateway · Palzio PSP</p>
+        <p className="pcheckout-sub">Secure checkout · Afghan Soccer & Cricket</p>
 
         {missing && (
           <div className="pcheckout-panel">
@@ -218,8 +203,7 @@ const PalzioCheckoutPage: React.FC = () => {
               <p className="pcheckout-order-label">Order reference</p>
               <p className="pcheckout-order-ref">{transactionRef}</p>
               <p className="pcheckout-order-hint">
-                Details you enter below are for this demo UI only. Completion
-                still uses the simulated result in &quot;Developer options&quot;.
+                Complete payment to activate your Afghan soccer or cricket pass.
               </p>
             </div>
 
@@ -382,35 +366,6 @@ const PalzioCheckoutPage: React.FC = () => {
                 </button>
               </div>
             </div>
-
-            <details className="pcheckout-dev">
-              <summary>Developer options (mock)</summary>
-              <p className="pcheckout-dev-intro">
-                Real PSPs resolve success or failure on their servers. Here you
-                pick the outcome before paying.
-              </p>
-              <p className="pcheckout-dev-label">Simulate result</p>
-              <div
-                className="pcheckout-chips"
-                role="group"
-                aria-label="Outcome"
-              >
-                {OUTCOMES.map((o) => (
-                  <button
-                    key={o.id}
-                    type="button"
-                    className={`pcheckout-chip ${outcome === o.id ? "is-on" : ""}`}
-                    onClick={() => setOutcome(o.id)}
-                    title={o.hint}
-                  >
-                    {o.label}
-                  </button>
-                ))}
-              </div>
-              <p className="pcheckout-dev-hint">
-                {OUTCOMES.find((o) => o.id === outcome)?.hint}
-              </p>
-            </details>
 
             {error && <p className="pcheckout-error pcheckout-error-below">{error}</p>}
             {doneMessage && (

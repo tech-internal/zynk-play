@@ -23,7 +23,7 @@
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 15px;
   line-height: 24px;
-  font-weight: 500;
+  font-weight: var(--font-weight-body);
   letter-spacing: 0.2px;
   line-height: 1.6;
   background: transparent;
@@ -78,7 +78,7 @@
   color: var(--thp-on-surface-variant);
   font-size: 1rem;
   line-height: 1.6;
-  font-weight: 400;
+  font-weight: var(--font-weight-body);
 }
 
 /* Grid */
@@ -241,7 +241,7 @@
   color: var(--thp-on-bg);
   font-family: 'Space Grotesk', sans-serif;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: var(--font-weight-body);
   letter-spacing: 0.05em;
   line-height: 1;
   text-transform: uppercase;
@@ -566,7 +566,7 @@
   margin: 0;
   font-family: 'Space Grotesk', sans-serif;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: var(--font-weight-body);
   letter-spacing: 0.05em;
   line-height: 1;
   color: var(--thp-on-surface-variant);
@@ -615,7 +615,7 @@
   margin-top: 4px;
   font-family: 'Space Grotesk', sans-serif;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: var(--font-weight-body);
   letter-spacing: 0.05em;
   line-height: 1;
   color: var(--thp-on-surface-variant);

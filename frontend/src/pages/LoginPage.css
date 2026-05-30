@@ -28,7 +28,7 @@
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 15px;
   line-height: 24px;
-  font-weight: 500;
+  font-weight: var(--font-weight-body);
   letter-spacing: 0.2px;
   -webkit-font-smoothing: antialiased;
 }
@@ -40,7 +40,7 @@
 
 .material-symbols-outlined {
   font-family: 'Material Symbols Outlined', sans-serif;
-  font-weight: normal;
+  font-weight: var(--font-weight-body);
   font-style: normal;
   font-size: 24px;
   line-height: 1;
@@ -243,7 +243,7 @@
   margin: 0;
   font-family: 'Space Grotesk', sans-serif;
   font-size: 10px;
-  font-weight: 500;
+  font-weight: var(--font-weight-body);
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--fv-on-surface-variant);
@@ -280,7 +280,7 @@
 .login-hud-chip {
   font-family: 'Space Grotesk', sans-serif;
   font-size: 10px;
-  font-weight: 500;
+  font-weight: var(--font-weight-body);
   letter-spacing: 0.05em;
   color: #e9c400;
 }
@@ -1042,7 +1042,7 @@
 .login-hud-node span {
   font-family: 'Space Grotesk', sans-serif;
   font-size: 10px;
-  font-weight: 500;
+  font-weight: var(--font-weight-body);
   letter-spacing: 0.05em;
   color: rgba(155, 203, 255, 0.6);
 }

@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'entertainment_platform',
     'psp',
     'xp_management',
+    'lucky_draw',
 ]
 
 MIDDLEWARE = [
@@ -79,6 +80,7 @@ _db_engine = config('DB_ENGINE', default='').strip()
 _db_name = config('DB_NAME', default='').strip()
 
 if _db_engine == 'django.db.backends.postgresql' and _db_name:
+    _conn_max_age = int(config('DB_CONN_MAX_AGE', default='60'))
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
@@ -87,7 +89,8 @@ if _db_engine == 'django.db.backends.postgresql' and _db_name:
             'PASSWORD': config('DB_PASSWORD', default=''),
             'HOST': config('DB_HOST', default='localhost'),
             'PORT': config('DB_PORT', default='5432'),
-            'CONN_MAX_AGE': int(config('DB_CONN_MAX_AGE', default='0')),
+            'CONN_MAX_AGE': _conn_max_age,
+            'CONN_HEALTH_CHECKS': _conn_max_age > 0,
         }
     }
 else:
@@ -290,6 +293,10 @@ CELERY_BEAT_SCHEDULE = {
     'process-xp-expiry': {
         'task': 'xp_management.tasks.process_xp_expiry',
         'schedule': timedelta(minutes=15),
+    },
+    'process-lucky-draws': {
+        'task': 'lucky_draw.tasks.process_lucky_draws',
+        'schedule': timedelta(minutes=10),
     },
 }
 

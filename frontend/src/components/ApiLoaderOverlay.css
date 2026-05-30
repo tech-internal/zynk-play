@@ -129,7 +129,7 @@
   min-height: 1.35em;
   font-family: 'JetBrains Mono', ui-monospace, monospace;
   font-size: 0.7rem;
-  font-weight: 500;
+  font-weight: var(--font-weight-body);
   letter-spacing: 0.04em;
   color: var(--text-low);
   animation: api-loader-sub-fade 0.5s ease;

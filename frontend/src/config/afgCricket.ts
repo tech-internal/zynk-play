@@ -1,14 +1,38 @@
-/** MI India Cricket — WebGL build hosted on AWS S3 */
+/** Afghan Soccer — Unity WebGL on CloudFront */
+export const AFG_SOCCER_GAME_BASE_URL =
+  'https://dd0pkk35jdxki.cloudfront.net/index.html';
 
-export const AFG_CRICKET_GAME_URL =
-  'https://unitybucket67.s3.us-east-1.amazonaws.com/index.html';
+/**
+ * Soccer CDN responds with `X-Frame-Options: SAMEORIGIN`, so browsers block
+ * cross-origin iframes. Use external launch until CloudFront removes that header.
+ */
+export const AFG_SOCCER_REQUIRES_EXTERNAL_LAUNCH = true;
 
-/** Same URL in a new tab (embed fallback / external play). */
-export const AFG_CRICKET_STANDALONE_URL = AFG_CRICKET_GAME_URL;
+/** MI India Cricket — Unity WebGL on CloudFront */
+export const AFG_CRICKET_GAME_BASE_URL =
+  'https://d3kqwmfqrqx099.cloudfront.net/index.html';
+
+/** @deprecated Use AFG_CRICKET_GAME_BASE_URL */
+export const AFG_CRICKET_GAME_URL = AFG_CRICKET_GAME_BASE_URL;
+
+/** @deprecated Use buildUnityGameUrl(AFG_CRICKET_GAME_BASE_URL, userId) */
+export const AFG_CRICKET_STANDALONE_URL = AFG_CRICKET_GAME_BASE_URL;
 
 /** Permissions — match Unity WebGL iframe (fullscreen, gamepad, etc.) */
 export const AFG_CRICKET_IFRAME_ALLOW =
   'autoplay; fullscreen *; gamepad *; microphone; xr-spatial-tracking';
+
+export const UNITY_GAME_IFRAME_ALLOW = AFG_CRICKET_IFRAME_ALLOW;
+
+export function buildUnityGameUrl(
+  baseUrl: string,
+  userId: string | null | undefined,
+): string {
+  if (!userId) return baseUrl;
+  const url = new URL(baseUrl);
+  url.searchParams.set('userid', userId);
+  return url.toString();
+}
 
 export const LIVE_STREAM_HLS_URL =
   'https://d1clrt8nxj7onv.cloudfront.net/live/myStream/playlist.m3u8';

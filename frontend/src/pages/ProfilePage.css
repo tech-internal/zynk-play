@@ -196,7 +196,7 @@
 .fv-profile-xp-label {
   font-family: 'Space Grotesk', sans-serif;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: var(--font-weight-body);
   letter-spacing: 0.05em;
   color: var(--fv-tertiary);
 }
@@ -372,7 +372,7 @@
   margin-top: 4px;
   font-family: 'Space Grotesk', sans-serif;
   font-size: 10px;
-  font-weight: 500;
+  font-weight: var(--font-weight-body);
   letter-spacing: 0.05em;
   color: var(--fv-outline);
 }
@@ -531,7 +531,7 @@
 .fv-uplink-status {
   font-family: 'Space Grotesk', sans-serif;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: var(--font-weight-body);
   letter-spacing: 0.04em;
   color: var(--fv-outline);
   margin-top: 2px;

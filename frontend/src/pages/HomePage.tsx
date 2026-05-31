@@ -1,19 +1,14 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useI18n, usePageTitle } from '../i18n';
+import imgWatch from '../images/Watch.png';
+import imgPlay from '../images/Play.png';
+import imgWin from '../images/Win.png';
+import imgShare from '../images/Share.png';
 import './HomePage.css';
 
 const portalImg =
   'https://lh3.googleusercontent.com/aida-public/AB6AXuDsyWmGsekSZNUiIyzr3WXuommQlkphRb8MetdkdwCBY8qSkJD4EnWn5DKGvVuWIPzhD4t6vEIyYhZK4FkxGtoqD_NZ2gQwLStArNqMc0IHvs6jQSQwlqf2z8RIblVlQ7nt_p0Cg6SsCSJIMWD-8oDAk6thBUc4C_QdgvQk9GnLiQzd0Ze-12xMCf6n-H_FV-T56tcPw5D35jip8vCFELBMcIbhOjMFqzms7M8jssVavxiirfgUIah56NqzKc-Lt5q2nC9NTHCY3Wag';
-
-const imgWatch =
-  'https://lh3.googleusercontent.com/aida-public/AB6AXuC5jRrZpUJ6tZYlaK37OZPfbMLmqpN6GYkyKX22yJbN-JX88It3NdzKDgIdr7Pl3Te5XTgnBPw0Bz92Quudb6J0M9yvodPmBQNN2zt6lWDsh7ed6iBm0Nwl1TtmiNCbHpZQxq09mIAa1AyLV0mApCZVjuxpgkcsiGrBojwIIZWcHlrZWaErNzgimtDWUdmLa4ZLhSaX3ljtFcmC0bKnX3-AAcvH74c583MqaWKYrJiYa4bdGrMnNKgWAH-uUiXIe29YcDfjiXEtqIfJ';
-const imgPlay =
-  'https://lh3.googleusercontent.com/aida-public/AB6AXuBFBEExmB0jPbtj22a8pUWzmiq5I1oRTzcscqb7rCfLtfkdE3mfctGjlhs21jSunTDfj9YjT_5_fn8P2AiTCEz7xvgGc_dudVfChOYw7fe8ah_jQ9OnngROORBKjHNyOjEyLSAQ_vWL_hjPEMW1cnXG-evve_0YDzdBOQvGFZtTHMyfsK4hp42knRNMh4dX1SE1IlI9tl-48a46xmrzvLHAmcDcPrG7XVrsKIYc0Lgm-b5fmLoxDclloF8DxifeqOoYJBvIrOQu-P9Z';
-const imgEarn =
-  'https://lh3.googleusercontent.com/aida-public/AB6AXuDhXRdmuU2qIO1Trb9ZhDrz2EcnzwWN2K8UguTT-Sk0WrR-HKnNuPbd6K2K3hwiO3B18A08uKUe0G4F3m5JKnVgvVCbvnJq1MBvz4EYxvR0ELaPIiBCQSrjR7W9wiDqdBSEL9u5G-Qhw-0vTHX8CnWTgon3j2DtFrSiFMDVM4M0Y1ur3Azq4BHn1WMA25Pgn9gtGf7NY1KEALmMQ3hKjGW7jz3AW475r5XTqq8bkrJsvUqfSzWJQ07Pfed2iZDlPXrbmx_PNeQP5aGK';
-const imgShare =
-  'https://lh3.googleusercontent.com/aida-public/AB6AXuCyFk0SnZOVJVJWtZ6y1FvyrRhrm0mKZQcvtx94y6zyfz0wqQ1VYA0T9mSZPzKaF-vL7NlifjzxXs7NqMKD9cPRfdoQfJOaW8hZ8Hpw1Xd83vryguvfMnl5X7VClSQbCqFAGrXI76NibbkBJCIu3oMX7t7fdl5W1Z7oTxAPwwy3kToVwne3_CJxYYsOfHls3IANhzElyzaaXsmkpR9OBMP7wM5nlV9gv3W57tRWuXQaMgu-DjI2b8RQ2mL2jSd_cMrabNWJC11jodHD';
 
 function TickerLoop(): React.ReactElement {
   const { t } = useI18n();
@@ -112,7 +107,7 @@ const HomePage: React.FC = () => {
                 </div>
               </Link>
               <Link to="/earn-share?view=earn" className="fv-ldg-mtile fv-ldg-mtile--cyan">
-                <img className="fv-ldg-mtile-img" src={imgEarn} alt="" />
+                <img className="fv-ldg-mtile-img" src={imgWin} alt="" />
                 <div className="fv-ldg-mtile-grad" />
                 <div className="fv-ldg-mtile-meta">
                   <span className="fv-ldg-mtile-num fv-ldg-mtile-num--cyan">03</span>
@@ -207,7 +202,7 @@ const HomePage: React.FC = () => {
             </div>
 
             <div className="fv-ldg-card fv-ldg-card--cyan">
-              <img className="fv-ldg-card-bg" src={imgEarn} alt="" />
+              <img className="fv-ldg-card-bg" src={imgWin} alt="" />
               <div className="fv-ldg-card-grad" />
               <div className="fv-ldg-card-body">
                 <span className="fv-ldg-card-op">{t('home.op03')}</span>

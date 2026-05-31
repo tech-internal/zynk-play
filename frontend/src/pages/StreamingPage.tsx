@@ -1,9 +1,9 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import './StreamingPage.css';
 import ScreenHeader from '../components/ScreenHeader';
 import ReelsFeed from '../components/ReelsFeed';
 import { LIVE_STREAM_HLS_URL, getWindowHls } from '../config/afgCricket';
-import { getAllReels } from '../config/reels';
+import { fetchReels, ReelItem } from '../config/reels';
 import PremiumAccessWall from '../components/PremiumAccessWall';
 import { useEntitlements } from '../context/EntitlementsContext';
 import { useI18n } from '../i18n';
@@ -25,7 +25,21 @@ const StreamingPage: React.FC = () => {
   const { todayWatchXp, perAwardXp, countdownSeconds, startSession } = useWatchXp();
   const [muted, setMuted] = React.useState(true);
   const [reelsMode, setReelsMode] = React.useState(false);
-  const reels = useMemo(() => getAllReels(), []);
+  const [reels, setReels] = React.useState<ReelItem[]>([]);
+
+  React.useEffect(() => {
+    let cancelled = false;
+    fetchReels()
+      .then((items) => {
+        if (!cancelled) setReels(items);
+      })
+      .catch(() => {
+        if (!cancelled) setReels([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
   const streamBlockRef = React.useRef<HTMLDivElement | null>(null);
 
   React.useEffect(() => {

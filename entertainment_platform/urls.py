@@ -68,5 +68,6 @@ urlpatterns = [
     # =====================================================================
     # REELS (S3 stream)
     # =====================================================================
+    path('api/v1/reels', reels.list_reels, name='list_reels'),
     path('api/v1/reels/stream', reels.stream_reel, name='stream_reel'),
 ]

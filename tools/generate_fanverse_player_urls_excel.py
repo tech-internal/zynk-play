@@ -91,9 +91,16 @@ ROWS = [
     # Reels
     (
         "Reels Video Player",
+        "List available reels",
+        "GET",
+        "{API_BASE}/api/v1/reels",
+        "Returns only MP4 objects present in S3",
+    ),
+    (
+        "Reels Video Player",
         "Local static file (preferred)",
         "GET",
-        "/reels/{folderId}/{encodedFilePath}",
+        "/reels/{encodedS3Key}",
         "Served from frontend/public/reels/",
     ),
     (
@@ -107,8 +114,8 @@ ROWS = [
         "Reels Video Player",
         "Backend proxy fallback",
         "GET",
-        "{API_BASE}/api/v1/reels/stream?folder={folderId}&file={filePath}",
-        "Example: .../api/v1/reels/stream?folder=folder2&file=Reels%2Fexample.mp4",
+        "{API_BASE}/api/v1/reels/stream?key={s3Key}",
+        "Example: .../api/v1/reels/stream?key=Reels%2Fexample.mp4",
     ),
     # Env vars
     (

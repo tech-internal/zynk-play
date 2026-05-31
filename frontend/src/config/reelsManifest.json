@@ -1,6 +1,6 @@
 [
   {
-    "id": "folder2",
+    "id": "s3",
     "files": [
       "Reels/Arman FC Celebrations.mp4",
       "Reels/تیمور شاه روفی مدافع کناری جوان و با استعداد آرمان اف سی.mp4",
@@ -9,46 +9,6 @@
       "Reels/مهارت ها و عکس العمل های عیسی عزیزی دروازه بان آرمان اف سی.mp4",
       "Reels/مهارت ها و گل های میر آغا شریفی کاپیتان آرمان اف سی.mp4",
       "Reels/گل های آرمان اف سی در فصل پنجم لیگ قهرمانان افغانستان.mp4"
-    ]
-  },
-  {
-    "id": "folder3",
-    "files": [
-      "REEL 01.mp4",
-      "REEL 02.mp4",
-      "REEL 03.mp4",
-      "REEL 04.mp4",
-      "REEL 05.mp4",
-      "تیم ملی فوتسال افغانستان در گروه D        با تیم های فوتسال ایران عربستان سعودی و مالیزیا هم گروه شد.mp4"
-    ]
-  },
-  {
-    "id": "folder1",
-    "files": [
-      "Reel_01_Traffic_Warden.mp4",
-      "Reel_02_Rickshaw_Challenge.mp4",
-      "Reel_03_Afghan_Chaat.mp4",
-      "Reel_04_Ramadan_Charity.mp4",
-      "Reel_05_Youth_Plea.mp4",
-      "Reel_06_Fresh_Produce.mp4",
-      "Reel_07_Kabab_Sizzle.mp4",
-      "Reel_08_Watch_Vendor.mp4",
-      "Reel_09_Young_Yasin.mp4",
-      "Reel_10_Diaspora_Message.mp4"
-    ]
-  },
-  {
-    "id": "folder4",
-    "files": [
-      "Promos/IRAN VS AFG/DARI MATCH PRMO OF 6 NOV ok.mp4",
-      "Promos/IRAN VS AFG/PASHTO MATCH PRMO OF 6 NOV ok.mp4",
-      "SHORT 01.mp4",
-      "SHORT 02.mp4",
-      "SHORT 03.mp4",
-      "SHORT 04.mp4",
-      "SHORT 05.mp4",
-      "SHORT 06.mp4",
-      "SHORT 07.mp4"
     ]
   }
 ]

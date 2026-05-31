@@ -316,6 +316,12 @@ FREE_TRIAL_DURATION_MINUTES = 5
 STREAM_BASE_URL = os.getenv('STREAM_BASE_URL', 'https://stream.yourdomain.com')
 SIGNED_URL_VALIDITY_SECONDS = 300
 
+# AWS S3 (reels and media)
+AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID', default='')
+AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY', default='')
+AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME', default='')
+AWS_S3_REGION_NAME = config('AWS_S3_REGION_NAME', default='us-east-1')
+
 # Payment Settings
 PAYMENT_PROVIDER_URL = os.getenv('PAYMENT_PROVIDER_URL', '')
 PAYMENT_API_KEY = os.getenv('PAYMENT_API_KEY', '')

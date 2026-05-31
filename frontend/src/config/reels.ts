@@ -3,9 +3,8 @@ import { API_BASE } from '../api/client';
 
 export type ReelFolder = {
   id: string;
-  folderId: string;
-  folderKey: string;
-  rlkey: string;
+  /** Optional S3 key prefix for all files in this folder. */
+  s3Prefix?: string;
   files: string[];
 };
 
@@ -16,13 +15,16 @@ export type ReelItem = {
   title: string;
   /** Local file in frontend/public/reels (preferred). */
   src: string;
-  /** Dropbox direct URL if local missing. */
+  /** Direct S3 URL when the bucket allows public read. */
   fallbackSrc: string;
-  /** Backend stream from Dropbox zip cache. */
+  /** Backend stream from S3. */
   proxySrc: string;
 };
 
 const folders = manifest as ReelFolder[];
+
+const S3_BUCKET = process.env.REACT_APP_AWS_S3_BUCKET ?? 'gamepalazio-content';
+const S3_REGION = process.env.REACT_APP_AWS_S3_REGION ?? 'ap-southeast-2';
 
 /** Served from frontend/public/reels/{folderId}/… */
 export function buildLocalReelUrl(folderId: string, filePath: string): string {
@@ -33,16 +35,15 @@ export function buildLocalReelUrl(folderId: string, filePath: string): string {
   return `/reels/${folderId}/${encodedPath}`;
 }
 
-/** Build a direct Dropbox stream URL for a file inside a shared folder. */
-export function buildDropboxReelUrl(folder: ReelFolder, filePath: string): string {
-  const encodedPath = filePath
+/** Build a direct S3 URL for a reel object key. */
+export function buildS3ReelUrl(folder: ReelFolder, filePath: string): string {
+  const prefix = folder.s3Prefix?.replace(/\/$/, '') ?? '';
+  const key = prefix ? `${prefix}/${filePath}` : filePath;
+  const encodedKey = key
     .split('/')
     .map((segment) => encodeURIComponent(segment))
     .join('/');
-  return (
-    `https://www.dropbox.com/scl/fo/${folder.folderId}/${folder.folderKey}` +
-    `/${encodedPath}?rlkey=${folder.rlkey}&raw=1`
-  );
+  return `https://${S3_BUCKET}.s3.${S3_REGION}.amazonaws.com/${encodedKey}`;
 }
 
 export function buildReelProxyUrl(folderId: string, filePath: string): string {
@@ -71,7 +72,7 @@ export function getAllReels(): ReelItem[] {
         filePath,
         title: reelTitleFromPath(filePath),
         src: buildLocalReelUrl(folder.id, filePath),
-        fallbackSrc: buildDropboxReelUrl(folder, filePath),
+        fallbackSrc: buildS3ReelUrl(folder, filePath),
         proxySrc: buildReelProxyUrl(folder.id, filePath),
       });
     }

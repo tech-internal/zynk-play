@@ -66,7 +66,7 @@ urlpatterns = [
     path('api/v1/games/<uuid:game_id>/launch', views.launch_game, name='launch_game'),
 
     # =====================================================================
-    # REELS (Dropbox fallback stream)
+    # REELS (S3 stream)
     # =====================================================================
     path('api/v1/reels/stream', reels.stream_reel, name='stream_reel'),
 ]

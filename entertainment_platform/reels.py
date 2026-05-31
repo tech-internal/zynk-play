@@ -1,20 +1,17 @@
-"""Stream reels from Dropbox shared folders (cached zip fallback)."""
+"""Stream reels from AWS S3."""
 from __future__ import annotations
 
-import io
 import json
-import zipfile
 from pathlib import Path
 
-import requests
+import boto3
+from botocore.exceptions import ClientError
 from django.conf import settings
-from django.core.cache import cache
-from django.http import FileResponse, Http404, HttpResponseBadRequest
+from django.http import Http404, HttpResponseBadRequest, StreamingHttpResponse
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 
 MANIFEST_PATH = settings.BASE_DIR / "frontend" / "src" / "config" / "reelsManifest.json"
-CACHE_TTL = 60 * 60
 
 
 def _load_manifest() -> list[dict]:
@@ -28,35 +25,20 @@ def _folder_by_id(folder_id: str) -> dict:
     raise Http404("Unknown reel folder")
 
 
-def _folder_zip_url(folder: dict) -> str:
-    return (
-        f"https://www.dropbox.com/scl/fo/{folder['folderId']}/{folder['folderKey']}"
-        f"?rlkey={folder['rlkey']}&dl=1"
+def _s3_client():
+    return boto3.client(
+        "s3",
+        region_name=settings.AWS_S3_REGION_NAME,
+        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
     )
 
 
-def _cache_dir() -> Path:
-    path = Path(getattr(settings, "REELS_CACHE_DIR", settings.BASE_DIR / "tmp" / "reels_cache"))
-    path.mkdir(parents=True, exist_ok=True)
-    return path
-
-
-def _ensure_folder_zip(folder: dict) -> Path:
-    folder_id = folder["id"]
-    target = _cache_dir() / f"{folder_id}.zip"
-    cache_key = f"reels:zip:{folder_id}"
-    if target.exists() and cache.get(cache_key):
-        return target
-
-    resp = requests.get(
-        _folder_zip_url(folder),
-        headers={"User-Agent": "Mozilla/5.0"},
-        timeout=600,
-    )
-    resp.raise_for_status()
-    target.write_bytes(resp.content)
-    cache.set(cache_key, True, CACHE_TTL)
-    return target
+def _s3_key(file_path: str, folder: dict | None = None) -> str:
+    prefix = (folder or {}).get("s3Prefix", "").strip("/")
+    if prefix:
+        return f"{prefix}/{file_path.lstrip('/')}"
+    return file_path
 
 
 @api_view(["GET"])
@@ -67,20 +49,39 @@ def stream_reel(request):
     if not folder_id or not file_path:
         return HttpResponseBadRequest("folder and file are required")
 
+    bucket = settings.AWS_STORAGE_BUCKET_NAME
+    if not bucket:
+        raise Http404("S3 bucket not configured")
+
     folder = _folder_by_id(folder_id)
     if file_path not in folder.get("files", []):
         raise Http404("Unknown reel file")
 
-    zip_path = _ensure_folder_zip(folder)
-    with zipfile.ZipFile(zip_path) as zf:
-        try:
-            info = zf.getinfo(file_path)
-            payload = zf.read(file_path)
-        except KeyError as exc:
-            raise Http404("Reel file missing in Dropbox folder") from exc
+    key = _s3_key(file_path, folder)
+    range_header = request.META.get("HTTP_RANGE")
 
-    response = FileResponse(io.BytesIO(payload), content_type="video/mp4")
-    response["Content-Length"] = info.file_size
+    params: dict = {"Bucket": bucket, "Key": key}
+    if range_header:
+        params["Range"] = range_header
+
+    try:
+        obj = _s3_client().get_object(**params)
+    except ClientError as exc:
+        code = exc.response.get("Error", {}).get("Code", "")
+        if code in ("NoSuchKey", "404"):
+            raise Http404("Reel file missing in S3") from exc
+        raise
+
+    status = 206 if range_header and obj.get("ContentRange") else 200
+    response = StreamingHttpResponse(
+        obj["Body"].iter_chunks(chunk_size=8192),
+        content_type=obj.get("ContentType") or "video/mp4",
+        status=status,
+    )
+    if obj.get("ContentLength") is not None:
+        response["Content-Length"] = obj["ContentLength"]
+    if obj.get("ContentRange"):
+        response["Content-Range"] = obj["ContentRange"]
     response["Accept-Ranges"] = "bytes"
     response["Cache-Control"] = "public, max-age=3600"
     return response

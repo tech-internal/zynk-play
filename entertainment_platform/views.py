@@ -2,7 +2,7 @@
 # API Views for Entertainment Platform
 
 from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -29,6 +29,7 @@ from .serializers import (
     TransactionSerializer, StreamingContentSerializer,
     StreamSessionSerializer, GameSerializer, GameSessionSerializer,
     ServiceTokenRequestSerializer,
+    LookupUserByPhoneSerializer,
 )
 from .tokens import issue_tokens_for_platform_user
 from .service_tokens import issue_service_access_token
@@ -37,7 +38,8 @@ from .subscriptions import (
     eligible_active_plan_ids,
     purchase_eligibility_reason,
 )
-from .permissions import IsPlatformStaff
+from .permissions import IsPlatformStaff, IsServiceAuthenticated
+from .service_auth import ServiceTokenAuthentication
 from .utils import send_sms_otp, generate_signed_url, validate_payment_signature
 from .palzio_tokens import issue_palzio_checkout_token
 from .openapi import (
@@ -64,6 +66,7 @@ from .openapi import (
     schema_subscription_plans_manage_collection,
     schema_subscription_plans_manage_detail,
     schema_subscription_status,
+    schema_user_by_phone,
     schema_user_profile,
     schema_verify_otp,
 )
@@ -98,6 +101,9 @@ def home(request):
             "mock_auth": {
                 "send_otp": "POST /api/v1/mock/auth/send-otp - Mock: always responds as if OTP was sent",
                 "verify_otp": "POST /api/v1/mock/auth/verify-otp - Mock: success when otp_code is 123456"
+            },
+            "users": {
+                "by_phone": "POST /api/v1/users/by-phone - Integration: get or create user by mobile number"
             },
             "subscriptions": {
                 "plans": "GET /api/v1/subscriptions/plans - List subscription plans",
@@ -392,6 +398,31 @@ def refresh_token(request):
 # ============================================================================
 # USER VIEWS
 # ============================================================================
+
+@schema_user_by_phone
+@api_view(['POST'])
+@authentication_classes([ServiceTokenAuthentication])
+@permission_classes([IsServiceAuthenticated])
+def user_by_phone(request):
+    """
+    Look up or create a user by mobile number and return their profile.
+    POST /api/v1/users/by-phone
+    """
+    serializer = LookupUserByPhoneSerializer(data=request.data)
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    phone_number = serializer.validated_data['phone_number']
+    user, user_created = User.objects.get_or_create(phone_number=phone_number)
+
+    return Response(
+        {
+            'user_created': user_created,
+            'user': UserSerializer(user).data,
+        },
+        status=status.HTTP_200_OK,
+    )
+
 
 @schema_user_profile
 @api_view(['GET', 'PUT', 'PATCH'])

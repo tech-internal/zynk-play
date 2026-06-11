@@ -294,6 +294,24 @@ class TokenResponseSerializer(serializers.Serializer):
     user = UserSerializer()
 
 
+PHONE_PATTERN = re.compile(r'^\+?1?\d{9,15}$')
+
+
+class LookupUserByPhoneSerializer(serializers.Serializer):
+    phone_number = serializers.CharField(max_length=20)
+
+    def validate_phone_number(self, value):
+        phone = value.strip()
+        if not PHONE_PATTERN.match(phone):
+            raise serializers.ValidationError('Invalid phone number format')
+        return phone
+
+
+class UserByPhoneResponseSerializer(serializers.Serializer):
+    user_created = serializers.BooleanField()
+    user = UserSerializer()
+
+
 class ServiceTokenRequestSerializer(serializers.Serializer):
     client_id = serializers.CharField(max_length=100)
     client_secret = serializers.CharField(max_length=200, write_only=True)

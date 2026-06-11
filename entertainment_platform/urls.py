@@ -28,6 +28,7 @@ urlpatterns = [
     # USER ENDPOINTS
     # =====================================================================
     path('api/v1/users/me', views.user_profile, name='user_profile'),
+    path('api/v1/users/by-phone', views.user_by_phone, name='user_by_phone'),
     
     # =====================================================================
     # SUBSCRIPTION ENDPOINTS

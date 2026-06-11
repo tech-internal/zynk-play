@@ -16,7 +16,7 @@ from entertainment_platform.service_auth import ServiceTokenAuthentication
 from .constants import next_tier_info
 from .exceptions import XPError, XPDuplicateRequestError
 from .models import XPEvent, XPRule, XPTransaction, UserXPWallet
-from .permissions import IsServiceAuthenticated, IsXPAdmin
+from .permissions import can_access_user_wallet, is_integration_service, IsServiceAuthenticated, IsXPAdmin
 from .response import xp_error, xp_success
 from .serializers import (
     GrantXPByPhoneSerializer,
@@ -72,9 +72,14 @@ def _handle_xp_errors(request, fn):
 
 
 def _resolve_target_user(request, user_id_param):
+    if is_integration_service(request):
+        if not user_id_param:
+            return None, xp_error(request, 'XP_VALIDATION_ERROR', 'user_id is required', status=400)
+        return get_object_or_404(User, pk=user_id_param), None
+
     if user_id_param:
         target = get_object_or_404(User, pk=user_id_param)
-        if str(target.id) != str(request.user.id) and getattr(request.user, 'role', '') != 'staff':
+        if not can_access_user_wallet(request, target.id):
             return None, xp_error(request, 'XP_FORBIDDEN', 'Cannot access another user wallet', status=403)
         return target, None
     return request.user, None
@@ -138,7 +143,7 @@ def trigger_event(request):
         return xp_error(request, 'XP_VALIDATION_ERROR', 'Invalid request body', details=ser.errors, status=400)
 
     data = ser.validated_data
-    if str(data['user_id']) != str(request.user.id) and getattr(request.user, 'role', '') != 'staff':
+    if not can_access_user_wallet(request, data['user_id']):
         return xp_error(request, 'XP_FORBIDDEN', 'Cannot trigger XP for another user', status=403)
 
     rid = _request_id(request)

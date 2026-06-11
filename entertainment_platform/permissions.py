@@ -1,5 +1,16 @@
 from rest_framework.permissions import BasePermission
 
+from .service_auth import ServicePrincipal
+
+
+class IsServiceAuthenticated(BasePermission):
+    """Integration bearer token from POST /api/v1/auth/token."""
+
+    message = 'Valid integration service bearer token required.'
+
+    def has_permission(self, request, view):
+        return isinstance(getattr(request, 'user', None), ServicePrincipal)
+
 
 class IsPlatformStaff(BasePermission):
     """Users with role=staff may manage catalog plans via API."""

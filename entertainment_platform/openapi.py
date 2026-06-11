@@ -15,6 +15,7 @@ from rest_framework import serializers
 from .serializers import (
     GameSerializer,
     GameSessionSerializer,
+    LookupUserByPhoneSerializer,
     SendOTPSerializer,
     ServiceTokenRequestSerializer,
     ServiceTokenResponseSerializer,
@@ -23,6 +24,7 @@ from .serializers import (
     SubscriptionPlanSerializer,
     TokenResponseSerializer,
     TransactionSerializer,
+    UserByPhoneResponseSerializer,
     UserSerializer,
     UserSubscriptionSerializer,
     VerifyOTPSerializer,
@@ -193,7 +195,7 @@ schema_generate_service_token = extend_schema(
     description=(
         'Exchange integration client credentials for a bearer token. '
         'Use `Authorization: Bearer <access_token>` on integration endpoints such as '
-        '`POST /api/v1/xp/grant-by-phone`.'
+        '`POST /api/v1/users/by-phone` and `POST /api/v1/xp/grant-by-phone`.'
     ),
     request=ServiceTokenRequestSerializer,
     responses={
@@ -217,6 +219,28 @@ schema_refresh_token = extend_schema(
     request=RefreshRequest,
     responses={200: RefreshResponse, 400: ErrorResponse},
     auth=[],
+)
+
+schema_user_by_phone = extend_schema(
+    tags=['Users (Integration)'],
+    summary='Get or create user by phone number',
+    description=(
+        'Look up a platform user by mobile number and return their profile. '
+        'If no user exists for that number, one is created automatically. '
+        'Requires integration bearer token from POST /api/v1/auth/token.'
+    ),
+    request=LookupUserByPhoneSerializer,
+    responses={
+        200: UserByPhoneResponseSerializer,
+        400: ErrorResponse,
+        401: ErrorResponse,
+    },
+    examples=[
+        OpenApiExample(
+            'Lookup user',
+            value={'phone_number': '+93700123456'},
+        ),
+    ],
 )
 
 def schema_user_profile(view):

@@ -16,6 +16,8 @@ from .serializers import (
     GameSerializer,
     GameSessionSerializer,
     SendOTPSerializer,
+    ServiceTokenRequestSerializer,
+    ServiceTokenResponseSerializer,
     StreamingContentSerializer,
     SubscriptionPlanManageSerializer,
     SubscriptionPlanSerializer,
@@ -181,6 +183,30 @@ schema_mock_verify_otp = extend_schema(
     responses={200: TokenResponseSerializer, 400: ErrorResponse},
     examples=[
         OpenApiExample('Mock login', value={'phone_number': '+93700123456', 'otp_code': '123456'}),
+    ],
+    auth=[],
+)
+
+schema_generate_service_token = extend_schema(
+    tags=['Auth'],
+    summary='Generate integration bearer token',
+    description=(
+        'Exchange integration client credentials for a bearer token. '
+        'Use `Authorization: Bearer <access_token>` on integration endpoints such as '
+        '`POST /api/v1/xp/grant-by-phone`.'
+    ),
+    request=ServiceTokenRequestSerializer,
+    responses={
+        200: ServiceTokenResponseSerializer,
+        400: ErrorResponse,
+        401: ErrorResponse,
+        503: ErrorResponse,
+    },
+    examples=[
+        OpenApiExample(
+            'Integration login',
+            value={'client_id': 'my-partner', 'client_secret': 'your-secret'},
+        ),
     ],
     auth=[],
 )

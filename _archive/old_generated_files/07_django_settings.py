@@ -5,9 +5,6 @@ import os
 from pathlib import Path
 from datetime import timedelta
 
-from decouple import config
-
-ALLOWED_HOSTS = ['*']
 # ============================================================================
 # CORE DJANGO SETTINGS
 # ============================================================================
@@ -15,7 +12,7 @@ ALLOWED_HOSTS = ['*']
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-dev-key-change-in-production')
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
-# ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -27,16 +24,14 @@ INSTALLED_APPS = [
     
     # Third-party apps
     'rest_framework',
-    'drf_spectacular',
     'rest_framework_simplejwt',
     'corsheaders',
     'django_filters',
+    'django_celery_beat',
+    'django_celery_results',
     
     # Local apps
     'entertainment_platform',
-    'psp',
-    'xp_management',
-    'lucky_draw',
 ]
 
 MIDDLEWARE = [
@@ -73,33 +68,21 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # ============================================================================
 # DATABASE
 # ============================================================================
-# PostgreSQL when DB_ENGINE=postgresql and DB_NAME is set (see .env.example).
-# Otherwise SQLite (db.sqlite3) for zero-config local runs.
 
-_db_engine = config('DB_ENGINE', default='').strip()
-_db_name = config('DB_NAME', default='').strip()
-
-if _db_engine == 'django.db.backends.postgresql' and _db_name:
-    _conn_max_age = int(config('DB_CONN_MAX_AGE', default='60'))
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': _db_name,
-            'USER': config('DB_USER', default='postgres'),
-            'PASSWORD': config('DB_PASSWORD', default=''),
-            'HOST': config('DB_HOST', default='localhost'),
-            'PORT': config('DB_PORT', default='5432'),
-            'CONN_MAX_AGE': _conn_max_age,
-            'CONN_HEALTH_CHECKS': _conn_max_age > 0,
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DB_NAME', 'entertainment_platform'),
+        'USER': os.getenv('DB_USER', 'postgres'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 'postgres'),
+        'HOST': os.getenv('DB_HOST', 'localhost'),
+        'PORT': os.getenv('DB_PORT', '5432'),
+        'CONN_MAX_AGE': 600,
+        'OPTIONS': {
+            'sslmode': 'prefer',
+        },
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+}
 
 # ============================================================================
 # CACHING
@@ -107,8 +90,11 @@ else:
 
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'entertainment-platform-cache',
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': os.getenv('REDIS_URL', 'redis://127.0.0.1:6379/1'),
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
     }
 }
 
@@ -117,10 +103,8 @@ CACHES = {
 # ============================================================================
 
 REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'entertainment_platform.service_auth.ServiceTokenAuthentication',
-        'entertainment_platform.authentication.PlatformUserJWTAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
@@ -149,8 +133,8 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
-    'ROTATE_REFRESH_TOKENS': False,
-    'BLACKLIST_AFTER_ROTATION': False,
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
     'UPDATE_LAST_LOGIN': True,
     'ALGORITHM': 'HS256',
     'SIGNING_KEY': SECRET_KEY,
@@ -168,9 +152,12 @@ SIMPLE_JWT = {
 # CORS CONFIGURATION
 # ============================================================================
 
-# Temporary permissive setting while debugging CORS issues.
-# IMPORTANT: Restrict this before production.
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+    'http://localhost:8000',
+    'http://127.0.0.1:3000',
+    'https://yourdomain.com',
+]
 
 CORS_ALLOW_CREDENTIALS = True
 
@@ -217,9 +204,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # LOGGING
 # ============================================================================
 
-LOG_DIR = BASE_DIR / 'logs'
-LOG_DIR.mkdir(parents=True, exist_ok=True)
-
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -240,7 +224,7 @@ LOGGING = {
         },
         'file': {
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': LOG_DIR / 'platform.log',
+            'filename': BASE_DIR / 'logs' / 'platform.log',
             'maxBytes': 1024 * 1024 * 10,  # 10 MB
             'backupCount': 10,
             'formatter': 'verbose',
@@ -257,11 +241,6 @@ LOGGING = {
             'propagate': False,
         },
         'entertainment_platform': {
-            'handlers': ['console', 'file'],
-            'level': 'DEBUG',
-            'propagate': False,
-        },
-        'xp_management': {
             'handlers': ['console', 'file'],
             'level': 'DEBUG',
             'propagate': False,
@@ -291,14 +270,6 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'entertainment_platform.tasks.clean_expired_otp_requests',
         'schedule': timedelta(minutes=10),
     },
-    'process-xp-expiry': {
-        'task': 'xp_management.tasks.process_xp_expiry',
-        'schedule': timedelta(minutes=15),
-    },
-    'process-lucky-draws': {
-        'task': 'lucky_draw.tasks.process_lucky_draws',
-        'schedule': timedelta(minutes=10),
-    },
 }
 
 # ============================================================================
@@ -317,58 +288,23 @@ FREE_TRIAL_DURATION_MINUTES = 5
 STREAM_BASE_URL = os.getenv('STREAM_BASE_URL', 'https://stream.yourdomain.com')
 SIGNED_URL_VALIDITY_SECONDS = 300
 
-# AWS S3 (reels and media)
-AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID', default='')
-AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY', default='')
-AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME', default='')
-AWS_S3_REGION_NAME = config('AWS_S3_REGION_NAME', default='us-east-1')
-
 # Payment Settings
 PAYMENT_PROVIDER_URL = os.getenv('PAYMENT_PROVIDER_URL', '')
 PAYMENT_API_KEY = os.getenv('PAYMENT_API_KEY', '')
 PAYMENT_MERCHANT_ID = os.getenv('PAYMENT_MERCHANT_ID', '')
 PAYMENT_WEBHOOK_SECRET = os.getenv('PAYMENT_WEBHOOK_SECRET', '')
-# Shared with mock Palzio PSP (checkout token + webhook HMAC). Falls back to PAYMENT_WEBHOOK_SECRET in code when empty.
-PALZIO_PSP_SHARED_SECRET = os.getenv('PALZIO_PSP_SHARED_SECRET', '')
-PALZIO_CHECKOUT_TTL_SECONDS = int(os.getenv('PALZIO_CHECKOUT_TTL_SECONDS', '3600'))
-# Where the psp app POSTs payment results (full URL). Default is derived from SITE_URL in psp.views.
-PLATFORM_PAYMENT_WEBHOOK_URL = os.getenv('PLATFORM_PAYMENT_WEBHOOK_URL', '')
 
 # SMS Settings
 SMS_SERVICE_URL = os.getenv('SMS_SERVICE_URL', '')
 SMS_API_KEY = os.getenv('SMS_API_KEY', '')
 
-# Site URL (callbacks, webhooks). In DEBUG, ignore template placeholder hosts.
-_site_url = os.getenv('SITE_URL', '').strip().rstrip('/')
-if not _site_url or 'yourdomain.com' in _site_url.lower():
-    SITE_URL = 'http://localhost:8000' if DEBUG else 'https://yourdomain.com'
-else:
-    SITE_URL = _site_url
-
-# XP integration docs portal (password-protected partner site at /xp/integration/)
-XP_DOCS_ENABLED = config('XP_DOCS_ENABLED', default='True').lower() in ('true', '1', 'yes')
-XP_DOCS_USERNAME = config('XP_DOCS_USERNAME', default='xp-integration')
-XP_DOCS_PASSWORD = config('XP_DOCS_PASSWORD', default='')
-
-# Service integration API (POST /api/v1/auth/token → Bearer for integration endpoints)
-API_INTEGRATION_CLIENT_ID = config('API_INTEGRATION_CLIENT_ID', default='')
-API_INTEGRATION_CLIENT_SECRET = config('API_INTEGRATION_CLIENT_SECRET', default='')
-API_INTEGRATION_TOKEN_LIFETIME_HOURS = int(config('API_INTEGRATION_TOKEN_LIFETIME_HOURS', default='24'))
-XP_PHONE_GRANT_EVENT_CODE = config('XP_PHONE_GRANT_EVENT_CODE', default='PARTNER_PHONE_GRANT')
+# Site URL (for callbacks)
+SITE_URL = os.getenv('SITE_URL', 'https://yourdomain.com')
 
 # Security Settings
-# Railway terminates TLS at the edge proxy; trust forwarded proto so Django
-# does not redirect HTTPS requests in a loop.
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-USE_X_FORWARDED_HOST = True
-
 SECURE_SSL_REDIRECT = not DEBUG
 SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
 SECURE_HSTS_SECONDS = 31536000 if not DEBUG else 0
 SECURE_HSTS_INCLUDE_SUBDOMAINS = not DEBUG
 SECURE_HSTS_PRELOAD = not DEBUG
-
-# OpenAPI (drf-spectacular) — import after REST_FRAMEWORK so DEFAULT_SCHEMA_CLASS applies
-from config.openapi_settings import SPECTACULAR_SETTINGS  # noqa: E402
-import config.schema  # noqa: E402, F401 — register JWT auth extension for OpenAPI

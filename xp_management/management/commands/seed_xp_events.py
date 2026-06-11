@@ -48,6 +48,7 @@ SEED_RULES = [
     ('PROFILE_COMPLETE', 'platform', 'Complete user profile (one-time)', 250, None, 0, 1, 120, 'flat', {}),
     ('REFERRAL_SIGNUP', 'platform', 'Referred user completes registration', 500, None, 0, None, 120, 'flat', {}),
     ('REFERRAL_FIRST_GAME', 'platform', 'Referred user plays first game', 300, None, 0, None, 120, 'flat', {}),
+    ('PARTNER_PHONE_GRANT', 'platform', 'XP granted via partner phone integration API', 100, None, 0, None, 120, 'flat', {}),
 ]
 
 REQUIRES_VERIFICATION = {

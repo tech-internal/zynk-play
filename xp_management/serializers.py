@@ -1,7 +1,33 @@
+import re
+
+from django.conf import settings
 from rest_framework import serializers
 
 from .models import XPEvent, XPRedemptionItem, XPRule, XPTransaction
 from .services.engine import normalize_source_metadata
+
+PHONE_PATTERN = re.compile(r'^\+?1?\d{9,15}$')
+
+
+class GrantXPByPhoneSerializer(serializers.Serializer):
+    phone_number = serializers.CharField(max_length=20)
+    event_code = serializers.CharField(max_length=100, required=False, allow_blank=True)
+    idempotency_key = serializers.CharField(max_length=200, required=False, allow_blank=True)
+    source_metadata = serializers.JSONField(required=False, default=dict)
+
+    def validate(self, attrs):
+        if not attrs.get('event_code'):
+            attrs['event_code'] = settings.XP_PHONE_GRANT_EVENT_CODE
+        return attrs
+
+    def validate_phone_number(self, value):
+        phone = value.strip()
+        if not PHONE_PATTERN.match(phone):
+            raise serializers.ValidationError('Invalid phone number format')
+        return phone
+
+    def validate_source_metadata(self, value):
+        return normalize_source_metadata(value)
 
 
 class TriggerEventSerializer(serializers.Serializer):

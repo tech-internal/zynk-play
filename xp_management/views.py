@@ -5,19 +5,21 @@ from datetime import timedelta
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
 
 from entertainment_platform.models import User
 from entertainment_platform.permissions import IsPlatformStaff
+from entertainment_platform.service_auth import ServiceTokenAuthentication
 
 from .constants import next_tier_info
 from .exceptions import XPError, XPDuplicateRequestError
 from .models import XPEvent, XPRule, XPTransaction, UserXPWallet
-from .permissions import IsXPAdmin
+from .permissions import IsServiceAuthenticated, IsXPAdmin
 from .response import xp_error, xp_success
 from .serializers import (
+    GrantXPByPhoneSerializer,
     RedeemSerializer,
     ReverseTransactionSerializer,
     TriggerEventSerializer,
@@ -29,6 +31,7 @@ from .services.engine import get_or_create_wallet, redeem_xp, reverse_transactio
 from .openapi import (
     schema_admin_reverse,
     schema_balance,
+    schema_grant_xp_by_phone,
     schema_leaderboard,
     schema_redeem,
     schema_rules_collection,
@@ -75,6 +78,51 @@ def _resolve_target_user(request, user_id_param):
             return None, xp_error(request, 'XP_FORBIDDEN', 'Cannot access another user wallet', status=403)
         return target, None
     return request.user, None
+
+
+@schema_grant_xp_by_phone
+@api_view(['POST'])
+@authentication_classes([ServiceTokenAuthentication])
+@permission_classes([IsServiceAuthenticated])
+def grant_xp_by_phone(request):
+    """
+    POST /api/v1/xp/grant-by-phone
+    Create or load user by phone, then credit XP through the event pipeline.
+    """
+    ser = GrantXPByPhoneSerializer(data=request.data)
+    if not ser.is_valid():
+        return xp_error(request, 'XP_VALIDATION_ERROR', 'Invalid request body', details=ser.errors, status=400)
+
+    data = ser.validated_data
+    phone_number = data['phone_number']
+    event_code = data['event_code']
+    idempotency_key = (data.get('idempotency_key') or '').strip()
+    if not idempotency_key:
+        idempotency_key = f'phone-grant:{phone_number}:{event_code}:{uuid.uuid4()}'
+
+    rid = _request_id(request)
+
+    def run():
+        user, user_created = User.objects.get_or_create(phone_number=phone_number)
+        metadata = dict(data.get('source_metadata') or {})
+        metadata['phone_number'] = phone_number
+        metadata['integration_client'] = getattr(request.user, 'client_id', '')
+
+        result = trigger_xp_event(
+            event_code=event_code,
+            user_id=user.id,
+            idempotency_key=idempotency_key,
+            occurred_at=timezone.now(),
+            source_metadata=metadata,
+            request_id=rid,
+            source_ip=_client_ip(request),
+        )
+        result['user_created'] = user_created
+        result['phone_number'] = phone_number
+        result['user_id'] = str(user.id)
+        return xp_success(request, result)
+
+    return _handle_xp_errors(request, run)
 
 
 @schema_trigger_event

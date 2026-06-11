@@ -28,8 +28,10 @@ from .serializers import (
     UserSubscriptionSerializer,
     TransactionSerializer, StreamingContentSerializer,
     StreamSessionSerializer, GameSerializer, GameSessionSerializer,
+    ServiceTokenRequestSerializer,
 )
 from .tokens import issue_tokens_for_platform_user
+from .service_tokens import issue_service_access_token
 from .subscriptions import (
     create_user_subscription_from_paid_transaction,
     eligible_active_plan_ids,
@@ -53,6 +55,7 @@ from .openapi import (
     schema_payment_history,
     schema_payment_webhook,
     schema_purchase_subscription,
+    schema_generate_service_token,
     schema_refresh_token,
     schema_send_otp,
     schema_start_trial,
@@ -89,6 +92,7 @@ def home(request):
             "auth": {
                 "send_otp": "POST /api/v1/auth/send-otp - Send OTP to phone",
                 "verify_otp": "POST /api/v1/auth/verify-otp - Verify OTP and get JWT",
+                "token": "POST /api/v1/auth/token - Integration client credentials → bearer token",
                 "refresh": "POST /api/v1/auth/refresh - Refresh access token"
             },
             "mock_auth": {
@@ -313,6 +317,46 @@ def mock_verify_otp(request):
             'access': access,
             'refresh': refresh_str,
             'user': UserSerializer(user).data,
+        },
+        status=status.HTTP_200_OK,
+    )
+
+
+@schema_generate_service_token
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def generate_service_token(request):
+    """
+    Issue a bearer token for service-to-service API integration.
+    POST /api/v1/auth/token
+    """
+    configured_id = getattr(settings, 'API_INTEGRATION_CLIENT_ID', '')
+    configured_secret = getattr(settings, 'API_INTEGRATION_CLIENT_SECRET', '')
+    if not configured_id or not configured_secret:
+        return Response(
+            {'error': 'Integration API credentials are not configured'},
+            status=status.HTTP_503_SERVICE_UNAVAILABLE,
+        )
+
+    serializer = ServiceTokenRequestSerializer(data=request.data)
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    client_id = serializer.validated_data['client_id']
+    client_secret = serializer.validated_data['client_secret']
+
+    if client_id != configured_id or client_secret != configured_secret:
+        return Response(
+            {'error': 'Invalid client credentials'},
+            status=status.HTTP_401_UNAUTHORIZED,
+        )
+
+    access_token, expires_in = issue_service_access_token(client_id)
+    return Response(
+        {
+            'access_token': access_token,
+            'token_type': 'bearer',
+            'expires_in': expires_in,
         },
         status=status.HTTP_200_OK,
     )

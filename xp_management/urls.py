@@ -10,6 +10,7 @@ urlpatterns = [
     path('xp/integration/portal/', docs_views.docs_portal, name='docs_portal'),
     path('xp/integration/logout/', docs_views.docs_logout, name='docs_logout'),
     path('xp/integration/catalog/', docs_views.docs_catalog, name='docs_catalog'),
+    path('api/v1/xp/grant-by-phone', views.grant_xp_by_phone, name='grant_xp_by_phone'),
     path('api/v1/xp/trigger-event', views.trigger_event, name='trigger_event'),
     path('api/v1/xp/balance', views.balance, name='balance'),
     path('api/v1/xp/transactions', views.transactions, name='transactions'),

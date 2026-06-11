@@ -6,6 +6,7 @@ from drf_spectacular.utils import OpenApiParameter, extend_schema, inline_serial
 from rest_framework import serializers
 
 from .serializers import (
+    GrantXPByPhoneSerializer,
     RedeemSerializer,
     ReverseTransactionSerializer,
     TriggerEventSerializer,
@@ -237,6 +238,25 @@ schema_admin_reverse = extend_schema(
     summary='Reverse XP transaction (admin)',
     request=ReverseTransactionSerializer,
     responses={200: XPGenericSuccess, 400: XPErrorEnvelope, 403: XPErrorEnvelope},
+)
+
+schema_grant_xp_by_phone = extend_schema(
+    tags=['XP (Integration)'],
+    summary='Grant XP by phone number',
+    description=(
+        'Look up a user by phone number, create the user if missing, then credit XP '
+        'via the event pipeline. Requires integration bearer token from POST /api/v1/auth/token.'
+    ),
+    request=GrantXPByPhoneSerializer,
+    responses={200: XPGenericSuccess, 400: XPErrorEnvelope, 401: XPErrorEnvelope, 403: XPErrorEnvelope},
+    parameters=[
+        OpenApiParameter(
+            'X-Request-Id',
+            str,
+            location=OpenApiParameter.HEADER,
+            description='Optional trace id; generated if omitted.',
+        ),
+    ],
 )
 
 schema_leaderboard = extend_schema(
